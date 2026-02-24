@@ -5,6 +5,7 @@ const tileList = document.getElementById("tileList");
 const checkBtn = document.getElementById("checkBtn");
 const hintBtn = document.getElementById("hintBtn");
 const resetBtn = document.getElementById("resetBtn");
+const helpSidebarBtn = document.getElementById("helpSidebarBtn");
 const rotateBtn = document.getElementById("rotateBtn");
 const removeBtn = document.getElementById("removeBtn");
 const statusText = document.getElementById("statusText");
@@ -349,6 +350,12 @@ function attachEvents() {
     if (!state.current) return;
     setChallenge(state.current);
   });
+  
+  if (helpSidebarBtn) {
+    helpSidebarBtn.addEventListener("click", () => {
+      showHelp();
+    });
+  }
 
   if (rotateBtn) {
     rotateBtn.addEventListener("click", () => {
@@ -811,7 +818,7 @@ function setChallenge(challenge) {
   state.selectedTileId = null;
   state.rotation = 0;
   challengeSelect.value = challenge.id;
-  modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "With Wolf" : "Without Wolf";
+  modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "WITH WOLF" : "WITHOUT WOLF";
   if (difficultyBadge) difficultyBadge.textContent = challenge.difficulty;
   updateTileList();
   status("Challenge loaded.");

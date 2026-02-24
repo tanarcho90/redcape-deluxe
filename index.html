@@ -116,7 +116,10 @@
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
-                <span id="difficultyBadge" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
+                <div class="flex items-center gap-2">
+                  <span id="difficultyBadge" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
+                  <span id="modeLabel" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
+                </div>
               </div>
               <select
                 id="challengeSelect"
@@ -138,14 +141,15 @@
                   </svg>
                   Hint
                 </button>
+                <button id="helpSidebarBtn" class="group flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition hover:text-blue-400" title="Show Help">
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                  Help
+                </button>
               </div>
-            </div>
-
-            <div class="space-y-2">
-              <h2 class="text-base font-semibold text-slate-100">Mode</h2>
-              <p id="modeLabel" class="inline-flex rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200">
-                Without Wolf
-              </p>
             </div>
             <div class="space-y-2">
               <h2 class="text-base font-semibold text-slate-100">Controls</h2>
