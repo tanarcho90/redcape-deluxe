@@ -887,10 +887,14 @@ function handleCheck() {
     
     // Confetti!
     if (typeof confetti === 'function') {
+      const btnRect = checkBtn.getBoundingClientRect();
+      const originX = (btnRect.left + btnRect.width / 2) / window.innerWidth;
+      const originY = (btnRect.top + btnRect.height / 2) / window.innerHeight;
+
       confetti({
         particleCount: 150,
         spread: 70,
-        origin: { y: 0.6 },
+        origin: { x: originX, y: originY },
         colors: ['#10b981', '#34d399', '#6ee7b7', '#ffffff']
       });
     }
