@@ -38,15 +38,17 @@ const AudioManager = {
   isPlaying: false,
 
   init() {
-    this.audio.volume = volumeSlider.value;
+    if (volumeSlider) {
+      this.audio.volume = volumeSlider.value;
+      volumeSlider.addEventListener("input", (e) => {
+        this.audio.volume = e.target.value;
+      });
+    }
+    
     this.audio.addEventListener("ended", () => this.next());
     
-    volumeSlider.addEventListener("input", (e) => {
-      this.audio.volume = e.target.value;
-    });
-
-    playPauseBtn.addEventListener("click", () => this.togglePlay());
-    skipBtn.addEventListener("click", () => this.next());
+    if (playPauseBtn) playPauseBtn.addEventListener("click", () => this.togglePlay());
+    if (skipBtn) skipBtn.addEventListener("click", () => this.next());
     
     // SFX precaching
     this.winAudio = new Audio(this.sfx.win);
