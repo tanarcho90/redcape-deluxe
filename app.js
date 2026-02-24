@@ -768,59 +768,89 @@ function setChallenge(challenge) {
 function updateTileList() {
   tileList.innerHTML = "";
   if (!state.current) return;
-  state.current.availableTiles.forEach((tileId) => {
+  
+  // Only show tiles that are NOT placed on the board
+  const availableInInventory = state.current.availableTiles.filter(tileId => !state.placements.has(tileId));
+  
+  availableInInventory.forEach((tileId) => {
     const tile = tileDefs[tileId];
     const card = document.createElement("button");
     card.type = "button";
     card.draggable = true;
     card.title = tileId;
-    card.className = "flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-2 transition hover:bg-slate-800";
-    if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/70");
-    if (state.placements.has(tileId)) card.classList.add("opacity-60");
+    // Static size for inventory items
+    card.className = "flex h-20 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/40 p-2 transition hover:bg-slate-800 hover:scale-105 active:scale-95";
+    if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
+    
     const preview = document.createElement("canvas");
-    preview.width = 72;
-    preview.height = 44;
-    const placement = state.placements.get(tileId);
-    const isSelected = state.selectedTileId === tileId;
-    const previewRotation = isSelected ? state.rotation : placement?.rotation ?? 0;
-    renderTilePreview(preview, tileId, previewRotation);
+    // Always 0 rotation in inventory for clean look
+    renderTilePreview(preview, tileId, 0);
+    
     card.append(preview);
+    
     card.addEventListener("click", () => {
-      const wasSelected = state.selectedTileId === tileId;
       state.selectedTileId = tileId;
-      const placement = state.placements.get(tileId);
-      if (placement) state.rotation = placement.rotation;
-      else if (!wasSelected) state.rotation = 0;
+      state.rotation = 0; // Reset rotation for new selection from inventory
       updateTileList();
-      status(`Selected: ${tileId}.`);
+      status(`Selected: ${tileId}. Drag to board.`);
       draw();
     });
+    
     card.addEventListener("dragstart", (event) => {
       event.dataTransfer?.setData("text/plain", tileId);
       state.selectedTileId = tileId;
-      const placement = state.placements.get(tileId);
-      const rot = placement ? placement.rotation : (state.selectedTileId === tileId ? state.rotation : 0);
-      if (placement) state.rotation = placement.rotation;
+      state.rotation = 0;
       
-      // Init Drag State
       state.dragState = {
         active: true,
         tileId: tileId,
         x: -1, 
         y: -1,
-        rotation: rot,
+        rotation: 0,
         valid: false
       };
 
-      setTileDragImage(event, tileId, rot);
+      setTileDragImage(event, tileId, 0);
     });
 
     card.addEventListener("dragend", () => {
         state.dragState = { active: false, tileId: null, x: -1, y: -1, rotation: 0, valid: false };
         draw();
     });
+    
     tileList.append(card);
   });
+}
+
+function renderTilePreview(canvas, tileId, rotation) {
+  const ctx = canvas.getContext("2d");
+  const img = getTileImage(tileId);
+  if (!img) return;
+  
+  // Use 0 rotation for inventory previews to keep it tidy
+  const shape = LogicCore.getTransformedTile(tileId, 0);
+  const isSingleCell = shape.cells.length === 1;
+  
+  const baseSize = 20; // Slightly smaller for inventory
+  
+  // Inventory preview is always horizontal or 1x1
+  canvas.width = (isSingleCell ? 1 : 2) * baseSize;
+  canvas.height = baseSize;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  // No rotation here for inventory
+  
+  const drawW = baseSize * 2;
+  const drawH = baseSize;
+  
+  if (isSingleCell) {
+    drawTintedImage(ctx, img, "#ffffff", -baseSize / 2, -baseSize / 2, drawW, drawH);
+  } else {
+    drawTintedImage(ctx, img, "#ffffff", -baseSize, -baseSize / 2, drawW, drawH);
+  }
+  ctx.restore();
 }
 
 function handleBoardClick(event) {
@@ -828,12 +858,12 @@ function handleBoardClick(event) {
   const cell = getCellFromEvent(event);
   if (!cell) return;
 
-  if (!state.selectedTileId) {
+  if (!state.selectedTileId || state.placements.has(state.selectedTileId)) {
     const clickedTile = findTileAtCell(cell.x, cell.y);
     if (clickedTile) {
       state.selectedTileId = clickedTile;
       state.rotation = state.placements.get(clickedTile)?.rotation ?? 0;
-      updateTileList();
+      updateTileList(); // Refresh to clear inventory highlights
       status(`Selected: ${clickedTile}.`);
       draw();
     }
@@ -854,12 +884,23 @@ function handleCheck() {
     state.tileTint = theme.tileSuccess;
     flashBoard("success");
     status(result.message || "Correct.");
+    
+    // Confetti!
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#34d399', '#6ee7b7', '#ffffff']
+      });
+    }
+
     const nextChallenge = getNextChallenge();
     if (nextChallenge) {
       setTimeout(() => {
         setChallenge(nextChallenge);
         hideOverlay();
-      }, 1500); // Wait longer for win sound
+      }, 2000); // 2 seconds delay to enjoy the confetti
     } else {
       showOverlay("Correct!", "You solved all challenges.", "Finish");
     }
@@ -1334,12 +1375,16 @@ function setTileDragImage(event, tileId, rotation) {
   const isSingleCell = shape.cells.length === 1;
   const isVertical = rotation % 180 !== 0;
   
+  // Use a smaller scale for the drag image so it doesn't obscure everything
+  const dragScale = 0.8;
+  const size = cellSize * dragScale;
+  
   if (isSingleCell) {
-    canvas.width = cellSize;
-    canvas.height = cellSize;
+    canvas.width = size;
+    canvas.height = size;
   } else {
-    canvas.width = (isVertical ? 1 : 2) * cellSize;
-    canvas.height = (isVertical ? 2 : 1) * cellSize;
+    canvas.width = (isVertical ? 1 : 2) * size;
+    canvas.height = (isVertical ? 2 : 1) * size;
   }
 
   const ctx = canvas.getContext("2d");
@@ -1348,10 +1393,13 @@ function setTileDragImage(event, tileId, rotation) {
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((rotation * Math.PI) / 180);
     
+    const drawW = size * 2;
+    const drawH = size;
+    
     if (isSingleCell) {
-      drawTintedImage(ctx, img, "#ffffff", -cellSize / 2, -cellSize / 2, cellSize * 2, cellSize);
+      drawTintedImage(ctx, img, "#ffffff", -size / 2, -size / 2, drawW, drawH);
     } else {
-      drawTintedImage(ctx, img, "#ffffff", -cellSize, -cellSize / 2, cellSize * 2, cellSize);
+      drawTintedImage(ctx, img, "#ffffff", -size, -size / 2, drawW, drawH);
     }
   }
   event.dataTransfer.setDragImage(canvas, canvas.width / 2, canvas.height / 2);

@@ -7,8 +7,8 @@ Hier werden die nächsten Schritte und Verbesserungen für das Projekt festgehal
 - [x] **Floating Toolbar:** Interaktive Steuerung direkt über dem Spielfeld.
 - [x] **Drag-out to Remove:** Intuitive Entfernung von Steinen durch Ziehen vom Board.
 - [x] **Debug-Tools:** Visualisierung von Pfad-Graphen (Taste 'D') und Auto-Solve ('S').
-- [ ] **Erfolgs-Overlay:** Ein visuell ansprechendes UI-Element, das nach dem Lösen erscheint (statt sofortigem Sprung).
-- [ ] **Verbesserte Tile-Vorschau:** Die Vorschau-Grafiken in der Liste sollen exakt der Form (1x1 vs 1x2) entsprechen.
+- [x] **Verbesserte Tile-Vorschau:** Kacheln verschwinden aus der Liste, wenn sie platziert sind; statische, saubere Vorschau im Vorrat.
+- [x] **Success Celebration:** Konfetti-Effekt (via canvas-confetti) beim Lösen eines Levels.
 
 ## Priorität: Content & Hilfe
 - [x] **Hint-System Vervollständigung:** Zuverlässige Hints für alle 43 Level.
