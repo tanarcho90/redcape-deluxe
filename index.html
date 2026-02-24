@@ -104,9 +104,9 @@
     </style>
   </head>
   <body class="hero-pattern h-screen overflow-hidden bg-slate-950 text-slate-100">
-    <div class="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-5 py-4">
-      <main class="grid flex-1 overflow-hidden items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
-        <section class="flex flex-col h-full max-h-full space-y-5 rounded-3xl bg-slate-900/60 p-5 shadow-xl shadow-slate-950/30 overflow-hidden">
+    <div class="mx-auto flex max-lg:h-full w-full max-w-7xl flex-col gap-4 px-5 py-4">
+      <main class="grid max-lg:flex-1 overflow-hidden items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <section class="flex flex-col max-lg:h-full max-lg:max-h-full space-y-5 rounded-3xl bg-slate-900/60 p-5 shadow-xl shadow-slate-950/30 overflow-hidden">
           <div class="flex-shrink-0 space-y-3">
             <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Logic Trail Edition</p>
             <h1 class="text-3xl font-semibold text-slate-100">Redcape Deluxe</h1>
@@ -179,8 +179,8 @@
           </div>
         </section>
 
-        <section class="flex h-full min-h-0 flex-col rounded-3xl bg-slate-900/60 p-4 shadow-xl shadow-slate-950/30 overflow-hidden">
-          <div class="game-frame board-surface relative flex h-full flex-1 items-center justify-center overflow-hidden rounded-2xl bg-slate-950/70">
+        <section class="flex max-lg:h-full min-h-0 flex-col rounded-3xl bg-slate-900/60 p-4 shadow-xl shadow-slate-950/30 overflow-hidden">
+          <div class="game-frame board-surface relative flex max-lg:h-full flex-1 items-center justify-center overflow-hidden rounded-2xl bg-slate-950/70">
             <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
             
             <!-- Absolute Overlay Toolbar -->
