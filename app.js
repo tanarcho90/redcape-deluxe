@@ -9,6 +9,7 @@ const rotateBtn = document.getElementById("rotateBtn");
 const removeBtn = document.getElementById("removeBtn");
 const statusText = document.getElementById("statusText");
 const modeLabel = document.getElementById("modeLabel");
+const difficultyBadge = document.getElementById("difficultyBadge");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
@@ -759,7 +760,8 @@ function populateChallengeSelect() {
   state.challenges.forEach((challenge, index) => {
     const option = document.createElement("option");
     option.value = challenge.id;
-    option.textContent = `${challenge.id} – ${challenge.difficulty}`;
+    // Show only the ID since difficulty is already part of it (e.g., "Starter 4" instead of "Starter 4 – Starter")
+    option.textContent = challenge.id;
     if (index === 0) option.selected = true;
     challengeSelect.append(option);
   });
@@ -775,6 +777,7 @@ function setChallenge(challenge) {
   state.rotation = 0;
   challengeSelect.value = challenge.id;
   modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "With Wolf" : "Without Wolf";
+  if (difficultyBadge) difficultyBadge.textContent = challenge.difficulty;
   updateTileList();
   status("Challenge loaded.");
   showOverlay("Ready?", "Select tiles and place them.", "Start");

@@ -112,9 +112,12 @@
             <h1 class="text-3xl font-semibold text-slate-100">Redcape Deluxe</h1>
           </div>
           
-          <div class="flex-1 overflow-y-auto space-y-5 pr-2 custom-scrollbar">
+          <div class="flex-1 space-y-5 pr-2">
             <div class="space-y-2">
-              <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
+              <div class="flex items-center justify-between">
+                <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
+                <span id="difficultyBadge" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
+              </div>
               <select
                 id="challengeSelect"
                 class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
