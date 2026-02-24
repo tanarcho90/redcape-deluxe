@@ -21,3 +21,7 @@
 - **Hint System:** Backtracking solver finds the solution and places one missing/correct tile.
 - **Check:** Validates the entire board including path connectivity and Wolf rules.
 - **Drag & Drop:** Supports snapping to the nearest valid grid position.
+- **Drag-out:** Dragging a tile off the board removes it instantly.
+- **Debug Mode (D):** Visualizes the internal path graph (nodes and edges) for debugging.
+- **Auto-Solve (S):** Triggers the solver to automatically complete the level.
+- **Skip Level (N):** Immediately skips to the next challenge in the sequence.
