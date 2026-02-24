@@ -269,6 +269,7 @@ const state = {
   placements: new Map(),
   selectedTileId: null,
   rotation: 0,
+  inventoryRotations: new Map(), // Store rotation for each tile in inventory
   lastResultOk: false,
   tileTint: theme.path,
   dragState: {
@@ -357,6 +358,11 @@ function attachEvents() {
     removeBtn.addEventListener("click", () => {
       if (!state.selectedTileId) return;
       if (state.placements.has(state.selectedTileId)) {
+        // Save rotation to inventory before removing
+        const placement = state.placements.get(state.selectedTileId);
+        if (placement) {
+          state.inventoryRotations.set(state.selectedTileId, placement.rotation);
+        }
         state.placements.delete(state.selectedTileId);
         updateTileList();
         status("Tile removed.");
@@ -696,6 +702,11 @@ function handleDragEnd(e) {
 
     // Dragged out of board → remove tile
     if (isOutside) {
+        // Save rotation to inventory before removing
+        const placement = state.placements.get(tileId);
+        if (placement) {
+          state.inventoryRotations.set(tileId, placement.rotation);
+        }
         state.placements.delete(tileId);
         updateTileList();
         status("Tile removed.");
@@ -801,35 +812,51 @@ function updateTileList() {
     card.className = "flex h-20 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/40 p-2 transition hover:bg-slate-800 hover:scale-105 active:scale-95";
     if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
     
+    // Get rotation for this tile (default 0)
+    const tileRotation = state.inventoryRotations.get(tileId) || 0;
+    
     const preview = document.createElement("canvas");
-    // Always 0 rotation in inventory for clean look
-    renderTilePreview(preview, tileId, 0);
+    renderTilePreview(preview, tileId, tileRotation);
     
     card.append(preview);
     
     card.addEventListener("click", () => {
       state.selectedTileId = tileId;
-      state.rotation = 0; // Reset rotation for new selection from inventory
+      state.rotation = tileRotation; // Use stored rotation
       updateTileList();
       status(`Selected: ${tileId}. Drag to board.`);
       draw();
     });
     
+    // Right-click to rotate in inventory
+    card.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      const currentRot = state.inventoryRotations.get(tileId) || 0;
+      const newRot = (currentRot + 90) % 360;
+      state.inventoryRotations.set(tileId, newRot);
+      if (state.selectedTileId === tileId) {
+        state.rotation = newRot;
+      }
+      AudioManager.playSFX("rotate");
+      updateTileList();
+      status(`Rotated ${tileId} to ${newRot}°.`);
+    });
+    
     card.addEventListener("dragstart", (event) => {
       event.dataTransfer?.setData("text/plain", tileId);
       state.selectedTileId = tileId;
-      state.rotation = 0;
+      state.rotation = tileRotation; // Use stored rotation
       
       state.dragState = {
         active: true,
         tileId: tileId,
         x: -1, 
         y: -1,
-        rotation: 0,
+        rotation: tileRotation, // Use stored rotation
         valid: false
       };
 
-      setTileDragImage(event, tileId, 0);
+      setTileDragImage(event, tileId, tileRotation);
     });
 
     card.addEventListener("dragend", () => {
