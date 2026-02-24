@@ -5,8 +5,8 @@ const path = require("path");
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, "data/challenges.json"), "utf8"));
 const challenge = data.challenges.find(c => c.id === "Starter 1 (Wolf)");
 
-const tileId1 = "Weiss";
-const tileId2 = "Rosa";
+const tileId1 = "White";
+const tileId2 = "Pink";
 
 // Let's try to find ANY placement of these 2 tiles that connects both
 const findAny = () => {

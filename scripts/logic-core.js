@@ -6,11 +6,11 @@
     },
 
     tileDefs: {
-      Blau:  { id: "Blau",  endpoints: [{ cell: "A", edge: "W" }, { cell: "B", edge: "E" }] }, // Straight, 2 cells
-      Rosa:  { id: "Rosa",  endpoints: [{ cell: "A", edge: "S" }, { cell: "B", edge: "N" }] }, // Straight, 2 cells
-      Weiss: { id: "Weiss", endpoints: [{ cell: "A", edge: "W" }, { cell: "A", edge: "N" }] }, // Curve, 1 cell
-      Lila:  { id: "Lila",  endpoints: [{ cell: "A", edge: "W" }, { cell: "B", edge: "N" }] }, // Curve, 2 cells
-      Gelb:  { id: "Gelb",  endpoints: [{ cell: "A", edge: "S" }, { cell: "B", edge: "S" }] }, // U-Turn, 2 cells
+      Blue:   { id: "Blue",   endpoints: [{ cell: "A", edge: "W" }, { cell: "B", edge: "E" }] }, // Straight, 2 cells
+      Pink:   { id: "Pink",   endpoints: [{ cell: "A", edge: "S" }, { cell: "B", edge: "N" }] }, // Straight, 2 cells
+      White:  { id: "White",  endpoints: [{ cell: "A", edge: "W" }, { cell: "A", edge: "N" }] }, // Curve, 1 cell
+      Purple: { id: "Purple", endpoints: [{ cell: "A", edge: "W" }, { cell: "B", edge: "N" }] }, // Curve, 2 cells
+      Yellow: { id: "Yellow", endpoints: [{ cell: "A", edge: "S" }, { cell: "B", edge: "S" }] }, // U-Turn, 2 cells
     },
 
     getTransformedTile(tileId, rotation) {

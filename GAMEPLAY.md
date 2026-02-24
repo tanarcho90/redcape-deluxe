@@ -9,11 +9,11 @@
 ## Rules
 
 - Grid: 4x4
-- Tiles: 1x2 and 1x1 (Weiss) pieces, cannot overlap or cover trees/starts
+- Tiles: 1x2 and 1x1 (White) pieces, cannot overlap or cover trees/starts
 - House: Occupies 1 grid cell but is accessible from all 4 sides (N, E, S, W)
 - WithoutWolf: Red Riding Hood must reach any side of the house. No gaps, crossings, or extra tiles allowed.
 - WithWolf: Two separate paths required. Both must reach the house.
-- Path Length: Calculated by tile segments (1 for 1-cell Weiss tile, 2 for all 2-cell tiles).
+- Path Length: Calculated by tile segments (1 for 1-cell White tile, 2 for all 2-cell tiles).
 - Wolf Rule: The Wolf's path must be strictly shorter (weighted length) than Red Riding Hood's path.
 
 ## Tools

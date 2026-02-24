@@ -1,22 +1,22 @@
 # Roadmap - Redcape Deluxe
 
-Hier werden die nächsten Schritte und Verbesserungen für das Projekt festgehalten.
+This document tracks the next steps and improvements for the project.
 
-## Priorität: UX & Gameplay
-- [x] **Single-Screen Layout:** App funktioniert ohne Scrollen auf einer Seite.
-- [x] **Floating Toolbar:** Interaktive Steuerung direkt über dem Spielfeld.
-- [x] **Drag-out to Remove:** Intuitive Entfernung von Steinen durch Ziehen vom Board.
-- [x] **Debug-Tools:** Visualisierung von Pfad-Graphen (Taste 'D') und Auto-Solve ('S').
-- [x] **Verbesserte Tile-Vorschau:** Kacheln verschwinden aus der Liste, wenn sie platziert sind; statische, saubere Vorschau im Vorrat.
-- [x] **Success Celebration:** Konfetti-Effekt (via canvas-confetti) beim Lösen eines Levels.
-- [x] **Smart Rotation:** "Fly-to-fit" Logik für Tile-Rotationen.
-- [ ] **Animation Polish:** Weiche Gleit-Animationen für das Einrasten und Rotieren von Steinen.
+## Priority: UX & Gameplay
+- [x] **Single-Screen Layout:** App works without scrolling on a single page.
+- [x] **Floating Toolbar:** Interactive controls directly above the game board.
+- [x] **Drag-out to Remove:** Intuitive removal of tiles by dragging them off the board.
+- [x] **Debug Tools:** Visualization of path graphs (key 'D') and Auto-Solve ('S').
+- [x] **Improved Tile Preview:** Tiles disappear from the list when placed; static, clean preview in inventory.
+- [x] **Success Celebration:** Confetti effect (via canvas-confetti) when solving a level.
+- [x] **Smart Rotation:** "Fly-to-fit" logic for tile rotations.
+- [ ] **Animation Polish:** Smooth glide animations for snapping and rotating tiles.
 
-## Priorität: Content & Hilfe
-- [x] **Hint-System Vervollständigung:** Zuverlässige Hints für alle 43 Level.
-- [x] **Audio-System:** Hintergrundmusik-Playlist und SFX integriert.
-- [ ] **Final Level Polish:** Alle 43 Level auf Konsistenz und Balance prüfen.
+## Priority: Content & Help
+- [x] **Hint System Completion:** Reliable hints for all 43 levels.
+- [x] **Audio System:** Background music playlist and SFX integrated.
+- [ ] **Final Level Polish:** Check all 43 levels for consistency and balance.
 
-## Priorität: Mobile & Erreichbarkeit
-- [ ] **Touch Support:** Implementierung von Touch-Events für Mobile/Tablet Drag & Drop.
-- [ ] **Mobile Layout-Feinschliff:** Letzte Anpassungen für extrem schmale Bildschirme.
+## Priority: Mobile & Accessibility
+- [ ] **Touch Support:** Implementation of touch events for mobile/tablet drag & drop.
+- [ ] **Mobile Layout Refinement:** Final adjustments for extremely narrow screens.

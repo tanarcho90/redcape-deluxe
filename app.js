@@ -247,11 +247,11 @@ const iconPaths = {
 };
 
 const tileImagePaths = {
-  Blau: "assets/tiles/blau.svg",
-  Rosa: "assets/tiles/rosa.svg",
-  Weiss: "assets/tiles/weiss.svg",
-  Lila: "assets/tiles/lila.svg",
-  Gelb: "assets/tiles/gelb.svg",
+  Blue: "assets/tiles/blau.svg",
+  Pink: "assets/tiles/rosa.svg",
+  White: "assets/tiles/weiss.svg",
+  Purple: "assets/tiles/lila.svg",
+  Yellow: "assets/tiles/gelb.svg",
 };
 
 const iconCache = {};

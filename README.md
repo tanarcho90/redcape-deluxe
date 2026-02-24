@@ -54,8 +54,8 @@ Web implementation of the Red Riding Hood logic game. Place 1x2 path tiles on a 
 - **Mobile Responsive Refinement:** Fine-tuning sidebar and board scaling for narrow portrait viewports.
 - **Final Level Polish:** Consistency check across all 43 levels.
 
-## Entwicklungsprozess
+## Development Process
 
-- **Step-by-Step:** Aufgaben werden kleinteilig und nacheinander abgearbeitet.
-- **Rücksprache:** Nach jedem signifikanten Schritt oder bei Unklarheiten wird kurz innegehalten und das weitere Vorgehen abgestimmt.
-- **Keine Alleingänge:** Komplexe Refactorings oder massive Änderungen an den Spieldaten erfolgen nur nach expliziter Bestätigung.
+- **Step-by-Step:** Tasks are broken down into small pieces and completed sequentially.
+- **Communication:** After each significant step or when uncertainties arise, we pause briefly and coordinate the next approach.
+- **No Solo Actions:** Complex refactorings or massive changes to game data are only done after explicit confirmation.

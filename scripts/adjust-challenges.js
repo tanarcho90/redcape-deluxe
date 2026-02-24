@@ -10,31 +10,31 @@ const data = JSON.parse(raw);
 const boardConfig = { cols: 4, rows: 4 };
 
 const tileDefs = {
-  Blau: {
+  Blue: {
     endpoints: [
       { cell: "A", edge: "W" },
       { cell: "B", edge: "E" },
     ],
   },
-  Rosa: {
+  Pink: {
     endpoints: [
       { cell: "A", edge: "S" },
       { cell: "B", edge: "N" },
     ],
   },
-  Weiss: {
+  White: {
     endpoints: [
       { cell: "A", edge: "W" },
       { cell: "A", edge: "N" },
     ],
   },
-  Lila: {
+  Purple: {
     endpoints: [
       { cell: "A", edge: "W" },
       { cell: "B", edge: "N" },
     ],
   },
-  Gelb: {
+  Yellow: {
     endpoints: [
       { cell: "A", edge: "S" },
       { cell: "B", edge: "S" },

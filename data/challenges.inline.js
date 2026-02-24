@@ -32,7 +32,7 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau"
+        "Blue"
       ],
       "requiredTileCount": 1
     },
@@ -68,7 +68,7 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss"
+        "White"
       ],
       "requiredTileCount": 1
     },
@@ -100,7 +100,7 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Lila"
+        "Purple"
       ],
       "requiredTileCount": 1
     },
@@ -136,7 +136,7 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa"
+        "Pink"
       ],
       "requiredTileCount": 1
     },
@@ -172,8 +172,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Lila"
+        "Blue",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -209,8 +209,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Weiss"
+        "Pink",
+        "White"
       ],
       "requiredTileCount": 2
     },
@@ -246,8 +246,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Lila"
+        "Pink",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -283,8 +283,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Lila"
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -320,8 +320,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Weiss"
+        "Blue",
+        "White"
       ],
       "requiredTileCount": 2
     },
@@ -357,8 +357,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Gelb"
+        "Blue",
+        "Yellow"
       ],
       "requiredTileCount": 2
     },
@@ -394,9 +394,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Weiss",
-        "Lila"
+        "Blue",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 3
     },
@@ -432,8 +432,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Lila"
+        "Pink",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -469,8 +469,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Gelb"
+        "White",
+        "Yellow"
       ],
       "requiredTileCount": 2
     },
@@ -506,9 +506,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Weiss",
-        "Lila"
+        "Pink",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 3
     },
@@ -540,9 +540,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -578,11 +578,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -614,9 +614,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Weiss",
-        "Lila"
+        "Pink",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 3
     },
@@ -652,9 +652,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Lila",
-        "Gelb"
+        "Pink",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -690,10 +690,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 4
     },
@@ -725,9 +725,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -759,10 +759,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Yellow"
       ],
       "requiredTileCount": 4
     },
@@ -798,10 +798,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 4
     },
@@ -841,8 +841,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Rosa"
+        "White",
+        "Pink"
       ],
       "requiredTileCount": 2
     },
@@ -882,8 +882,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Lila"
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -923,8 +923,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Lila"
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -964,8 +964,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Lila"
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 2
     },
@@ -1005,8 +1005,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Weiss"
+        "Blue",
+        "White"
       ],
       "requiredTileCount": 2
     },
@@ -1046,8 +1046,8 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Weiss",
-        "Rosa"
+        "White",
+        "Pink"
       ],
       "requiredTileCount": 2
     },
@@ -1091,9 +1091,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Weiss",
-        "Lila"
+        "Blue",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 3
     },
@@ -1133,9 +1133,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -1175,9 +1175,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss"
+        "Blue",
+        "Pink",
+        "White"
       ],
       "requiredTileCount": 3
     },
@@ -1217,9 +1217,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Rosa",
-        "Weiss",
-        "Gelb"
+        "Pink",
+        "White",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -1259,9 +1259,9 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 3
     },
@@ -1297,10 +1297,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Weiss",
-        "Rosa",
-        "Lila"
+        "Blue",
+        "White",
+        "Pink",
+        "Purple"
       ],
       "requiredTileCount": 4
     },
@@ -1340,10 +1340,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Gelb",
-        "Blau",
-        "Weiss",
-        "Lila"
+        "Yellow",
+        "Blue",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 4
     },
@@ -1379,11 +1379,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -1423,10 +1423,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Gelb",
-        "Blau",
-        "Weiss",
-        "Rosa"
+        "Yellow",
+        "Blue",
+        "White",
+        "Pink"
       ],
       "requiredTileCount": 4
     },
@@ -1458,11 +1458,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -1498,10 +1498,10 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple"
       ],
       "requiredTileCount": 4
     },
@@ -1541,11 +1541,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -1581,11 +1581,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -1621,11 +1621,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     },
@@ -1665,11 +1665,11 @@ window.__CHALLENGES__ = {
         }
       },
       "availableTiles": [
-        "Blau",
-        "Rosa",
-        "Weiss",
-        "Lila",
-        "Gelb"
+        "Blue",
+        "Pink",
+        "White",
+        "Purple",
+        "Yellow"
       ],
       "requiredTileCount": 5
     }

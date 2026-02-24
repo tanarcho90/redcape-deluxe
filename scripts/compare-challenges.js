@@ -8,11 +8,11 @@ const jsonData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 const pySource = fs.readFileSync(pyPath, "utf8");
 
 const colorMap = {
-  blue: "Blau",
-  pink: "Rosa",
-  white: "Weiss",
-  purple: "Lila",
-  yellow: "Gelb",
+  blue: "Blue",
+  pink: "Pink",
+  white: "White",
+  purple: "Purple",
+  yellow: "Yellow",
 };
 const allColors = ["blue", "pink", "white", "purple", "yellow"];
 
