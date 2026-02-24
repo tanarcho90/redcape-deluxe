@@ -522,36 +522,43 @@ function handleRightClick(e) {
     const p = state.placements.get(tileId);
     const newRot = (p.rotation + 90) % 360;
     
-    // Try to rotate in place
-    // We need to check if the new rotation fits at the current anchor
-    // If not, maybe try to adjust anchor? For now, strict in-place rotation.
-    
-    const shape = LogicCore.getTransformedTile(tileId, newRot);
-    const occupied = shape.cells.map((c) => ({
-      x: p.anchorX + c.x,
-      y: p.anchorY + c.y,
-    }));
-
-    // Temporarily remove self from placements to check collision
+    // Temporarily remove self from placements to check collision properly
+    const originalPlacement = { ...p };
     state.placements.delete(tileId);
     
-    let valid = false;
-    if (isWithinBoard(occupied) && !isBlocked(occupied) && !isOverlapping(tileId, occupied)) {
-       valid = true;
-    }
-    
-    if (valid) {
+    // 1. Try to rotate in place
+    if (canPlaceTile(tileId, p.anchorX, p.anchorY, newRot)) {
       state.placements.set(tileId, { ...p, rotation: newRot });
       AudioManager.playSFX("rotate");
       status("Rotated.");
-    } else {
-      // Put it back
-      state.placements.set(tileId, p);
-      
-      // Optional: Try to find a valid anchor nearby for this rotation?
-      // For now, just fail silently or shake?
-      status("Cannot rotate here.");
-      AudioManager.playSFX("false");
+    } 
+    // 2. If it doesn't fit, find nearest valid spot
+    else {
+      // Calculate visual center of current placement to find "nearest" accurately
+      const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+      const xs = shape.cells.map(c => p.anchorX + c.x);
+      const ys = shape.cells.map(c => p.anchorY + c.y);
+      const visualCenter = { 
+        x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
+        y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
+      };
+
+      const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+      if (nearest) {
+        state.placements.set(tileId, { 
+          tileId, 
+          rotation: newRot, 
+          anchorX: nearest.x, 
+          anchorY: nearest.y 
+        });
+        AudioManager.playSFX("rotate");
+        status("Rotated and moved to fit.");
+      } else {
+        // 3. Nowhere to go, put it back
+        state.placements.set(tileId, originalPlacement);
+        status("Cannot rotate: No space found.");
+        AudioManager.playSFX("false");
+      }
     }
     draw();
   }
@@ -982,17 +989,53 @@ function handleHint() {
 function updateOrientation(rotation) {
   const tileId = state.selectedTileId;
   if (!tileId) return;
-  const placement = state.placements.get(tileId);
-  if (!placement) {
+  const p = state.placements.get(tileId);
+  
+  // If not placed yet, just update the global rotation state
+  if (!p) {
     state.rotation = rotation;
     AudioManager.playSFX("rotate");
     updateTileList();
     draw();
     return;
   }
+
+  // If already placed, try to rotate in place or find next spot
   state.rotation = rotation;
-  AudioManager.playSFX("rotate");
-  placeTile(tileId, placement.anchorX, placement.anchorY, rotation, true);
+  const originalPlacement = { ...p };
+  state.placements.delete(tileId);
+
+  if (canPlaceTile(tileId, p.anchorX, p.anchorY, rotation)) {
+    state.placements.set(tileId, { ...p, rotation });
+    AudioManager.playSFX("rotate");
+    status("Rotated.");
+  } else {
+    const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+    const xs = shape.cells.map(c => p.anchorX + c.x);
+    const ys = shape.cells.map(c => p.anchorY + c.y);
+    const visualCenter = { 
+      x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
+      y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
+    };
+
+    const nearest = findNearestValidPlacement(tileId, rotation, visualCenter);
+    if (nearest) {
+      state.placements.set(tileId, { 
+        tileId, 
+        rotation, 
+        anchorX: nearest.x, 
+        anchorY: nearest.y 
+      });
+      AudioManager.playSFX("rotate");
+      status("Rotated and moved to fit.");
+    } else {
+      state.placements.set(tileId, originalPlacement);
+      status("No space found for rotation.");
+      AudioManager.playSFX("false");
+    }
+  }
+  updateTileList();
+  draw();
 }
 
 function placeTile(tileId, anchorX, anchorY, rotation) {
