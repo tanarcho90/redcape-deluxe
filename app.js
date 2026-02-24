@@ -1355,8 +1355,8 @@ function drawTiles() {
     
     if (DEBUG_ENDPOINTS) {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
-      ctx.fillStyle = "#3b82f6"; // Blue instead of green
-      const radius = Math.max(1.5, Math.round(cellSize * 0.05)); // Smaller radius
+      ctx.fillStyle = "#94a3b8"; // Light gray (slate-400)
+      const radius = Math.max(1, Math.round(cellSize * 0.03)); // Smaller radius
       shape.endpoints.forEach((ep) => {
         const x = (p.anchorX + ep.point.x) * cellSize;
         const y = (p.anchorY + ep.point.y) * cellSize;
