@@ -227,7 +227,21 @@
 
             <div id="overlay" class="overlay absolute inset-0 grid place-items-center bg-slate-950/70 z-20">
               <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-xl shadow-slate-950/60">
-                <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
+                <div class="flex items-center justify-between mb-2">
+                  <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
+                  <button
+                    id="helpBtn"
+                    class="flex h-6 w-6 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-400 transition hover:bg-slate-700 hover:text-slate-200 hover:border-slate-500"
+                    type="button"
+                    title="Show help"
+                  >
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </button>
+                </div>
                 <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
                 <div class="mt-4 rounded-xl border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-left">
                   <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Controls</p>
@@ -247,6 +261,66 @@
                   </svg>
                   Play now
                 </button>
+              </div>
+            </div>
+
+            <!-- Help Modal -->
+            <div id="helpOverlay" class="overlay hidden absolute inset-0 grid place-items-center bg-slate-950/80 z-30">
+              <div class="max-w-lg rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-xl shadow-slate-950/60 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
+                  <button
+                    id="closeHelpBtn"
+                    class="flex h-7 w-7 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-400 transition hover:bg-slate-700 hover:text-slate-200"
+                    type="button"
+                    title="Close help"
+                  >
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <div class="space-y-5 text-sm text-slate-300">
+                  <div>
+                    <h3 class="text-base font-semibold text-slate-100 mb-2">Goal</h3>
+                    <p class="text-slate-400">Place path tiles on the 4×4 grid to create a valid route from Red Riding Hood's starting position to the house.</p>
+                  </div>
+
+                  <div>
+                    <h3 class="text-base font-semibold text-slate-100 mb-2">Rules</h3>
+                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
+                      <li><strong class="text-slate-300">Grid:</strong> 4×4 cells</li>
+                      <li><strong class="text-slate-300">Tiles:</strong> 1×2 and 1×1 (White) pieces. Cannot overlap or cover trees/starting positions.</li>
+                      <li><strong class="text-slate-300">House:</strong> Occupies 1 cell but accessible from all 4 sides (N, E, S, W).</li>
+                      <li><strong class="text-slate-300">Without Wolf:</strong> Red Riding Hood must reach any side of the house. No gaps, crossings, or extra tiles allowed.</li>
+                      <li><strong class="text-slate-300">With Wolf:</strong> Two separate paths required. Both must reach the house.</li>
+                      <li><strong class="text-slate-300">Path Length:</strong> Calculated by tile segments (1 for 1-cell White tile, 2 for all 2-cell tiles).</li>
+                      <li><strong class="text-slate-300">Wolf Rule:</strong> The Wolf's path must be strictly shorter than Red Riding Hood's path.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 class="text-base font-semibold text-slate-100 mb-2">Controls</h3>
+                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
+                      <li><strong class="text-slate-300">Move / Place:</strong> Left click on board or drag tile from inventory</li>
+                      <li><strong class="text-slate-300">Rotate:</strong> Right click on tile (on board or in inventory)</li>
+                      <li><strong class="text-slate-300">Remove:</strong> Drag tile off the board</li>
+                      <li><strong class="text-slate-300">Hint:</strong> Click hint button to place one correct tile</li>
+                      <li><strong class="text-slate-300">Check:</strong> Validate your solution</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 class="text-base font-semibold text-slate-100 mb-2">Tips</h3>
+                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
+                      <li>Smart rotation automatically finds the nearest valid placement if a rotation causes collision</li>
+                      <li>The inventory only shows tiles not currently on the board</li>
+                      <li>Success triggers confetti and auto-advances to the next challenge after 2 seconds</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

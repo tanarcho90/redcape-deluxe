@@ -14,6 +14,9 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
+const helpBtn = document.getElementById("helpBtn");
+const helpOverlay = document.getElementById("helpOverlay");
+const closeHelpBtn = document.getElementById("closeHelpBtn");
 const gameFrame = document.querySelector(".game-frame");
 const playPauseBtn = document.getElementById("playPauseBtn");
 const skipBtn = document.getElementById("skipBtn");
@@ -375,6 +378,27 @@ function attachEvents() {
     overlayBtn.addEventListener("click", () => {
       hideOverlay();
       AudioManager.startIfStopped();
+    });
+  }
+
+  if (helpBtn) {
+    helpBtn.addEventListener("click", () => {
+      showHelp();
+    });
+  }
+
+  if (closeHelpBtn) {
+    closeHelpBtn.addEventListener("click", () => {
+      hideHelp();
+    });
+  }
+
+  // Close help when clicking outside
+  if (helpOverlay) {
+    helpOverlay.addEventListener("click", (e) => {
+      if (e.target === helpOverlay) {
+        hideHelp();
+      }
     });
   }
 
@@ -1497,6 +1521,12 @@ function showOverlay(t, txt, btn) {
   overlay.classList.remove("hidden");
 }
 function hideOverlay() { overlay.classList.add("hidden"); }
+function showHelp() {
+  if (helpOverlay) helpOverlay.classList.remove("hidden");
+}
+function hideHelp() {
+  if (helpOverlay) helpOverlay.classList.add("hidden");
+}
 function getNextChallenge() {
   const i = state.challenges.findIndex(c => c.id === state.current.id);
   return state.challenges[i + 1];
