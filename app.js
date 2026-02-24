@@ -669,12 +669,22 @@ function handleDragMove(e) {
 function handleDragEnd(e) {
     if (!state.dragState.active || !state.dragState.isFromBoard) return;
 
-    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY } = state.dragState;
-    
+    const { tileId, x, y, valid, rotation, originalX, originalY } = state.dragState;
+
+    // Use release position for "outside" check (more reliable than last mousemove)
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const releaseX = (e.clientX - rect.left) * scaleX;
+    const releaseY = (e.clientY - rect.top) * scaleY;
+    const margin = 40;
+    const isOutside = releaseX < -margin || releaseX > canvas.width + margin ||
+                      releaseY < -margin || releaseY > canvas.height + margin;
+
     resetDragState();
 
-    if (valid && x !== -1) {
-        // Place at new spot
+    if (valid && x !== -1 && !isOutside) {
+        // Place at new spot (only if still over canvas)
         state.placements.delete(tileId);
         const result = placeTile(tileId, x, y, rotation);
         if (result.ok) {
@@ -683,8 +693,7 @@ function handleDragEnd(e) {
         }
     }
 
-    // Check if dragged out to remove
-    const isOutside = pixelX < -20 || pixelX > canvas.width + 20 || pixelY < -20 || pixelY > canvas.height + 20;
+    // Dragged out of board → remove tile
     if (isOutside) {
         state.placements.delete(tileId);
         updateTileList();
