@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redcape Deluxe – Logic Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .overlay {
+        opacity: 1;
+        transition: opacity 200ms ease;
+      }
+
+      .overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .board-shake {
+        animation: board-shake 300ms ease;
+      }
+
+      .board-glow-success {
+        animation: board-glow-success 600ms ease;
+      }
+
+      .board-glow-error {
+        animation: board-glow-error 600ms ease;
+      }
+
+      @keyframes board-shake {
+        0% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-6px);
+        }
+        40% {
+          transform: translateX(6px);
+        }
+        60% {
+          transform: translateX(-4px);
+        }
+        80% {
+          transform: translateX(4px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes board-glow-success {
+        0% {
+          box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+        }
+        30% {
+          box-shadow: 0 0 24px rgba(16, 185, 129, 0.45);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+        }
+      }
+
+      @keyframes board-glow-error {
+        0% {
+          box-shadow: 0 0 0 rgba(248, 113, 113, 0);
+        }
+        30% {
+          box-shadow: 0 0 24px rgba(248, 113, 113, 0.45);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(248, 113, 113, 0);
+        }
+      }
+
+      .hero-pattern {
+        background-color: #0b1120;
+        background-image: radial-gradient(1200px 800px at 15% 10%, rgba(14, 116, 144, 0.18), transparent 60%),
+          radial-gradient(900px 700px at 85% 25%, rgba(30, 64, 175, 0.18), transparent 55%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none' stroke='%2394a3b8' stroke-width='1' stroke-opacity='0.08'%3E%3Cpath d='M-12 12L12 -12M0 24L24 0M12 36L36 12M24 48L48 24M36 60L60 36M48 72L72 48M60 84L84 60'/%3E%3C/svg%3E");
+        background-size: auto, auto, 144px 144px;
+        background-attachment: fixed;
+      }
+
+      .board-surface {
+        background-image: radial-gradient(circle at top, rgba(148, 163, 184, 0.12), transparent 55%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64' fill='none' stroke='%23334155' stroke-width='1' stroke-opacity='0.35'%3E%3Cpath d='M0 16H64M0 32H64M0 48H64M16 0V64M32 0V64M48 0V64'/%3E%3C/svg%3E");
+        background-size: cover, 128px 128px;
+      }
+    </style>
+  </head>
+  <body class="hero-pattern h-screen bg-slate-950 text-slate-100">
+    <div class="mx-auto flex h-full w-full max-w-7xl flex-col gap-6 px-5 py-6">
+      <main class="grid flex-1 items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <section class="space-y-5 rounded-3xl bg-slate-900/60 p-5 shadow-xl shadow-slate-950/30">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Logic Trail Edition</p>
+            <h1 class="text-3xl font-semibold text-slate-100">Redcape Deluxe</h1>
+            <p class="text-sm text-slate-300">
+              Arrange the paths so Red Riding Hood (and the wolf) reach the house safely. No crossings, no gaps.
+            </p>
+          </div>
+          <div class="space-y-2">
+            <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
+            <select
+              id="challengeSelect"
+              class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
+            ></select>
+          </div>
+          <div class="space-y-2">
+            <h2 class="text-base font-semibold text-slate-100">Mode</h2>
+            <p id="modeLabel" class="inline-flex rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200">
+              Without Wolf
+            </p>
+          </div>
+          <div class="space-y-2">
+            <h2 class="text-base font-semibold text-slate-100">Controls</h2>
+            <div class="space-y-2 text-xs text-slate-400">
+               <div class="flex items-center justify-between">
+                 <span>Move / Place</span>
+                 <span class="font-bold text-slate-200">Left Mouse</span>
+               </div>
+               <div class="flex items-center justify-between">
+                 <span>Rotate</span>
+                 <span class="font-bold text-slate-200">Right Mouse</span>
+               </div>
+               <div class="flex items-center justify-between">
+                 <span>Remove</span>
+                 <span class="font-bold text-slate-200">Drag out</span>
+            </div>
+          <div class="space-y-2">
+            <h2 class="text-base font-semibold text-slate-100">Tiles</h2>
+            <div id="tileList" class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2"></div>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Music</h2>
+              <span id="trackInfo" class="text-[10px] text-slate-500 italic">Stopped</span>
+            </div>
+            <div class="flex gap-2">
+              <button
+                id="playPauseBtn"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
+                title="Play/Pause"
+              >
+                <svg id="playIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <svg id="pauseIcon" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+              </button>
+              <button
+                id="skipBtn"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
+                title="Next Track"
+              >
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+              </button>
+              <input 
+                id="volumeSlider" 
+                type="range" min="0" max="1" step="0.05" value="0.3"
+                class="h-1.5 w-full mt-3 cursor-pointer appearance-none rounded-lg bg-slate-800 accent-emerald-500"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="flex h-full flex-col rounded-3xl bg-slate-900/60 p-4 shadow-xl shadow-slate-950/30">
+          <div class="game-frame board-surface relative flex h-full flex-1 items-center justify-center overflow-hidden rounded-2xl bg-slate-950/70">
+            <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full"></canvas>
+            <div id="overlay" class="overlay absolute inset-0 grid place-items-center bg-slate-950/70">
+              <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-xl shadow-slate-950/60">
+                <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
+                <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
+                <button
+                  id="overlayBtn"
+                  class="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-slate-700"
+                  type="button"
+                >
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  Jetzt spielen
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Controls (Now correctly under the board) -->
+          <div class="mt-4 flex flex-col items-center gap-4">
+            <div id="statusContainer" class="flex items-center gap-2 rounded-full bg-slate-950/40 px-4 py-1.5 border border-slate-800/50">
+              <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              <p id="statusText" class="text-xs font-medium tracking-wide text-slate-400">Ready.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4">
+              <button
+                id="resetBtn"
+                class="group inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-6 py-3 text-sm font-bold text-rose-200 shadow-lg shadow-rose-950/20 transition hover:bg-rose-500/20 hover:scale-105 active:scale-95"
+                type="button"
+              >
+                <svg class="h-4 w-4 transition group-hover:rotate-[-45deg]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+                Reset
+              </button>
+              
+              <button
+                id="hintBtn"
+                class="group inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-8 py-3 text-sm font-bold text-amber-200 shadow-lg shadow-amber-950/20 transition hover:bg-amber-500/20 hover:scale-105 active:scale-95"
+                type="button"
+              >
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Hint
+              </button>
+              
+              <button
+                id="checkBtn"
+                class="group inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-10 py-3 text-sm font-bold text-emerald-100 shadow-xl shadow-emerald-950/30 transition hover:bg-emerald-500/30 hover:scale-105 active:scale-95"
+                type="button"
+              >
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Check
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+        <span>Project: redcape-deluxe</span>
+        <span>Engine: Puzzle-MVP</span>
+      </footer>
+    </div>
+    <script src="data/challenges.inline.js"></script>
+    <script src="scripts/logic-core.js"></script>
+    <script src="scripts/solver-engine.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
