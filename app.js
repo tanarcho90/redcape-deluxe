@@ -932,11 +932,14 @@ function getBoardMetrics() {
 function resizeCanvas() {
   const frame = document.querySelector(".game-frame");
   if (!frame) return;
-  const header = document.querySelector("header");
-  const footer = document.querySelector("footer");
-  const headerHeight = header ? header.getBoundingClientRect().height : 0;
-  const footerHeight = footer ? footer.getBoundingClientRect().height : 0;
-  const size = Math.max(320, Math.min(frame.clientWidth, window.innerHeight - headerHeight - footerHeight - 64));
+  
+  // Use the actual available space in the frame
+  const padding = 32; // Total padding around board
+  const maxWidth = frame.clientWidth - padding;
+  const maxHeight = frame.clientHeight - padding;
+  
+  const size = Math.floor(Math.min(maxWidth, maxHeight));
+  
   if (canvas.width !== size) {
     canvas.width = size;
     canvas.height = size;
