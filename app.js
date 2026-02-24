@@ -90,14 +90,137 @@ const AudioManager = {
     const sound = this[name + "Audio"];
     if (sound) {
       sound.currentTime = 0;
-      sound.volume = volumeSlider.value;
+      sound.volume = volumeSlider ? volumeSlider.value : 0.3;
       sound.play().catch(() => {});
     }
   },
 
   // Helper for first interaction
   startIfStopped() {
-    if (!this.isPlaying) this.togglePlay();
+    if (!this.isPlaying && playPauseBtn) this.togglePlay();
+  }
+};
+
+const DebugManager = {
+  active: false,
+  showNodes: false,
+  showEdges: false,
+  showTileIds: false,
+
+  init() {
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "d") {
+        this.toggle();
+      }
+      if (this.active && e.key.toLowerCase() === "s") {
+        this.solveCurrent();
+      }
+      if (this.active && e.key.toLowerCase() === "n") {
+        this.nextLevel();
+      }
+    });
+  },
+
+  toggle() {
+    this.active = !this.active;
+    this.showNodes = this.active;
+    this.showEdges = this.active;
+    this.showTileIds = this.active;
+    status(`Debug Mode: ${this.active ? "ON" : "OFF"}`);
+    draw();
+  },
+
+  solveCurrent() {
+    if (!state.current) return;
+    status("Solving...");
+    const solution = SolverEngine.solve(state.current);
+    if (solution) {
+      state.placements = solution;
+      updateTileList();
+      draw();
+      status("Solved!");
+    } else {
+      status("No solution found.");
+    }
+  },
+
+  nextLevel() {
+    const next = getNextChallenge();
+    if (next) {
+      setChallenge(next);
+      hideOverlay();
+    }
+  },
+
+  draw(ctx, cellSize) {
+    if (!this.active) return;
+
+    if (this.showTileIds) {
+      ctx.save();
+      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.font = "bold 12px sans-serif";
+      state.placements.forEach((p, id) => {
+        const x = (p.anchorX + 0.5) * cellSize;
+        const y = (p.anchorY + 0.5) * cellSize;
+        ctx.fillText(id, x, y);
+      });
+      ctx.restore();
+    }
+
+    if (this.showNodes || this.showEdges) {
+      this.drawGraph(ctx, cellSize);
+    }
+  },
+
+  drawGraph(ctx, cellSize) {
+    if (!state.current) return;
+    
+    const edgeNodes = new Set();
+    const connections = [];
+
+    state.placements.forEach((p, tileId) => {
+      const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+      const nodes = shape.endpoints.map(ep => LogicCore.edgeNodeFromPoint(p.anchorX + ep.point.x, p.anchorY + ep.point.y));
+      nodes.forEach(n => edgeNodes.add(n));
+      connections.push({ a: nodes[0], b: nodes[1], color: "#3b82f6" });
+    });
+
+    const house = state.current.boardSetup.house;
+    const doors = LogicCore.getDoorNodes(house);
+    
+    // Draw edges
+    ctx.lineWidth = 2;
+    connections.forEach(conn => {
+      const pA = this.parseNode(conn.a, cellSize);
+      const pB = this.parseNode(conn.b, cellSize);
+      if (pA && pB) {
+        ctx.strokeStyle = conn.color;
+        ctx.beginPath();
+        ctx.moveTo(pA.x, pA.y);
+        ctx.lineTo(pB.x, pB.y);
+        ctx.stroke();
+      }
+    });
+
+    // Draw nodes
+    edgeNodes.forEach(node => {
+      const p = this.parseNode(node, cellSize);
+      if (p) {
+        ctx.fillStyle = doors.includes(node) ? "#f59e0b" : "#10b981";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  },
+
+  parseNode(nodeId, cellSize) {
+    if (!nodeId || nodeId.startsWith("start") || nodeId.startsWith("door")) return null;
+    const parts = nodeId.split("-").map(p => p.split(",").map(Number));
+    // Midpoint of the edge
+    const x = (parts[0][0] + parts[1][0]) / 2 * cellSize;
+    const y = (parts[0][1] + parts[1][1]) / 2 * cellSize;
+    return { x, y };
   }
 };
 
