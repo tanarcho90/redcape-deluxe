@@ -19,9 +19,12 @@
 ## Tools
 
 - **Hint System:** Backtracking solver finds the solution and places one missing/correct tile.
-- **Check:** Validates the entire board including path connectivity and Wolf rules.
+- **Check:** Validates the entire board including path connectivity and Wolf rules. Triggers confetti on success.
+- **Success State:** After a 2-second celebration following a successful solve, the game automatically advances to the next challenge.
 - **Drag & Drop:** Supports snapping to the nearest valid grid position.
-- **Drag-out:** Dragging a tile off the board removes it instantly.
+- **Smart Rotation (Right-Click):** Rotating a tile that would collide causes it to "fly" to the nearest valid placement.
+- **Drag-out:** Dragging a tile off the board removes it instantly and returns it to the inventory.
+- **Inventory:** Dynamic sidebar only shows tiles not currently on the board.
 - **Debug Mode (D):** Visualizes the internal path graph (nodes and edges) for debugging.
 - **Auto-Solve (S):** Triggers the solver to automatically complete the level.
 - **Skip Level (N):** Immediately skips to the next challenge in the sequence.

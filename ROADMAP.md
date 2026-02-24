@@ -9,10 +9,13 @@ Hier werden die nächsten Schritte und Verbesserungen für das Projekt festgehal
 - [x] **Debug-Tools:** Visualisierung von Pfad-Graphen (Taste 'D') und Auto-Solve ('S').
 - [x] **Verbesserte Tile-Vorschau:** Kacheln verschwinden aus der Liste, wenn sie platziert sind; statische, saubere Vorschau im Vorrat.
 - [x] **Success Celebration:** Konfetti-Effekt (via canvas-confetti) beim Lösen eines Levels.
+- [x] **Smart Rotation:** "Fly-to-fit" Logik für Tile-Rotationen.
+- [ ] **Animation Polish:** Weiche Gleit-Animationen für das Einrasten und Rotieren von Steinen.
 
 ## Priorität: Content & Hilfe
 - [x] **Hint-System Vervollständigung:** Zuverlässige Hints für alle 43 Level.
 - [x] **Audio-System:** Hintergrundmusik-Playlist und SFX integriert.
+- [ ] **Final Level Polish:** Alle 43 Level auf Konsistenz und Balance prüfen.
 
 ## Priorität: Mobile & Erreichbarkeit
 - [ ] **Touch Support:** Implementierung von Touch-Events für Mobile/Tablet Drag & Drop.

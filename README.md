@@ -30,25 +30,29 @@ Web implementation of the Red Riding Hood logic game. Place 1x2 path tiles on a 
 - **Solver Engine:** High-performance DFS solver in `scripts/solver-engine.js` used for validation and hints.
 - **UI & Layout:**
   - **Single-Screen UI:** App fits entirely in the viewport without scrolling (`overflow-hidden`).
-  - **Floating Toolbar:** Glassmorphism-style toolbar positioned over the board.
-  - **Status Indicator:** Pulsing status light showing game state.
+  - **Sidebar:** Redesigned sidebar featuring challenge selection, reset/hint controls, music player, and dynamic inventory.
+  - **Floating Toolbar:** Simplified to a prominent "Check" button.
+  - **Status Indicator:** Pulsing status light located at the bottom of the sidebar.
 - **Audio:**
   - Background music playlist with 4 tracks (fairytale theme).
   - UI controls for Play/Pause, Skip, and Volume.
   - Sound Effects (SFX) for Win, False solution, and Tile rotation.
 - **Gameplay Mechanics:**
+  - **Smart Rotation:** Tiles auto-locate the nearest valid slot if a rotation causes a collision ("fly to fit").
+  - **Inventory Management:** Sidebar only shows tiles not currently on the board.
+  - **Success Feedback:** `canvas-confetti` celebration upon solving, followed by a 2-second delay and auto-transition to the next level.
   - **Hint System:** Robust real-time hints that place the correct tile.
   - **Drag-out to Remove:** Intuitive way to clear tiles from the board.
-  - **Debug Manager:** Visualizes graph nodes and edges for pathfinding analysis.
+  - **Debug Manager:** Visualizes graph nodes and edges with 'D', auto-solve with 'S', and skip with 'N'.
 - **Local Support:** Optimized for direct execution via `index.html` (skips CORS/Fetch blocks using inline data).
 - **Challenges:** 43 solvable levels verified.
 
 ## Next Steps
 
-- **Success Overlay:** High-quality visual feedback after solving a level.
-- **Touch Support:** Optimization of drag events for mobile devices.
-- **Preview Graphics:** Exact shape representation (1x1 vs 1x2) in the tile list.
-- **Animation Polishing:** Transitions for UI overlays and tile placements.
+- **Animation Polish:** Adding smooth glide animations for the "fly to fit" logic.
+- **Touch Support:** Optimization of drag and rotation events for mobile/tablet devices.
+- **Mobile Responsive Refinement:** Fine-tuning sidebar and board scaling for narrow portrait viewports.
+- **Final Level Polish:** Consistency check across all 43 levels.
 
 ## Entwicklungsprozess
 
