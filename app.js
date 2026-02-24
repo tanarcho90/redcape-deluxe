@@ -291,6 +291,7 @@ const state = {
 
 function init() {
   AudioManager.init();
+  DebugManager.init();
   loadIcons();
   loadTileImages();
   loadChallenges();
