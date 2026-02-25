@@ -151,7 +151,21 @@
       <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
         <div class="game-frame relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl">
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
-          
+
+          <!-- Rotate + Check als Overlay auf dem Spielfeld -->
+          <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 pointer-events-none">
+            <div class="pointer-events-auto flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/90 px-2 py-1.5 shadow-xl backdrop-blur-sm">
+              <button id="rotateBtn" class="flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-3 text-xs font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
+                <span>Rotate</span>
+              </button>
+              <button id="checkBtn" class="flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-4 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40" type="button" title="Check">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                <span>CHECK</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Overlay Messages -->
           <div id="overlay" class="overlay absolute inset-0 z-20 grid place-items-center bg-slate-950/80 p-4">
             <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-2xl">
@@ -178,20 +192,10 @@
         </div>
       </main>
 
-      <!-- FOOTER: Tile-Leiste + Rotate / Check -->
+      <!-- FOOTER: nur Tile-Leiste -->
       <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50">
         <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] items-center justify-center gap-2 overflow-x-auto px-2 py-1">
           <!-- Tiles will be injected here -->
-        </div>
-        <div class="flex items-center justify-center gap-2 mt-2">
-          <button id="rotateBtn" class="flex h-10 items-center gap-2 rounded-full bg-slate-800/50 px-4 text-xs font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
-            <span>Rotate</span>
-          </button>
-          <button id="checkBtn" class="flex h-10 items-center gap-2 rounded-full bg-emerald-600 px-6 sm:px-8 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-xl shadow-emerald-950/40" type="button" title="Check">
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-            <span>CHECK</span>
-          </button>
         </div>
       </footer>
 
