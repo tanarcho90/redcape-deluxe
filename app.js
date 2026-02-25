@@ -255,10 +255,10 @@ const theme = {
 const DEBUG_ENDPOINTS = true;
 
 const iconPaths = {
-  red: asset("assets/icons/_new/redcap.png"),
-  wolf: asset("assets/icons/_new/wolf.png"),
-  tree: asset("assets/icons/_new/tree.png"),
-  house: asset("assets/icons/_new/cabin.png"),
+  red: asset("assets/icons/redcap.png"),
+  wolf: asset("assets/icons/wolf.png"),
+  tree: asset("assets/icons/tree.png"),
+  house: asset("assets/icons/cabin.png"),
 };
 
 const tileImagePaths = {
