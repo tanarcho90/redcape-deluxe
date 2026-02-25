@@ -25,6 +25,10 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
+const overlaySoundBtn = document.getElementById("overlaySoundBtn");
+const overlaySoundOnIcon = document.getElementById("overlaySoundOnIcon");
+const overlaySoundOffIcon = document.getElementById("overlaySoundOffIcon");
+const overlaySoundLabel = document.getElementById("overlaySoundLabel");
 const helpBtn = document.getElementById("helpBtn");
 const helpOverlay = document.getElementById("helpOverlay");
 const closeHelpBtn = document.getElementById("closeHelpBtn");
@@ -35,6 +39,9 @@ const volumeSlider = document.getElementById("volumeSlider");
 const trackInfo = document.getElementById("trackInfo");
 const playIcon = document.getElementById("playIcon");
 const pauseIcon = document.getElementById("pauseIcon");
+const musicMuteBtn = document.getElementById("musicMuteBtn");
+const musicMuteOnIcon = document.getElementById("musicMuteOnIcon");
+const musicMuteOffIcon = document.getElementById("musicMuteOffIcon");
 
 const AudioManager = {
   music: [
@@ -51,13 +58,27 @@ const AudioManager = {
   currentTrackIndex: 0,
   audio: new Audio(),
   isPlaying: false,
+  muted: false,
+
+  getMuted() {
+    return this.muted;
+  },
+
+  setMuted(m) {
+    this.muted = !!m;
+    try { localStorage.setItem("soundMuted", this.muted ? "1" : "0"); } catch (_) {}
+    this.audio.volume = this.muted ? 0 : (volumeSlider ? volumeSlider.value : 0.3);
+  },
 
   init() {
+    try { this.muted = localStorage.getItem("soundMuted") === "1"; } catch (_) {}
     if (volumeSlider) {
-      this.audio.volume = volumeSlider.value;
+      this.audio.volume = this.muted ? 0 : volumeSlider.value;
       volumeSlider.addEventListener("input", (e) => {
-        this.audio.volume = e.target.value;
+        this.audio.volume = this.muted ? 0 : e.target.value;
       });
+    } else if (!this.muted) {
+      this.audio.volume = 0.3;
     }
     
     this.audio.addEventListener("ended", () => this.next());
@@ -487,6 +508,30 @@ function attachEvents() {
     overlayBtn.addEventListener("click", () => {
       hideOverlay();
       AudioManager.startIfStopped();
+    });
+  }
+
+  function updateMusicMuteUI() {
+    const muted = AudioManager.getMuted();
+    if (overlaySoundOnIcon) overlaySoundOnIcon.classList.toggle("hidden", muted);
+    if (overlaySoundOffIcon) overlaySoundOffIcon.classList.toggle("hidden", !muted);
+    if (overlaySoundLabel) overlaySoundLabel.textContent = muted ? "Music off" : "Music on";
+    if (overlaySoundBtn) overlaySoundBtn.setAttribute("aria-label", muted ? "Music off" : "Music on");
+    if (musicMuteOnIcon) musicMuteOnIcon.classList.toggle("hidden", muted);
+    if (musicMuteOffIcon) musicMuteOffIcon.classList.toggle("hidden", !muted);
+    if (musicMuteBtn) musicMuteBtn.setAttribute("aria-label", muted ? "Music off" : "Music on");
+  }
+  updateMusicMuteUI();
+  if (overlaySoundBtn) {
+    overlaySoundBtn.addEventListener("click", () => {
+      AudioManager.setMuted(!AudioManager.getMuted());
+      updateMusicMuteUI();
+    });
+  }
+  if (musicMuteBtn) {
+    musicMuteBtn.addEventListener("click", () => {
+      AudioManager.setMuted(!AudioManager.getMuted());
+      updateMusicMuteUI();
     });
   }
 
