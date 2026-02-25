@@ -254,17 +254,6 @@ const theme = {
 
 const DEBUG_ENDPOINTS = true;
 
-// Inline SVG placeholders (no 404 on GitHub Pages when assets/icons are missing)
-function dataUrlIcon(svg) {
-  return "data:image/svg+xml," + encodeURIComponent(svg);
-}
-const placeholderIcons = {
-  red: dataUrlIcon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#eb5a6e"/><circle cx="32" cy="26" r="10" fill="#fff"/></svg>'),
-  wolf: dataUrlIcon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#6e6e6e"/><ellipse cx="32" cy="28" rx="8" ry="6" fill="#4a4a4a"/><circle cx="28" cy="26" r="3" fill="#333"/><circle cx="36" cy="26" r="3" fill="#333"/></svg>'),
-  tree: dataUrlIcon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 8 L58 54 L32 44 L6 54 Z" fill="#2d5a27"/><rect x="28" y="44" width="8" height="12" fill="#5c4033"/></svg>'),
-  house: dataUrlIcon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 6 L8 28 L8 58 L24 58 L24 40 L40 40 L40 58 L56 58 L56 28 Z" fill="#8b4513" stroke="#5c4033" stroke-width="2"/><rect x="28" y="36" width="8" height="14" fill="#654321"/></svg>'),
-};
-
 const iconPaths = {
   red: asset("assets/icons/_new/redcap.png"),
   wolf: asset("assets/icons/_new/wolf.png"),
@@ -332,10 +321,7 @@ function loadIcons() {
   Object.entries(iconPaths).forEach(([key, src]) => {
     const img = new Image();
     img.onload = () => draw();
-    img.onerror = () => {
-      img.src = placeholderIcons[key];
-      img.onerror = null;
-    };
+    img.onerror = () => draw();
     img.src = src;
     iconCache[key] = img;
   });
