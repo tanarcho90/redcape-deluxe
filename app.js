@@ -528,11 +528,7 @@ function attachEvents() {
     if (!tileId) return; // Only react if we know what we are dragging (set in dragstart)
 
     // Calculate pixel position relative to canvas
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const pixelX = (event.clientX - rect.left) * scaleX;
-    const pixelY = (event.clientY - rect.top) * scaleY;
+    const { x: pixelX, y: pixelY } = getPixelFromEvent(event);
 
     state.dragState.pixelX = pixelX;
     state.dragState.pixelY = pixelY;
@@ -588,12 +584,10 @@ function attachEvents() {
 
     // Try ghost snap first
     if (currentDrag.valid && currentDrag.x !== -1) {
-        const { cellSize } = getBoardMetrics();
-        const fromX = currentDrag.pixelX / cellSize;
-        const fromY = currentDrag.pixelY / cellSize;
+        const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
         
         const result = placeTile(tileId, currentDrag.x, currentDrag.y, currentDrag.rotation, {
-            animateGlideFrom: { x: fromX, y: fromY }
+            animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
         });
         if (result.ok) {
             status("Tile placed.");
@@ -609,11 +603,9 @@ function attachEvents() {
     // Try exact drop
     const cell = getCellFromEvent(event);
     if (cell) {
-         const { cellSize } = getBoardMetrics();
-         const fromX = currentDrag.pixelX / cellSize;
-         const fromY = currentDrag.pixelY / cellSize;
+         const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
          result = placeTile(tileId, cell.x, cell.y, currentDrag.rotation, {
-             animateGlideFrom: { x: fromX, y: fromY }
+             animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
          });
     }
     
@@ -621,11 +613,9 @@ function attachEvents() {
     if (!result?.ok && dropPoint) {
       const nearest = findNearestValidPlacement(tileId, currentDrag.rotation, dropPoint);
       if (nearest) {
-        const { cellSize } = getBoardMetrics();
-        const fromX = currentDrag.pixelX / cellSize;
-        const fromY = currentDrag.pixelY / cellSize;
+        const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
         result = placeTile(tileId, nearest.x, nearest.y, currentDrag.rotation, {
-            animateGlideFrom: { x: fromX, y: fromY }
+            animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
         });
       }
     }
@@ -727,11 +717,7 @@ function handleRightClick(e) {
 function handleDragStart(e) {
     if (e.button !== 0) return; // Only Left Click
     if (!state.current) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const clickX = (e.clientX - rect.left) * scaleX;
-    const clickY = (e.clientY - rect.top) * scaleY;
+    const { x: clickX, y: clickY } = getPixelFromEvent(e);
     
     const { cellSize } = getBoardMetrics();
     const col = Math.floor(clickX / cellSize);
@@ -779,11 +765,7 @@ function handleDragStart(e) {
 function handleDragMove(e) {
     if (!state.dragState.active || !state.dragState.isFromBoard) return;
     
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const pixelX = (e.clientX - rect.left) * scaleX;
-    const pixelY = (e.clientY - rect.top) * scaleY;
+    const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
 
     state.dragState.pixelX = pixelX;
     state.dragState.pixelY = pixelY;
@@ -832,11 +814,7 @@ function handleDragEnd(e) {
     const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY } = state.dragState;
 
     // Use release position for "outside" check (more reliable than last mousemove)
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const releaseX = (e.clientX - rect.left) * scaleX;
-    const releaseY = (e.clientY - rect.top) * scaleY;
+    const { x: releaseX, y: releaseY } = getPixelFromEvent(e);
     const margin = 40;
     const isOutside = releaseX < -margin || releaseX > canvas.width + margin ||
                       releaseY < -margin || releaseY > canvas.height + margin;
@@ -847,12 +825,10 @@ function handleDragEnd(e) {
         // Place at new spot (only if still over canvas)
         state.placements.delete(tileId);
         
-        const { cellSize } = getBoardMetrics();
-        const fromX = (pixelX - offsetX) / cellSize;
-        const fromY = (pixelY - offsetY) / cellSize;
+        const fromGrid = getAnchorGridCoords(tileId, rotation, pixelX, pixelY, offsetX, offsetY);
         
         const result = placeTile(tileId, x, y, rotation, { 
-            animateGlideFrom: { x: fromX, y: fromY } 
+            animateGlideFrom: { x: fromGrid.x, y: fromGrid.y } 
         });
         if (result.ok) {
             AudioManager.playSFX("rotate");
@@ -896,6 +872,26 @@ function resetDragState() {
         isFromBoard: false, 
         originalX: -1, originalY: -1 
     };
+}
+
+function getAnchorGridCoords(tileId, rotation, pixelX, pixelY, offsetX, offsetY) {
+  const { cellSize } = getBoardMetrics();
+  const shape = LogicCore.getTransformedTile(tileId, rotation);
+  const xs = shape.cells.map(c => c.x);
+  const ys = shape.cells.map(c => c.y);
+  const width = Math.max(...xs) - Math.min(...xs) + 1;
+  const height = Math.max(...ys) - Math.min(...ys) + 1;
+  
+  // The visual center in pixels
+  const centerX = pixelX - offsetX;
+  const centerY = pixelY - offsetY;
+  
+  // Convert center back to anchor grid coordinates
+  // Based on: centerX = (anchorX + width/2) * cellSize
+  return {
+    x: (centerX / cellSize) - (width / 2),
+    y: (centerY / cellSize) - (height / 2)
+  };
 }
 
 async function loadChallenges() {
@@ -1076,15 +1072,10 @@ function handleBoardClick(event) {
     return;
   }
 
-  const { cellSize } = getBoardMetrics();
-  const rect = canvas.getBoundingClientRect();
-  const clickX = ((event.clientX - rect.left) / rect.width) * canvas.width;
-  const clickY = ((event.clientY - rect.top) / rect.height) * canvas.height;
-  const fromX = clickX / cellSize;
-  const fromY = clickY / cellSize;
+  const fromGrid = getAnchorGridCoords(state.selectedTileId, state.rotation, getPixelFromEvent(event).x, getPixelFromEvent(event).y, 0, 0);
 
   const result = placeTile(state.selectedTileId, cell.x, cell.y, state.rotation, {
-    animateGlideFrom: { x: fromX, y: fromY }
+    animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
   });
   if (result.ok) status("Tile placed.");
   else status(result.reason);
@@ -1343,10 +1334,18 @@ function findTileAtCell(x, y) {
   return null;
 }
 
-function getCellFromEvent(event) {
+function getPixelFromEvent(event) {
   const rect = canvas.getBoundingClientRect();
-  const x = ((event.clientX - rect.left) / rect.width) * canvas.width;
-  const y = ((event.clientY - rect.top) / rect.height) * canvas.height;
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    x: (event.clientX - rect.left) * scaleX,
+    y: (event.clientY - rect.top) * scaleY
+  };
+}
+
+function getCellFromEvent(event) {
+  const { x, y } = getPixelFromEvent(event);
   const { cellSize, startX, startY } = getBoardMetrics();
   const col = Math.floor((x - startX) / cellSize);
   const row = Math.floor((y - startY) / cellSize);
@@ -1355,9 +1354,7 @@ function getCellFromEvent(event) {
 }
 
 function getDropPoint(event) {
-  const rect = canvas.getBoundingClientRect();
-  const x = ((event.clientX - rect.left) / rect.width) * canvas.width;
-  const y = ((event.clientY - rect.top) / rect.height) * canvas.height;
+  const { x, y } = getPixelFromEvent(event);
   const { cellSize, startX, startY } = getBoardMetrics();
   return { x: (x - startX) / cellSize, y: (y - startY) / cellSize };
 }
