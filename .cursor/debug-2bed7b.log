@@ -1,0 +1,106 @@
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052878116,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052878118,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052878191,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052878196,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052878203,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052878210,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052878214,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052880226,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052880227,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052880281,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052880284,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052880289,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052880294,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052880298,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052881888,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052881889,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052881946,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052881949,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052881956,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052881961,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052881965,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052882758,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052882758,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052882811,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052882814,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052882819,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052882825,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052882830,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052883667,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052883668,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052883724,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052883729,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052883733,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052883740,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052883746,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052884737,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052884738,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052884811,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052884813,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052884819,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052884826,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052884829,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052914531,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052914531,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052914661,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052914665,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052914674,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052914679,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052914696,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052939243,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052939244,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052939311,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052939316,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052939324,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052939330,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052939339,"hypothesisId":"H2"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052945789,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052946921,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052947455,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052947920,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052948182,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052948460,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052948647,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052948826,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052949067,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":0,"tileIds":[]},"timestamp":1772052950186,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":0,"tileIds":[]},"timestamp":1772052951220,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":0,"tileIds":[]},"timestamp":1772052951491,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":0,"tileIds":[]},"timestamp":1772052951492,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 2","availableCount":1,"tileIds":["White"]},"timestamp":1772052958678,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964912,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052964912,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052964971,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964971,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052964976,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964977,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052964986,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964987,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964992,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052964992,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052964997,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052964998,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967790,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052967790,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052967850,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967851,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052967857,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967858,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052967864,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967865,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052967872,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967872,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052967876,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052967877,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:getTileImage","message":"getTileImage null","data":{"tileId":"Blue","hasImg":true,"complete":false,"naturalWidth":0},"timestamp":1772052979786,"hypothesisId":"H1,H3,H4"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979785,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Blue"},"timestamp":1772052979850,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979851,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Pink"},"timestamp":1772052979857,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979857,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"White"},"timestamp":1772052979862,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979863,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979875,"hypothesisId":"H1,H5"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Purple"},"timestamp":1772052979874,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:loadTileImages.onload","message":"tile image loaded","data":{"tileId":"Yellow"},"timestamp":1772052979881,"hypothesisId":"H2","runId":"post-fix"}
+{"sessionId":"2bed7b","location":"app.js:updateTileList","message":"updateTileList run","data":{"challengeId":"Starter 1","availableCount":1,"tileIds":["Blue"]},"timestamp":1772052979882,"hypothesisId":"H1,H5"}

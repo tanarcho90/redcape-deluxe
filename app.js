@@ -443,7 +443,10 @@ function loadTileImages() {
   Object.entries(tileImagePaths).forEach(([tileId, src]) => {
     const img = new Image();
     img.src = src;
-    img.onload = () => draw();
+    img.onload = () => {
+      updateTileList();
+      draw();
+    };
     tileImageCache[tileId] = img;
   });
 }
@@ -999,10 +1002,8 @@ function setChallenge(challenge) {
 function updateTileList() {
   tileList.innerHTML = "";
   if (!state.current) return;
-  
-  // Only show tiles that are NOT placed on the board
+
   const availableInInventory = state.current.availableTiles.filter(tileId => !state.placements.has(tileId));
-  
   availableInInventory.forEach((tileId) => {
     const tile = tileDefs[tileId];
     const card = document.createElement("button");
@@ -1073,7 +1074,7 @@ function renderTilePreview(canvas, tileId, rotation) {
   const ctx = canvas.getContext("2d");
   const img = getTileImage(tileId);
   if (!img) return;
-  
+
   // Use 0 rotation for inventory previews to keep it tidy
   const shape = LogicCore.getTransformedTile(tileId, 0);
   const isSingleCell = shape.cells.length === 1;
