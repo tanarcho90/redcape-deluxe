@@ -5,7 +5,7 @@ const BASE = (() => {
   return new URL(".", location.href).href;
 })();
 function asset(path) {
-  return new URL(path, BASE).href;
+  return new URL(path, document.baseURI).href;
 }
 
 const canvas = document.getElementById("board");
