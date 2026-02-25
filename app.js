@@ -265,15 +265,12 @@ const placeholderIcons = {
   house: dataUrlIcon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 6 L8 28 L8 58 L24 58 L24 40 L40 40 L40 58 L56 58 L56 28 Z" fill="#8b4513" stroke="#5c4033" stroke-width="2"/><rect x="28" y="36" width="8" height="14" fill="#654321"/></svg>'),
 };
 
-const isGitHubPages = /github\.io$/i.test(location.hostname);
-const iconPaths = isGitHubPages
-  ? placeholderIcons
-  : {
-      red: asset("assets/icons/_new/redcap.png"),
-      wolf: asset("assets/icons/_new/wolf.png"),
-      tree: asset("assets/icons/_new/tree.png"),
-      house: asset("assets/icons/_new/cabin.png"),
-    };
+const iconPaths = {
+  red: asset("assets/icons/_new/redcap.png"),
+  wolf: asset("assets/icons/_new/wolf.png"),
+  tree: asset("assets/icons/_new/tree.png"),
+  house: asset("assets/icons/_new/cabin.png"),
+};
 
 const tileImagePaths = {
   Blue: asset("assets/tiles/blau.svg"),
@@ -335,12 +332,10 @@ function loadIcons() {
   Object.entries(iconPaths).forEach(([key, src]) => {
     const img = new Image();
     img.onload = () => draw();
-    if (!isGitHubPages) {
-      img.onerror = () => {
-        img.src = placeholderIcons[key];
-        img.onerror = null;
-      };
-    }
+    img.onerror = () => {
+      img.src = placeholderIcons[key];
+      img.onerror = null;
+    };
     img.src = src;
     iconCache[key] = img;
   });
