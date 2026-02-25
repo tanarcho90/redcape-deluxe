@@ -413,7 +413,8 @@ const state = {
     valid: false,
     isFromBoard: false,
     originalX: -1,
-    originalY: -1
+    originalY: -1,
+    draggedDistance: 0
   },
 };
 
@@ -480,13 +481,6 @@ function attachEvents() {
   if (helpSidebarBtn) {
     helpSidebarBtn.addEventListener("click", () => {
       showHelp();
-    });
-  }
-
-  if (rotateBtn) {
-    rotateBtn.addEventListener("click", () => {
-      if (!state.selectedTileId) return;
-      updateOrientation((state.rotation + 90) % 360);
     });
   }
 
@@ -559,211 +553,82 @@ function attachEvents() {
     });
   }
 
-  canvas.addEventListener("click", handleBoardClick);
+  canvas.addEventListener("pointerdown", handleBoardPointerDown);
+  window.addEventListener("pointermove", handlePointerMove);
+  window.addEventListener("pointerup", handlePointerUp);
   
-  // -- Custom Mouse Dragging (Board to Board) --
-  canvas.addEventListener("mousedown", handleDragStart);
-  window.addEventListener("mousemove", handleDragMove);
-  window.addEventListener("mouseup", handleDragEnd);
+  // Prevent context menu on long press/right click
+  canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   
-  // -- Right Click Rotation --
-  canvas.addEventListener("contextmenu", handleRightClick);
-
-  // -- HTML5 Dragging (List to Board) --
-  canvas.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    const tileId = state.dragState.active ? state.dragState.tileId : null;
-    if (!tileId) return; // Only react if we know what we are dragging (set in dragstart)
-
-    // Calculate pixel position relative to canvas
-    const { x: pixelX, y: pixelY } = getPixelFromEvent(event);
-
-    state.dragState.pixelX = pixelX;
-    state.dragState.pixelY = pixelY;
-
-    // Calculate snap target
-    const dropPoint = getDropPoint(event);
-    if (!dropPoint) return;
-
-    const cell = getCellFromEvent(event);
-    let bestX = -1, bestY = -1, valid = false;
-
-    if (cell) {
-        if (canPlaceTile(tileId, cell.x, cell.y, state.dragState.rotation)) {
-            bestX = cell.x;
-            bestY = cell.y;
-            valid = true;
-        }
-    }
-
-    if (!valid) {
-        const nearest = findNearestValidPlacement(tileId, state.dragState.rotation, dropPoint);
-        if (nearest) {
-            bestX = nearest.x;
-            bestY = nearest.y;
-            valid = true;
-        }
-    }
-
-    state.dragState.x = bestX;
-    state.dragState.y = bestY;
-    state.dragState.valid = valid;
-    draw();
+  // Right Click Rotation (Keep for desktop users)
+  canvas.addEventListener("auxclick", (e) => {
+    if (e.button === 2) handleRightClick(e);
   });
-
-  canvas.addEventListener("dragleave", () => {
-     // Optional: Clear ghost if leaving canvas
-     // state.dragState.x = -1; 
-     // draw();
-  });
-
-  canvas.addEventListener("drop", (event) => {
-    event.preventDefault();
-    const tileId = event.dataTransfer?.getData("text/plain");
-    
-    // Logic is now shared with mouseup, but for HTML5 drop we use the calculated ghost or drop point
-    const currentDrag = { ...state.dragState };
-    resetDragState();
-
-    if (!tileId || !state.current) {
-        draw();
+  
+  if (rotateBtn) {
+    rotateBtn.addEventListener("click", () => {
+      if (!state.selectedTileId) {
+        status("Select a tile first.");
         return;
-    }
-
-    // Try ghost snap first
-    if (currentDrag.valid && currentDrag.x !== -1) {
-        const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
-        
-        const result = placeTile(tileId, currentDrag.x, currentDrag.y, currentDrag.rotation, {
-            animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
-        });
-        if (result.ok) {
-            status("Tile placed.");
-            return;
-        }
-    }
-    
-    // Fallback logic
-    const dropPoint = getDropPoint(event);
-    state.selectedTileId = tileId;
-    let result = null;
-    
-    // Try exact drop
-    const cell = getCellFromEvent(event);
-    if (cell) {
-         const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
-         result = placeTile(tileId, cell.x, cell.y, currentDrag.rotation, {
-             animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
-         });
-    }
-    
-    // Try nearest
-    if (!result?.ok && dropPoint) {
-      const nearest = findNearestValidPlacement(tileId, currentDrag.rotation, dropPoint);
-      if (nearest) {
-        const fromGrid = getAnchorGridCoords(tileId, currentDrag.rotation, currentDrag.pixelX, currentDrag.pixelY, 0, 0);
-        result = placeTile(tileId, nearest.x, nearest.y, currentDrag.rotation, {
-            animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
-        });
       }
-    }
-
-    if (result?.ok) status("Tile placed.");
-    else status(result?.reason || "No free spot found.");
-    
-    draw();
-  });
+      
+      const p = state.placements.get(state.selectedTileId);
+      if (p) {
+        // Rotate on board
+        const oldRot = p.rotation;
+        const newRot = (oldRot + 90) % 360;
+        
+        // Use the same logic as right click
+        const tileId = state.selectedTileId;
+        const originalPlacement = { ...p };
+        state.placements.delete(tileId);
+        
+        if (canPlaceTile(tileId, p.anchorX, p.anchorY, newRot)) {
+          state.placements.set(tileId, { ...p, rotation: newRot });
+          AnimationManager.addRotate(tileId, oldRot, newRot);
+          AudioManager.playSFX("rotate");
+          status("Rotated.");
+        } else {
+          const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+          const xs = shape.cells.map(c => p.anchorX + c.x);
+          const ys = shape.cells.map(c => p.anchorY + c.y);
+          const visualCenter = { 
+            x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
+            y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
+          };
+          const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+          if (nearest) {
+            state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
+            AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
+            AnimationManager.addRotate(tileId, oldRot, newRot);
+            AudioManager.playSFX("rotate");
+            status("Rotated and moved.");
+          } else {
+            state.placements.set(tileId, originalPlacement);
+            status("No space to rotate.");
+            AudioManager.playSFX("false");
+          }
+        }
+        draw();
+      } else {
+        // Rotate in inventory
+        const tileId = state.selectedTileId;
+        const currentRot = state.inventoryRotations.get(tileId) || 0;
+        const newRot = (currentRot + 90) % 360;
+        state.inventoryRotations.set(tileId, newRot);
+        state.rotation = newRot;
+        AudioManager.playSFX("rotate");
+        updateTileList();
+        status(`Rotated ${tileId} to ${newRot}°.`);
+      }
+    });
+  }
 }
 
 // -- Drag Handlers --
 
-function handleRightClick(e) {
-  e.preventDefault();
-  
-  // If dragging, rotate the dragged tile
-  if (state.dragState.active) {
-    const newRot = (state.dragState.rotation + 90) % 360;
-    state.dragState.rotation = newRot;
-    
-    // Check validity with new rotation
-    const { tileId, rotation, pixelX, pixelY } = state.dragState;
-    const { cellSize } = getBoardMetrics();
-    const nearest = findNearestValidPlacement(
-        tileId, 
-        rotation, 
-        { x: pixelX / cellSize, y: pixelY / cellSize }
-    );
-
-    if (nearest) {
-        state.dragState.x = nearest.x;
-        state.dragState.y = nearest.y;
-        state.dragState.valid = true;
-    } else {
-        state.dragState.valid = false;
-    }
-    
-    AudioManager.playSFX("rotate");
-    draw();
-    return;
-  }
-
-  // If not dragging, rotate tile under cursor
-  const cell = getCellFromEvent(e);
-  if (!cell) return;
-  
-  const tileId = findTileAtCell(cell.x, cell.y);
-  if (tileId) {
-    const p = state.placements.get(tileId);
-    const oldRot = p.rotation;
-    const newRot = (oldRot + 90) % 360;
-    
-    // Temporarily remove self from placements to check collision properly
-    const originalPlacement = { ...p };
-    state.placements.delete(tileId);
-    
-    // 1. Try to rotate in place
-    if (canPlaceTile(tileId, p.anchorX, p.anchorY, newRot)) {
-      state.placements.set(tileId, { ...p, rotation: newRot });
-      AnimationManager.addRotate(tileId, oldRot, newRot);
-      AudioManager.playSFX("rotate");
-      status("Rotated.");
-    } 
-    // 2. If it doesn't fit, find nearest valid spot
-    else {
-      // Calculate visual center of current placement to find "nearest" accurately
-      const shape = LogicCore.getTransformedTile(tileId, p.rotation);
-      const xs = shape.cells.map(c => p.anchorX + c.x);
-      const ys = shape.cells.map(c => p.anchorY + c.y);
-      const visualCenter = { 
-        x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
-        y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
-      };
-
-      const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
-      if (nearest) {
-        state.placements.set(tileId, { 
-          tileId, 
-          rotation: newRot, 
-          anchorX: nearest.x, 
-          anchorY: nearest.y 
-        });
-        AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
-        AnimationManager.addRotate(tileId, oldRot, newRot);
-        AudioManager.playSFX("rotate");
-        status("Rotated and moved to fit.");
-      } else {
-        // 3. Nowhere to go, put it back
-        state.placements.set(tileId, originalPlacement);
-        status("Cannot rotate: No space found.");
-        AudioManager.playSFX("false");
-      }
-    }
-    draw();
-  }
-}
-
-function handleDragStart(e) {
-    if (e.button !== 0) return; // Only Left Click
+function handleBoardPointerDown(e) {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
     if (!state.current) return;
     const { x: clickX, y: clickY } = getPixelFromEvent(e);
     
@@ -772,7 +637,11 @@ function handleDragStart(e) {
     const row = Math.floor(clickY / cellSize);
 
     const tileId = findTileAtCell(col, row);
-    if (!tileId) return;
+    if (!tileId) {
+        // Selection only
+        handleBoardClick(e);
+        return;
+    }
 
     // Found a tile, start dragging
     const placement = state.placements.get(tileId);
@@ -797,52 +666,68 @@ function handleDragStart(e) {
         originalY: placement.anchorY,
         valid: true,
         x: placement.anchorX,
-        y: placement.anchorY
+        y: placement.anchorY,
+        draggedDistance: 0
     };
 
-    // Select it
     state.selectedTileId = tileId;
-    updateTileList();
-
-    // Temporarily remove from placements for rendering
-    // (We will draw it manually in drawGhost)
-    // Actually, we can just filter it out in drawTiles
+    state.rotation = placement.rotation;
+    // updateTileList(); // Avoid recreating UI during drag start
     draw();
 }
 
-function handleDragMove(e) {
-    if (!state.dragState.active || !state.dragState.isFromBoard) return;
+function handleInventoryPointerDown(e, tileId, tileRotation) {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    
+    state.selectedTileId = tileId;
+    state.rotation = tileRotation;
+    
+    const isTouch = e.pointerType === "touch";
+    const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
+    
+    state.dragState = {
+        active: true,
+        tileId: tileId,
+        isFromBoard: false,
+        rotation: tileRotation,
+        pixelX: pixelX, 
+        pixelY: pixelY,
+        offsetX: 0,
+        offsetY: isTouch ? 60 : 0, // Lift tile above finger on touch
+        originalX: -1,
+        originalY: -1,
+        valid: false,
+        x: -1,
+        y: -1,
+        draggedDistance: 0
+    };
+    
+    // updateTileList(); // Avoid recreating UI during drag start
+    draw();
+}
+
+function handlePointerMove(e) {
+    if (!state.dragState.active) return;
     
     const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
+    
+    // Track movement
+    if (state.dragState.pixelX !== -1000) {
+        state.dragState.draggedDistance += Math.sqrt(
+            Math.pow(pixelX - state.dragState.pixelX, 2) + 
+            Math.pow(pixelY - state.dragState.pixelY, 2)
+        );
+    }
 
     state.dragState.pixelX = pixelX;
     state.dragState.pixelY = pixelY;
 
-    // Calculate snap target for highlight
     const { cellSize } = getBoardMetrics();
-    // Predict drop based on center
-    const targetCenterX = pixelX - state.dragState.offsetX;
-    const targetCenterY = pixelY - state.dragState.offsetY;
     
-    // Convert back to approximate anchor.
-    // This depends on tile shape. A simpler way:
-    // Just find nearest valid placement for the mouse position 
-    // mapped to the relative anchor.
-    
-    const dropPoint = { x: targetCenterX / cellSize, y: targetCenterY / cellSize };
-    // Adjust drop point to be the anchor 0,0
-    // Actually `findNearestValidPlacement` expects the "center" or just a point?
-    // It compares distance to x+0.5, y+0.5. So it expects a cell center.
-    // Let's just pass the raw grid coords of the center.
-    
-    // We need to pass the tile's visual center. 
-    // The drop point passed to findNearest... is used to minimize distance.
-    // Let's use the mouse position projected onto grid.
-
     const nearest = findNearestValidPlacement(
         state.dragState.tileId, 
         state.dragState.rotation, 
-        { x: pixelX / cellSize, y: pixelY / cellSize }
+        { x: (pixelX - state.dragState.offsetX) / cellSize, y: (pixelY - state.dragState.offsetY) / cellSize }
     );
 
     if (nearest) {
@@ -856,22 +741,21 @@ function handleDragMove(e) {
     draw();
 }
 
-function handleDragEnd(e) {
-    if (!state.dragState.active || !state.dragState.isFromBoard) return;
+function handlePointerUp(e) {
+    if (!state.dragState.active) return;
 
-    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY } = state.dragState;
+    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY, isFromBoard, draggedDistance } = state.dragState;
 
-    // Use release position for "outside" check (more reliable than last mousemove)
     const { x: releaseX, y: releaseY } = getPixelFromEvent(e);
-    const margin = 40;
+    const margin = 60;
     const isOutside = releaseX < -margin || releaseX > canvas.width + margin ||
                       releaseY < -margin || releaseY > canvas.height + margin;
 
+    const wasJustTap = draggedDistance < 10;
     resetDragState();
 
     if (valid && x !== -1 && !isOutside) {
-        // Place at new spot (only if still over canvas)
-        state.placements.delete(tileId);
+        if (isFromBoard) state.placements.delete(tileId);
         
         const fromGrid = getAnchorGridCoords(tileId, rotation, pixelX, pixelY, offsetX, offsetY);
         
@@ -880,17 +764,12 @@ function handleDragEnd(e) {
         });
         if (result.ok) {
             AudioManager.playSFX("rotate");
+            updateTileList();
             return;
         }
     }
 
-    // Dragged out of board → remove tile
-    if (isOutside) {
-        // Save rotation to inventory before removing
-        const placement = state.placements.get(tileId);
-        if (placement) {
-          state.inventoryRotations.set(tileId, placement.rotation);
-        }
+    if (isOutside && isFromBoard) {
         state.placements.delete(tileId);
         updateTileList();
         status("Tile removed.");
@@ -898,13 +777,24 @@ function handleDragEnd(e) {
         return;
     }
 
-    // Revert if invalid or failed
-    state.placements.set(tileId, { 
-        tileId, 
-        rotation, 
-        anchorX: originalX, 
-        anchorY: originalY 
-    });
+    // Revert
+    if (isFromBoard) {
+        state.placements.set(tileId, { 
+            tileId, 
+            rotation, 
+            anchorX: originalX, 
+            anchorY: originalY 
+        });
+        
+        if (wasJustTap) {
+            // It was a tap on a tile, just select it
+            state.selectedTileId = tileId;
+            state.rotation = rotation;
+            status(`Selected: ${tileId}.`);
+        }
+    }
+    
+    updateTileList();
     draw();
 }
 
@@ -920,6 +810,75 @@ function resetDragState() {
         isFromBoard: false, 
         originalX: -1, originalY: -1 
     };
+}
+
+function handleRightClick(e) {
+  e.preventDefault();
+  
+  // If dragging, rotate the dragged tile
+  if (state.dragState.active) {
+    const newRot = (state.dragState.rotation + 90) % 360;
+    state.dragState.rotation = newRot;
+    
+    const { tileId, rotation, pixelX, pixelY } = state.dragState;
+    const { cellSize } = getBoardMetrics();
+    const nearest = findNearestValidPlacement(tileId, rotation, { x: pixelX / cellSize, y: pixelY / cellSize });
+
+    if (nearest) {
+        state.dragState.x = nearest.x;
+        state.dragState.y = nearest.y;
+        state.dragState.valid = true;
+    } else {
+        state.dragState.valid = false;
+    }
+    
+    AudioManager.playSFX("rotate");
+    draw();
+    return;
+  }
+
+  // If not dragging, rotate tile under cursor
+  const cell = getCellFromEvent(e);
+  if (!cell) return;
+  
+  const tileId = findTileAtCell(cell.x, cell.y);
+  if (tileId) {
+    const p = state.placements.get(tileId);
+    const oldRot = p.rotation;
+    const newRot = (oldRot + 90) % 360;
+    
+    const originalPlacement = { ...p };
+    state.placements.delete(tileId);
+    
+    if (canPlaceTile(tileId, p.anchorX, p.anchorY, newRot)) {
+      state.placements.set(tileId, { ...p, rotation: newRot });
+      AnimationManager.addRotate(tileId, oldRot, newRot);
+      AudioManager.playSFX("rotate");
+      status("Rotated.");
+    } else {
+      const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+      const xs = shape.cells.map(c => p.anchorX + c.x);
+      const ys = shape.cells.map(c => p.anchorY + c.y);
+      const visualCenter = { 
+        x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
+        y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
+      };
+
+      const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+      if (nearest) {
+        state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
+        AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
+        AnimationManager.addRotate(tileId, oldRot, newRot);
+        AudioManager.playSFX("rotate");
+        status("Rotated and moved.");
+      } else {
+        state.placements.set(tileId, originalPlacement);
+        status("No space found.");
+        AudioManager.playSFX("false");
+      }
+    }
+    draw();
+  }
 }
 
 function getAnchorGridCoords(tileId, rotation, pixelX, pixelY, offsetX, offsetY) {
@@ -1008,7 +967,6 @@ function updateTileList() {
     const tile = tileDefs[tileId];
     const card = document.createElement("button");
     card.type = "button";
-    card.draggable = true;
     card.title = tileId;
     // Static size for inventory items
     card.className = "flex h-20 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/40 p-2 transition hover:bg-slate-800 hover:scale-105 active:scale-95";
@@ -1044,26 +1002,8 @@ function updateTileList() {
       status(`Rotated ${tileId} to ${newRot}°.`);
     });
     
-    card.addEventListener("dragstart", (event) => {
-      event.dataTransfer?.setData("text/plain", tileId);
-      state.selectedTileId = tileId;
-      state.rotation = tileRotation; // Use stored rotation
-      
-      state.dragState = {
-        active: true,
-        tileId: tileId,
-        x: -1, 
-        y: -1,
-        rotation: tileRotation, // Use stored rotation
-        valid: false
-      };
-
-      setTileDragImage(event, tileId, tileRotation);
-    });
-
-    card.addEventListener("dragend", () => {
-        state.dragState = { active: false, tileId: null, x: -1, y: -1, rotation: 0, valid: false };
-        draw();
+    card.addEventListener("pointerdown", (event) => {
+      handleInventoryPointerDown(event, tileId, tileRotation);
     });
     
     tileList.append(card);
@@ -1382,11 +1322,14 @@ function findTileAtCell(x, y) {
 
 function getPixelFromEvent(event) {
   const rect = canvas.getBoundingClientRect();
+  const clientX = event.clientX || (event.touches && event.touches[0] ? event.touches[0].clientX : 0);
+  const clientY = event.clientY || (event.touches && event.touches[0] ? event.touches[0].clientY : 0);
+  
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
   return {
-    x: (event.clientX - rect.left) * scaleX,
-    y: (event.clientY - rect.top) * scaleY
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY
   };
 }
 
@@ -1477,13 +1420,8 @@ function drawGhost() {
 
   // 2. Draw Flying Tile
   // The tile center should be at (pixelX - offsetX, pixelY - offsetY)
-  let drawCenterX = pixelX;
-  let drawCenterY = pixelY;
-  
-  if (isFromBoard) {
-      drawCenterX = pixelX - offsetX;
-      drawCenterY = pixelY - offsetY;
-  }
+  const drawCenterX = pixelX - offsetX;
+  const drawCenterY = pixelY - offsetY;
   
   ctx.translate(drawCenterX, drawCenterY);
   ctx.rotate((rotation * Math.PI) / 180);

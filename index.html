@@ -105,15 +105,25 @@
       }
     </style>
   </head>
-  <body class="hero-pattern h-screen overflow-hidden bg-slate-950 text-slate-100">
-    <div class="mx-auto flex max-lg:h-full w-full max-w-7xl flex-col gap-4 px-5 py-4">
-      <main class="grid max-lg:flex-1 overflow-hidden items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
-        <section class="flex flex-col max-lg:h-full max-lg:max-h-full space-y-5 rounded-3xl bg-slate-900/60 p-5 shadow-xl shadow-slate-950/30 overflow-hidden">
-          <div class="flex-shrink-0">
+  <body class="hero-pattern h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none">
+    <div class="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-4 py-3 sm:px-5 sm:py-4">
+      <main class="grid flex-1 overflow-hidden items-start gap-4 lg:gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <section class="flex flex-col h-full max-h-full space-y-4 lg:space-y-5 rounded-3xl bg-slate-900/60 p-4 lg:p-5 shadow-xl shadow-slate-950/30 overflow-hidden">
+          <div class="flex-shrink-0 max-lg:hidden">
             <img src="assets/Logo.webp" alt="Forest Pathways" class="w-full object-contain object-left" />
           </div>
           
-          <div class="flex-1 space-y-5 pr-2">
+          <div class="flex-1 space-y-4 lg:space-y-5 pr-1 overflow-y-auto custom-scrollbar">
+            <div class="space-y-2 lg:hidden">
+               <div class="flex items-center justify-between">
+                 <img src="assets/Logo.webp" alt="Forest Pathways" class="h-8 object-contain" />
+                 <div id="statusContainer" class="flex items-center gap-2">
+                   <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                   <p id="statusText" class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+                 </div>
+               </div>
+            </div>
+
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
@@ -232,14 +242,26 @@
             <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
             
             <!-- Absolute Overlay Toolbar -->
-            <div class="absolute bottom-6 left-0 right-0 pointer-events-none flex flex-col items-center gap-4">
-              <div class="pointer-events-auto flex items-center justify-center gap-3 bg-slate-900/40 backdrop-blur-xl p-2 px-3 rounded-full border border-slate-700/30 shadow-2xl">
+            <div class="absolute bottom-4 sm:bottom-6 left-0 right-0 pointer-events-none flex flex-col items-center gap-4">
+              <div class="pointer-events-auto flex items-center justify-center gap-2 sm:gap-3 bg-slate-900/40 backdrop-blur-xl p-2 px-2 sm:px-3 rounded-full border border-slate-700/30 shadow-2xl">
+                <button
+                  id="rotateBtn"
+                  class="group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-500/30 bg-slate-800/60 text-slate-100 transition hover:bg-slate-700/60 hover:scale-105 active:scale-95 shadow-xl shadow-slate-950/30"
+                  type="button"
+                  title="Rotate Selected Tile"
+                >
+                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                    <path d="M21 3v5h-5" />
+                  </svg>
+                </button>
+                <div class="w-px h-8 bg-slate-700/30"></div>
                 <button
                   id="checkBtn"
-                  class="group flex h-12 items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/20 px-10 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/30 hover:scale-105 active:scale-95 shadow-xl shadow-emerald-950/30"
+                  class="group flex h-10 sm:h-12 items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/20 px-6 sm:px-10 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/30 hover:scale-105 active:scale-95 shadow-xl shadow-emerald-950/30"
                   type="button"
                 >
-                  <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 6 9 17l-5-5" />
                   </svg>
                   Check
