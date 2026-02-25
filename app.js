@@ -1,3 +1,13 @@
+// Base path for GitHub Pages (e.g. /redcape-deluxe/) – resolves relative to current page
+const BASE = (() => {
+  const b = document.querySelector("base");
+  if (b && b.getAttribute("href")) return new URL(b.getAttribute("href"), location.href).href;
+  return new URL(".", location.href).href;
+})();
+function asset(path) {
+  return new URL(path, BASE).href;
+}
+
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const challengeSelect = document.getElementById("challengeSelect");
@@ -28,15 +38,15 @@ const pauseIcon = document.getElementById("pauseIcon");
 
 const AudioManager = {
   music: [
-    "assets/music/denis-pavlov-music-acoustic-guitar-amp-flute-fairytale-music-240577.mp3",
-    "assets/music/denis-pavlov-music-mysterious-esoteric-magical-shadowy-dark-fairytale-music-369257.mp3",
-    "assets/music/elisaveta_stoycheva-fairytale-cello-346847.mp3",
-    "assets/music/geoffharvey-fairy-nights-158413.mp3"
+    asset("assets/music/denis-pavlov-music-acoustic-guitar-amp-flute-fairytale-music-240577.mp3"),
+    asset("assets/music/denis-pavlov-music-mysterious-esoteric-magical-shadowy-dark-fairytale-music-369257.mp3"),
+    asset("assets/music/elisaveta_stoycheva-fairytale-cello-346847.mp3"),
+    asset("assets/music/geoffharvey-fairy-nights-158413.mp3")
   ],
   sfx: {
-    win: "assets/sfx/win.mp3",
-    false: "assets/sfx/false.mp3",
-    rotate: "assets/sfx/rotate.mp3"
+    win: asset("assets/sfx/win.mp3"),
+    false: asset("assets/sfx/false.mp3"),
+    rotate: asset("assets/sfx/rotate.mp3")
   },
   currentTrackIndex: 0,
   audio: new Audio(),
@@ -245,18 +255,18 @@ const theme = {
 const DEBUG_ENDPOINTS = true;
 
 const iconPaths = {
-  red: "assets/icons/_new/redcap.png",
-  wolf: "assets/icons/_new/wolf.png",
-  tree: "assets/icons/_new/tree.png",
-  house: "assets/icons/_new/cabin.png",
+  red: asset("assets/icons/_new/redcap.png"),
+  wolf: asset("assets/icons/_new/wolf.png"),
+  tree: asset("assets/icons/_new/tree.png"),
+  house: asset("assets/icons/_new/cabin.png"),
 };
 
 const tileImagePaths = {
-  Blue: "assets/tiles/blau.svg",
-  Pink: "assets/tiles/rosa.svg",
-  White: "assets/tiles/weiss.svg",
-  Purple: "assets/tiles/lila.svg",
-  Yellow: "assets/tiles/gelb.svg",
+  Blue: asset("assets/tiles/blau.svg"),
+  Pink: asset("assets/tiles/rosa.svg"),
+  White: asset("assets/tiles/weiss.svg"),
+  Purple: asset("assets/tiles/lila.svg"),
+  Yellow: asset("assets/tiles/gelb.svg"),
 };
 
 const iconCache = {};
@@ -774,7 +784,7 @@ async function loadChallenges() {
   
   if (!isLocalFile) {
     try {
-      const response = await fetch("data/challenges.json");
+      const response = await fetch(asset("data/challenges.json"));
       if (response.ok) {
         const data = await response.json();
         state.challenges = data.challenges || [];
