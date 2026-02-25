@@ -277,8 +277,7 @@ canvas {
   background: var(--accent-red);
 }
 
-#checkBtn,
-#overlayBtn {
+#checkBtn {
   background: var(--accent-blue);
 }
 
