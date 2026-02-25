@@ -77,6 +77,14 @@
         user-select: none;
         -webkit-tap-highlight-color: transparent;
       }
+
+      /* Start overlay: controls hint by device (touch vs pointer) */
+      .overlay-controls-touch { display: none; }
+      .overlay-controls-pointer { display: block; }
+      @media (pointer: coarse) {
+        .overlay-controls-touch { display: block; }
+        .overlay-controls-pointer { display: none; }
+      }
     </style>
   </head>
   <body class="hero-pattern h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none">
@@ -99,9 +107,17 @@
           ></select>
         </div>
 
-        <div id="statusContainer" class="flex items-center gap-2 min-w-0">
-          <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
-          <p id="statusText" class="truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button id="resetBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+          </button>
+          <button id="hintBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+          </button>
+          <button id="musicMuteBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-slate-100 active:scale-90" title="Music on/off">
+            <svg id="musicMuteOnIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+            <svg id="musicMuteOffIcon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+          </button>
         </div>
       </header>
 
@@ -115,6 +131,11 @@
             <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-2xl">
               <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
               <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700/80 text-left">
+                <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Controls</p>
+                <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
+                <p class="overlay-controls-pointer text-xs text-slate-400">Click a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
+              </div>
               <button
                 id="overlayBtn"
                 class="mt-6 w-full rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40"
@@ -125,47 +146,26 @@
             </div>
           </div>
         </div>
+        <div id="statusContainer" class="flex flex-shrink-0 items-center justify-center gap-2 mt-2 min-w-0">
+          <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
+          <p id="statusText" class="truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+        </div>
       </main>
 
-      <!-- FOOTER / CONTROLS -->
-      <footer class="z-10 flex flex-shrink-0 flex-col gap-3 bg-slate-900/60 p-3 pb-6 backdrop-blur-xl border-t border-slate-800/50">
-        <!-- Inventory Ribbon -->
-        <div id="tileList" class="custom-scrollbar flex items-center justify-center gap-2 overflow-x-auto px-2 py-1">
+      <!-- FOOTER: Tile-Leiste + Rotate / Check -->
+      <footer class="z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pb-4 backdrop-blur-xl border-t border-slate-800/50">
+        <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] items-center justify-center gap-2 overflow-x-auto px-2 py-1">
           <!-- Tiles will be injected here -->
         </div>
-
-        <!-- Floating Action Bar -->
-        <div class="flex items-center justify-center gap-2 sm:gap-4 px-2">
-          <div class="flex items-center gap-1.5 bg-slate-950/40 p-1 rounded-full border border-slate-800/50 shadow-inner">
-            <button id="resetBtn" class="flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
-            </button>
-            <button id="hintBtn" class="flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-            </button>
-          </div>
-
-          <div class="h-6 w-px bg-slate-800/50"></div>
-
-          <div class="flex items-center gap-2 bg-slate-950/40 p-1.5 px-3 rounded-full border border-slate-800/50 shadow-2xl">
-            <button id="musicMuteBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/50 text-slate-300 transition hover:bg-slate-700 active:scale-90 shadow-lg">
-              <svg id="musicMuteOnIcon" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-              <svg id="musicMuteOffIcon" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-            </button>
-            
-            <button id="rotateBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/50 text-slate-100 transition hover:bg-slate-700 active:scale-90 shadow-lg">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
-            </button>
-
-            <button
-              id="checkBtn"
-              class="flex h-10 items-center gap-2 rounded-full bg-emerald-600 px-6 sm:px-8 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-xl shadow-emerald-950/40"
-              type="button"
-            >
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-              <span>CHECK</span>
-            </button>
-          </div>
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <button id="rotateBtn" class="flex h-10 items-center gap-2 rounded-full bg-slate-800/50 px-4 text-xs font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
+            <span>Rotate</span>
+          </button>
+          <button id="checkBtn" class="flex h-10 items-center gap-2 rounded-full bg-emerald-600 px-6 sm:px-8 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-xl shadow-emerald-950/40" type="button" title="Check">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            <span>CHECK</span>
+          </button>
         </div>
       </footer>
 
