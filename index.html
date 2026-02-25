@@ -73,24 +73,35 @@
         border-radius: 10px;
       }
 
+      html {
+        height: 100%;
+        overflow: hidden;
+      }
       body {
+        box-sizing: border-box;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
-        /* Safe areas: Statusleiste oben, Browser-/Home-Leiste unten */
+        margin: 0;
+        /* Safe areas: Padding liegt INNERHALB der Höhe (border-box), Footer bleibt sichtbar */
         padding-top: env(safe-area-inset-top, 0);
         padding-bottom: env(safe-area-inset-bottom, 0);
         padding-left: env(safe-area-inset-left, 0);
         padding-right: env(safe-area-inset-right, 0);
         height: 100vh;
         height: 100dvh;
+        overflow: hidden;
       }
-      /* Handy: kleine Viewport-Höhe nutzen, damit Footer in den sichtbaren Bereich passt */
+      /* Handy: kleine Viewport-Höhe, damit Footer garantiert im sichtbaren Bereich liegt */
       @media (pointer: coarse) {
         body { height: 100svh; }
       }
-      /* Footer: extra Abstand unten für Browser-Leiste / Home-Indicator */
+      /* Footer: zusätzlicher Abstand über Browser-Leiste / Home-Indicator */
       .footer-safe {
-        padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+      }
+      /* Main darf schrumpfen, damit Header + Main + Footer in die Höhe passen */
+      .main-fill {
+        min-height: 0;
       }
 
       /* Start overlay: controls hint by device (touch vs pointer) */
@@ -137,7 +148,7 @@
       </header>
 
       <!-- MAIN AREA -->
-      <main class="relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
+      <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
         <div class="game-frame relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl">
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
           
