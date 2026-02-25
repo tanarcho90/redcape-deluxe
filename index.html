@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <base href="./" />
     <link rel="icon" href="assets/icons/redcap.png" />
     <title>Forest Pathways – Logic Game</title>
@@ -31,48 +31,24 @@
       }
 
       @keyframes board-shake {
-        0% {
-          transform: translateX(0);
-        }
-        20% {
-          transform: translateX(-6px);
-        }
-        40% {
-          transform: translateX(6px);
-        }
-        60% {
-          transform: translateX(-4px);
-        }
-        80% {
-          transform: translateX(4px);
-        }
-        100% {
-          transform: translateX(0);
-        }
+        0% { transform: translateX(0); }
+        20% { transform: translateX(-6px); }
+        40% { transform: translateX(6px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+        100% { transform: translateX(0); }
       }
 
       @keyframes board-glow-success {
-        0% {
-          box-shadow: 0 0 0 rgba(16, 185, 129, 0);
-        }
-        30% {
-          box-shadow: 0 0 24px rgba(16, 185, 129, 0.45);
-        }
-        100% {
-          box-shadow: 0 0 0 rgba(16, 185, 129, 0);
-        }
+        0% { box-shadow: 0 0 0 rgba(16, 185, 129, 0); }
+        30% { box-shadow: 0 0 24px rgba(16, 185, 129, 0.45); }
+        100% { box-shadow: 0 0 0 rgba(16, 185, 129, 0); }
       }
 
       @keyframes board-glow-error {
-        0% {
-          box-shadow: 0 0 0 rgba(248, 113, 113, 0);
-        }
-        30% {
-          box-shadow: 0 0 24px rgba(248, 113, 113, 0.45);
-        }
-        100% {
-          box-shadow: 0 0 0 rgba(248, 113, 113, 0);
-        }
+        0% { box-shadow: 0 0 0 rgba(248, 113, 113, 0); }
+        30% { box-shadow: 0 0 24px rgba(248, 113, 113, 0.45); }
+        100% { box-shadow: 0 0 0 rgba(248, 113, 113, 0); }
       }
 
       .hero-pattern {
@@ -84,13 +60,9 @@
         background-attachment: fixed;
       }
 
-      .board-surface {
-        
-        background-size: cover, 128px 128px;
-      }
-
       .custom-scrollbar::-webkit-scrollbar {
-        width: 5px;
+        height: 4px;
+        width: 4px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
         background: rgba(15, 23, 42, 0.3);
@@ -100,297 +72,121 @@
         background: rgba(148, 163, 184, 0.2);
         border-radius: 10px;
       }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(148, 163, 184, 0.3);
+
+      body {
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
     </style>
   </head>
   <body class="hero-pattern h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none">
-    <div class="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-4 py-3 sm:px-5 sm:py-4">
-      <main class="grid flex-1 overflow-hidden items-start gap-4 lg:gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
-        <section class="flex flex-col h-full max-h-full space-y-4 lg:space-y-5 rounded-3xl bg-slate-900/60 p-4 lg:p-5 shadow-xl shadow-slate-950/30 overflow-hidden">
-          <div class="flex-shrink-0 max-lg:hidden">
-            <img src="assets/Logo.webp" alt="Forest Pathways" class="w-full object-contain object-left" />
+    <div class="flex h-full w-full flex-col overflow-hidden">
+      <!-- HEADER -->
+      <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 p-3 px-4 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+          <img src="assets/Logo.webp" alt="Logo" class="h-6 sm:h-8 object-contain" />
+          <div class="h-4 w-px bg-slate-700/50 hidden sm:block"></div>
+          <div class="hidden flex-col sm:flex">
+             <span id="difficultyBadge" class="text-[9px] font-bold uppercase tracking-widest text-emerald-400"></span>
+             <span id="modeLabel" class="text-[9px] font-medium uppercase tracking-widest text-slate-400"></span>
           </div>
+        </div>
+
+        <div class="flex flex-1 max-w-xs mx-4">
+           <select
+            id="challengeSelect"
+            class="w-full rounded-xl border border-slate-700 bg-slate-950/50 px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
+          ></select>
+        </div>
+
+        <div id="statusContainer" class="flex items-center gap-2 min-w-0">
+          <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
+          <p id="statusText" class="truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+        </div>
+      </header>
+
+      <!-- MAIN AREA -->
+      <main class="relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
+        <div class="game-frame relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl">
+          <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
           
-          <div class="flex-1 space-y-4 lg:space-y-5 pr-1 overflow-y-auto custom-scrollbar">
-            <div class="space-y-2 lg:hidden">
-               <div class="flex items-center justify-between">
-                 <img src="assets/Logo.webp" alt="Forest Pathways" class="h-8 object-contain" />
-                 <div id="statusContainer" class="flex items-center gap-2">
-                   <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                   <p id="statusText" class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
-                 </div>
-               </div>
-            </div>
-
-            <div class="space-y-2">
-              <div class="flex items-center justify-between">
-                <h2 class="text-base font-semibold text-slate-100">Challenge</h2>
-                <div class="flex items-center gap-2">
-                  <span id="difficultyBadge" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
-                  <span id="modeLabel" class="inline-flex rounded-full bg-slate-800 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"></span>
-                </div>
-              </div>
-              <select
-                id="challengeSelect"
-                class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-              ></select>
-              <div class="flex items-center gap-4 px-1 pt-1">
-                <button id="resetBtn" class="group flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition hover:text-rose-400" title="Reset Challenge">
-                  <svg class="h-3 w-3 transition group-hover:rotate-[-45deg]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                  </svg>
-                  Reset
-                </button>
-                <button id="hintBtn" class="group flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition hover:text-amber-400" title="Get a Hint">
-                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                  </svg>
-                  Hint
-                </button>
-                <button id="helpSidebarBtn" class="group flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition hover:text-blue-400" title="Show Help">
-                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="16" x2="12" y2="12" />
-                    <line x1="12" y1="8" x2="12.01" y2="8" />
-                  </svg>
-                  Help
-                </button>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <h2 class="text-base font-semibold text-slate-100">Controls</h2>
-              <div class="space-y-2 text-xs text-slate-400">
-                 <div class="flex items-center justify-between">
-                   <span>Move / Place</span>
-                   <span class="font-bold text-slate-200">Left Mouse</span>
-                 </div>
-                 <div class="flex items-center justify-between">
-                   <span>Rotate</span>
-                   <span class="font-bold text-slate-200">Right Mouse</span>
-                 </div>
-                 <div class="flex items-center justify-between">
-                   <span>Remove</span>
-                   <span class="font-bold text-slate-200">Drag out</span>
-                 </div>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <h2 class="text-base font-semibold text-slate-100">Tiles</h2>
-              <div id="tileList" class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2"></div>
-            </div>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800">
-              <div class="flex items-center justify-between">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Music</h2>
-                <span id="trackInfo" class="text-[10px] text-slate-500 italic">Stopped</span>
-              </div>
-              <div class="flex gap-2">
-                <button
-                  id="playPauseBtn"
-                  class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
-                  title="Play/Pause"
-                >
-                  <svg id="playIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  <svg id="pauseIcon" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-                </button>
-                <button
-                  id="skipBtn"
-                  class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
-                  title="Next Track"
-                >
-                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
-                </button>
-                <button
-                  id="musicMuteBtn"
-                  class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
-                  title="Music on/off"
-                  aria-label="Music on"
-                >
-                  <svg id="musicMuteOnIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                  </svg>
-                  <svg id="musicMuteOffIcon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                  </svg>
-                </button>
-              </div>
-              <input 
-                  id="volumeSlider" 
-                  type="range" min="0" max="1" step="0.05" value="0.1"
-                  class="h-1.5 w-full mt-3 cursor-pointer appearance-none rounded-lg bg-slate-800 accent-emerald-500"
-                />
-              </div>
-
-            <div id="statusContainer" class="flex items-center gap-2 pt-2 border-t border-slate-800">
-              <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              <p id="statusText" class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+          <!-- Overlay Messages -->
+          <div id="overlay" class="overlay absolute inset-0 z-20 grid place-items-center bg-slate-950/80 p-4">
+            <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-2xl">
+              <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
+              <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
+              <button
+                id="overlayBtn"
+                class="mt-6 w-full rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40"
+                type="button"
+              >
+                Play now
+              </button>
             </div>
           </div>
-        </section>
+        </div>
+      </main>
 
-        <section class="flex max-lg:h-full min-h-0 flex-col rounded-3xl bg-slate-900/60 p-4 shadow-xl shadow-slate-950/30 overflow-hidden">
-          <div class="game-frame board-surface relative flex max-lg:h-full flex-1 items-center justify-center overflow-hidden rounded-2xl bg-slate-950/70">
-            <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
+      <!-- FOOTER / CONTROLS -->
+      <footer class="z-10 flex flex-shrink-0 flex-col gap-3 bg-slate-900/60 p-3 pb-6 backdrop-blur-xl border-t border-slate-800/50">
+        <!-- Inventory Ribbon -->
+        <div id="tileList" class="custom-scrollbar flex items-center justify-center gap-2 overflow-x-auto px-2 py-1">
+          <!-- Tiles will be injected here -->
+        </div>
+
+        <!-- Floating Action Bar -->
+        <div class="flex items-center justify-center gap-2 sm:gap-4 px-2">
+          <div class="flex items-center gap-1.5 bg-slate-950/40 p-1 rounded-full border border-slate-800/50 shadow-inner">
+            <button id="resetBtn" class="flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+            </button>
+            <button id="hintBtn" class="flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+            </button>
+          </div>
+
+          <div class="h-6 w-px bg-slate-800/50"></div>
+
+          <div class="flex items-center gap-2 bg-slate-950/40 p-1.5 px-3 rounded-full border border-slate-800/50 shadow-2xl">
+            <button id="musicMuteBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/50 text-slate-300 transition hover:bg-slate-700 active:scale-90 shadow-lg">
+              <svg id="musicMuteOnIcon" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+              <svg id="musicMuteOffIcon" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
             
-            <!-- Absolute Overlay Toolbar -->
-            <div class="absolute bottom-4 sm:bottom-6 left-0 right-0 pointer-events-none flex flex-col items-center gap-4">
-              <div class="pointer-events-auto flex items-center justify-center gap-2 sm:gap-3 bg-slate-900/40 backdrop-blur-xl p-2 px-2 sm:px-3 rounded-full border border-slate-700/30 shadow-2xl">
-                <button
-                  id="rotateBtn"
-                  class="group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-500/30 bg-slate-800/60 text-slate-100 transition hover:bg-slate-700/60 hover:scale-105 active:scale-95 shadow-xl shadow-slate-950/30"
-                  type="button"
-                  title="Rotate Selected Tile"
-                >
-                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                    <path d="M21 3v5h-5" />
-                  </svg>
-                </button>
-                <div class="w-px h-8 bg-slate-700/30"></div>
-                <button
-                  id="checkBtn"
-                  class="group flex h-10 sm:h-12 items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/20 px-6 sm:px-10 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/30 hover:scale-105 active:scale-95 shadow-xl shadow-emerald-950/30"
-                  type="button"
-                >
-                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                  Check
-                </button>
-              </div>
-            </div>
+            <button id="rotateBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/50 text-slate-100 transition hover:bg-slate-700 active:scale-90 shadow-lg">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
+            </button>
 
-            <div id="overlay" class="overlay absolute inset-0 grid place-items-center bg-slate-950/70 z-20">
-              <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-xl shadow-slate-950/60">
-                <div class="flex items-center justify-between mb-2">
-                  <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
-                  <button
-                    id="helpBtn"
-                    class="flex h-6 w-6 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-400 transition hover:bg-slate-700 hover:text-slate-200 hover:border-slate-500"
-                    type="button"
-                    title="Show help"
-                  >
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                      <line x1="12" y1="17" x2="12.01" y2="17" />
-                    </svg>
-                  </button>
-                </div>
-                <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
-                <div class="mt-4 rounded-xl border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-left">
-                  <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Controls</p>
-                  <div class="space-y-1 text-xs text-slate-400">
-                    <div class="flex justify-between gap-3"><span>Move / Place</span><span class="font-medium text-slate-300">Left click</span></div>
-                    <div class="flex justify-between gap-3"><span>Rotate</span><span class="font-medium text-slate-300">Right click</span></div>
-                    <div class="flex justify-between gap-3"><span>Remove</span><span class="font-medium text-slate-300">Drag out</span></div>
-                  </div>
-                </div>
-                <div class="mt-4 flex flex-col gap-3">
-                  <button
-                    id="overlaySoundBtn"
-                    type="button"
-                    class="inline-flex w-fit items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-700 hover:text-slate-100"
-                    title="Music on/off"
-                    aria-label="Music on"
-                  >
-                    <svg id="overlaySoundOnIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                    </svg>
-                    <svg id="overlaySoundOffIcon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <line x1="23" y1="9" x2="17" y2="15"></line>
-                      <line x1="17" y1="9" x2="23" y2="15"></line>
-                    </svg>
-                    <span id="overlaySoundLabel">Music on</span>
-                  </button>
-                  <button
-                    id="overlayBtn"
-                    class="group w-full flex h-12 items-center justify-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/20 px-4 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/30 hover:scale-105 active:scale-95 shadow-xl shadow-emerald-950/30"
-                    type="button"
-                  >
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                    Play now
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Help Modal -->
-            <div id="helpOverlay" class="overlay hidden absolute inset-0 grid place-items-center bg-slate-950/80 z-30">
-              <div class="max-w-lg rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-xl shadow-slate-950/60 max-h-[85vh] overflow-y-auto custom-scrollbar">
-                <div class="flex items-center justify-between mb-4">
-                  <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
-                  <button
-                    id="closeHelpBtn"
-                    class="flex h-7 w-7 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-400 transition hover:bg-slate-700 hover:text-slate-200"
-                    type="button"
-                    title="Close help"
-                  >
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                </div>
-                
-                <div class="space-y-5 text-sm text-slate-300">
-                  <div>
-                    <h3 class="text-base font-semibold text-slate-100 mb-2">Goal</h3>
-                    <p class="text-slate-400">Place path tiles on the 4×4 grid to create a valid route from Red Riding Hood's starting position to the house.</p>
-                  </div>
-
-                  <div>
-                    <h3 class="text-base font-semibold text-slate-100 mb-2">Rules</h3>
-                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
-                      <li><strong class="text-slate-300">Grid:</strong> 4×4 cells</li>
-                      <li><strong class="text-slate-300">Tiles:</strong> 1×2 and 1×1 (White) pieces. Cannot overlap or cover trees/starting positions.</li>
-                      <li><strong class="text-slate-300">House:</strong> Occupies 1 cell but accessible from all 4 sides (N, E, S, W).</li>
-                      <li><strong class="text-slate-300">Without Wolf:</strong> Red Riding Hood must reach any side of the house. No gaps, crossings, or extra tiles allowed.</li>
-                      <li><strong class="text-slate-300">With Wolf:</strong> Two separate paths required. Both must reach the house.</li>
-                      <li><strong class="text-slate-300">Path Length:</strong> Calculated by tile segments (1 for 1-cell White tile, 2 for all 2-cell tiles).</li>
-                      <li><strong class="text-slate-300">Wolf Rule:</strong> The Wolf's path must be strictly shorter than Red Riding Hood's path.</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 class="text-base font-semibold text-slate-100 mb-2">Controls</h3>
-                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
-                      <li><strong class="text-slate-300">Move / Place:</strong> Left click on board or drag tile from inventory</li>
-                      <li><strong class="text-slate-300">Rotate:</strong> Right click on tile (on board or in inventory)</li>
-                      <li><strong class="text-slate-300">Remove:</strong> Drag tile off the board</li>
-                      <li><strong class="text-slate-300">Hint:</strong> Click hint button to place one correct tile</li>
-                      <li><strong class="text-slate-300">Check:</strong> Validate your solution</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 class="text-base font-semibold text-slate-100 mb-2">Tips</h3>
-                    <ul class="space-y-2 text-slate-400 ml-4 list-disc">
-                      <li>Smart rotation automatically finds the nearest valid placement if a rotation causes collision</li>
-                      <li>The inventory only shows tiles not currently on the board</li>
-                      <li>Success triggers confetti and auto-advances to the next challenge after 2 seconds</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <button
+              id="checkBtn"
+              class="flex h-10 items-center gap-2 rounded-full bg-emerald-600 px-6 sm:px-8 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-xl shadow-emerald-950/40"
+              type="button"
+            >
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              <span>CHECK</span>
+            </button>
           </div>
-        </section>
+        </div>
+      </footer>
 
+      <!-- Help Overlay (Minimal) -->
+      <div id="helpOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">
+        <div class="max-w-lg w-full rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl max-h-[80vh] overflow-y-auto custom-scrollbar">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
+            <button id="closeHelpBtn" class="p-2 text-slate-500 hover:text-slate-100 transition"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+          </div>
+          <div class="space-y-4 text-xs sm:text-sm text-slate-400 leading-relaxed">
+            <p>Connect pathways from Red Riding Hood to the house.</p>
+            <ul class="list-disc ml-5 space-y-1">
+              <li><strong class="text-slate-200">Drag</strong> tiles to place them.</li>
+              <li><strong class="text-slate-200">Tap</strong> to select, use <strong class="text-slate-200">Rotate</strong> button to turn.</li>
+              <li><strong class="text-slate-200">With Wolf:</strong> Create two separate paths. Wolf's path must be shorter.</li>
+              <li><strong class="text-slate-200">Outside:</strong> Drag a tile off the board to remove it.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>

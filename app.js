@@ -17,7 +17,6 @@ const hintBtn = document.getElementById("hintBtn");
 const resetBtn = document.getElementById("resetBtn");
 const helpSidebarBtn = document.getElementById("helpSidebarBtn");
 const rotateBtn = document.getElementById("rotateBtn");
-const removeBtn = document.getElementById("removeBtn");
 const statusText = document.getElementById("statusText");
 const modeLabel = document.getElementById("modeLabel");
 const difficultyBadge = document.getElementById("difficultyBadge");
@@ -25,20 +24,10 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
-const overlaySoundBtn = document.getElementById("overlaySoundBtn");
-const overlaySoundOnIcon = document.getElementById("overlaySoundOnIcon");
-const overlaySoundOffIcon = document.getElementById("overlaySoundOffIcon");
-const overlaySoundLabel = document.getElementById("overlaySoundLabel");
 const helpBtn = document.getElementById("helpBtn");
 const helpOverlay = document.getElementById("helpOverlay");
 const closeHelpBtn = document.getElementById("closeHelpBtn");
 const gameFrame = document.querySelector(".game-frame");
-const playPauseBtn = document.getElementById("playPauseBtn");
-const skipBtn = document.getElementById("skipBtn");
-const volumeSlider = document.getElementById("volumeSlider");
-const trackInfo = document.getElementById("trackInfo");
-const playIcon = document.getElementById("playIcon");
-const pauseIcon = document.getElementById("pauseIcon");
 const musicMuteBtn = document.getElementById("musicMuteBtn");
 const musicMuteOnIcon = document.getElementById("musicMuteOnIcon");
 const musicMuteOffIcon = document.getElementById("musicMuteOffIcon");
@@ -67,24 +56,13 @@ const AudioManager = {
   setMuted(m) {
     this.muted = !!m;
     try { localStorage.setItem("soundMuted", this.muted ? "1" : "0"); } catch (_) {}
-    this.audio.volume = this.muted ? 0 : (volumeSlider ? volumeSlider.value : 0.3);
+    this.audio.volume = this.muted ? 0 : 0.3;
   },
 
   init() {
     try { this.muted = localStorage.getItem("soundMuted") === "1"; } catch (_) {}
-    if (volumeSlider) {
-      this.audio.volume = this.muted ? 0 : volumeSlider.value;
-      volumeSlider.addEventListener("input", (e) => {
-        this.audio.volume = this.muted ? 0 : e.target.value;
-      });
-    } else if (!this.muted) {
-      this.audio.volume = 0.3;
-    }
-    
+    this.audio.volume = this.muted ? 0 : 0.3;
     this.audio.addEventListener("ended", () => this.next());
-    
-    if (playPauseBtn) playPauseBtn.addEventListener("click", () => this.togglePlay());
-    if (skipBtn) skipBtn.addEventListener("click", () => this.next());
     
     // SFX precaching
     this.winAudio = new Audio(this.sfx.win);
@@ -99,43 +77,41 @@ const AudioManager = {
       if (!this.audio.src) this.loadTrack();
       this.audio.play().catch(e => console.log("Audio play blocked", e));
     }
-    this.isPlaying = !this.isPlaying;
+    this.isPlaying = !this.audio.paused;
     this.updateUI();
   },
 
   loadTrack() {
     this.audio.src = this.music[this.currentTrackIndex];
     this.audio.load();
-    this.updateUI();
   },
 
   next() {
     this.currentTrackIndex = (this.currentTrackIndex + 1) % this.music.length;
     this.audio.src = this.music[this.currentTrackIndex];
     if (this.isPlaying) this.audio.play();
-    this.updateUI();
   },
 
   updateUI() {
-    trackInfo.textContent = this.isPlaying ? `Track ${this.currentTrackIndex + 1}/${this.music.length}` : "Paused";
-    playIcon.classList.toggle("hidden", this.isPlaying);
-    pauseIcon.classList.toggle("hidden", !this.isPlaying);
+    if (musicMuteOnIcon) musicMuteOnIcon.classList.toggle("hidden", this.muted);
+    if (musicMuteOffIcon) musicMuteOffIcon.classList.toggle("hidden", !this.muted);
   },
 
   playSFX(name) {
     const sound = this[name + "Audio"];
     if (sound) {
       sound.currentTime = 0;
-      sound.volume = volumeSlider ? volumeSlider.value : 0.3;
+      sound.volume = 0.4;
       sound.play().catch(() => {});
     }
   },
 
   // Helper for first interaction
   startIfStopped() {
-    if (!this.isPlaying && playPauseBtn) this.togglePlay();
+    if (!this.isPlaying) this.togglePlay();
   }
 };
+
 
 const AnimationManager = {
   animations: new Map(), // tileId -> animation state
@@ -477,29 +453,6 @@ function attachEvents() {
     if (!state.current) return;
     setChallenge(state.current);
   });
-  
-  if (helpSidebarBtn) {
-    helpSidebarBtn.addEventListener("click", () => {
-      showHelp();
-    });
-  }
-
-  if (removeBtn) {
-    removeBtn.addEventListener("click", () => {
-      if (!state.selectedTileId) return;
-      if (state.placements.has(state.selectedTileId)) {
-        // Save rotation to inventory before removing
-        const placement = state.placements.get(state.selectedTileId);
-        if (placement) {
-          state.inventoryRotations.set(state.selectedTileId, placement.rotation);
-        }
-        state.placements.delete(state.selectedTileId);
-        updateTileList();
-        status("Tile removed.");
-        draw();
-      }
-    });
-  }
 
   if (overlayBtn) {
     overlayBtn.addEventListener("click", () => {
@@ -510,21 +463,13 @@ function attachEvents() {
 
   function updateMusicMuteUI() {
     const muted = AudioManager.getMuted();
-    if (overlaySoundOnIcon) overlaySoundOnIcon.classList.toggle("hidden", muted);
-    if (overlaySoundOffIcon) overlaySoundOffIcon.classList.toggle("hidden", !muted);
-    if (overlaySoundLabel) overlaySoundLabel.textContent = muted ? "Music off" : "Music on";
-    if (overlaySoundBtn) overlaySoundBtn.setAttribute("aria-label", muted ? "Music off" : "Music on");
     if (musicMuteOnIcon) musicMuteOnIcon.classList.toggle("hidden", muted);
     if (musicMuteOffIcon) musicMuteOffIcon.classList.toggle("hidden", !muted);
     if (musicMuteBtn) musicMuteBtn.setAttribute("aria-label", muted ? "Music off" : "Music on");
   }
+  
   updateMusicMuteUI();
-  if (overlaySoundBtn) {
-    overlaySoundBtn.addEventListener("click", () => {
-      AudioManager.setMuted(!AudioManager.getMuted());
-      updateMusicMuteUI();
-    });
-  }
+  
   if (musicMuteBtn) {
     musicMuteBtn.addEventListener("click", () => {
       AudioManager.setMuted(!AudioManager.getMuted());
@@ -533,23 +478,16 @@ function attachEvents() {
   }
 
   if (helpBtn) {
-    helpBtn.addEventListener("click", () => {
-      showHelp();
-    });
+    helpBtn.addEventListener("click", () => showHelp());
   }
 
   if (closeHelpBtn) {
-    closeHelpBtn.addEventListener("click", () => {
-      hideHelp();
-    });
+    closeHelpBtn.addEventListener("click", () => hideHelp());
   }
 
-  // Close help when clicking outside
   if (helpOverlay) {
     helpOverlay.addEventListener("click", (e) => {
-      if (e.target === helpOverlay) {
-        hideHelp();
-      }
+      if (e.target === helpOverlay) hideHelp();
     });
   }
 
@@ -557,10 +495,8 @@ function attachEvents() {
   window.addEventListener("pointermove", handlePointerMove);
   window.addEventListener("pointerup", handlePointerUp);
   
-  // Prevent context menu on long press/right click
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   
-  // Right Click Rotation (Keep for desktop users)
   canvas.addEventListener("auxclick", (e) => {
     if (e.button === 2) handleRightClick(e);
   });
@@ -574,11 +510,8 @@ function attachEvents() {
       
       const p = state.placements.get(state.selectedTileId);
       if (p) {
-        // Rotate on board
         const oldRot = p.rotation;
         const newRot = (oldRot + 90) % 360;
-        
-        // Use the same logic as right click
         const tileId = state.selectedTileId;
         const originalPlacement = { ...p };
         state.placements.delete(tileId);
@@ -590,11 +523,9 @@ function attachEvents() {
           status("Rotated.");
         } else {
           const shape = LogicCore.getTransformedTile(tileId, p.rotation);
-          const xs = shape.cells.map(c => p.anchorX + c.x);
-          const ys = shape.cells.map(c => p.anchorY + c.y);
           const visualCenter = { 
-            x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5,
-            y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5
+            x: (p.anchorX + 0.5),
+            y: (p.anchorY + 0.5)
           };
           const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
           if (nearest) {
@@ -611,7 +542,6 @@ function attachEvents() {
         }
         draw();
       } else {
-        // Rotate in inventory
         const tileId = state.selectedTileId;
         const currentRot = state.inventoryRotations.get(tileId) || 0;
         const newRot = (currentRot + 90) % 360;
@@ -964,42 +894,23 @@ function updateTileList() {
 
   const availableInInventory = state.current.availableTiles.filter(tileId => !state.placements.has(tileId));
   availableInInventory.forEach((tileId) => {
-    const tile = tileDefs[tileId];
     const card = document.createElement("button");
     card.type = "button";
     card.title = tileId;
-    // Static size for inventory items
-    card.className = "flex h-20 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/40 p-2 transition hover:bg-slate-800 hover:scale-105 active:scale-95";
+    card.className = "flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-800 active:scale-95";
     if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
     
-    // Get rotation for this tile (default 0)
     const tileRotation = state.inventoryRotations.get(tileId) || 0;
-    
     const preview = document.createElement("canvas");
     renderTilePreview(preview, tileId, tileRotation);
-    
     card.append(preview);
     
     card.addEventListener("click", () => {
       state.selectedTileId = tileId;
-      state.rotation = tileRotation; // Use stored rotation
+      state.rotation = tileRotation;
       updateTileList();
-      status(`Selected: ${tileId}. Drag to board.`);
+      status(`Selected: ${tileId}.`);
       draw();
-    });
-    
-    // Right-click to rotate in inventory
-    card.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      const currentRot = state.inventoryRotations.get(tileId) || 0;
-      const newRot = (currentRot + 90) % 360;
-      state.inventoryRotations.set(tileId, newRot);
-      if (state.selectedTileId === tileId) {
-        state.rotation = newRot;
-      }
-      AudioManager.playSFX("rotate");
-      updateTileList();
-      status(`Rotated ${tileId} to ${newRot}°.`);
     });
     
     card.addEventListener("pointerdown", (event) => {
@@ -1015,20 +926,16 @@ function renderTilePreview(canvas, tileId, rotation) {
   const img = getTileImage(tileId);
   if (!img) return;
 
-  // Use 0 rotation for inventory previews to keep it tidy
   const shape = LogicCore.getTransformedTile(tileId, 0);
   const isSingleCell = shape.cells.length === 1;
+  const baseSize = 22; 
   
-  const baseSize = 20; // Slightly smaller for inventory
-  
-  // Inventory preview is always horizontal or 1x1
   canvas.width = (isSingleCell ? 1 : 2) * baseSize;
   canvas.height = baseSize;
   
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.translate(canvas.width / 2, canvas.height / 2);
-  // No rotation here for inventory
   
   const drawW = baseSize * 2;
   const drawH = baseSize;
@@ -1358,7 +1265,7 @@ function resizeCanvas() {
   if (!frame) return;
   
   // Use the actual available space in the frame
-  const padding = 32; // Total padding around board
+  const padding = 16; // Total padding around board
   const maxWidth = frame.clientWidth - padding;
   const maxHeight = frame.clientHeight - padding;
   
@@ -1609,27 +1516,6 @@ function drawSelection() {
   ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
   ctx.lineWidth = 2;
   ctx.strokeRect(x + 4, y + 4, w - 8, h - 8);
-}
-
-function renderTilePreview(canvas, tileId, rotation) {
-  const ctx = canvas.getContext("2d");
-  const img = getTileImage(tileId);
-  if (!img) return;
-  
-  const shape = LogicCore.getTransformedTile(tileId, rotation);
-  const isSingleCell = shape.cells.length === 1;
-  
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.save();
-  ctx.translate(canvas.width / 2, canvas.height / 2);
-  ctx.rotate((rotation * Math.PI) / 180);
-  
-  if (isSingleCell) {
-    drawTintedImage(ctx, img, "#ffffff", -11, -11, 44, 22);
-  } else {
-    drawTintedImage(ctx, img, "#ffffff", -22, -11, 44, 22);
-  }
-  ctx.restore();
 }
 
 function setTileDragImage(event, tileId, rotation) {
