@@ -116,6 +116,97 @@ const AudioManager = {
   }
 };
 
+const AnimationManager = {
+  animations: new Map(), // tileId -> animation state
+  loopId: null,
+
+  addGlide(tileId, fromX, fromY, toX, toY, duration = 250) {
+    const anim = this.animations.get(tileId) || {};
+    anim.glide = {
+      startTime: performance.now(),
+      duration,
+      from: { x: fromX, y: fromY },
+      to: { x: toX, y: toY },
+      current: { x: fromX, y: fromY }
+    };
+    this.animations.set(tileId, anim);
+    this.startLoop();
+  },
+
+  addRotate(tileId, fromRot, toRot, duration = 200) {
+    const anim = this.animations.get(tileId) || {};
+    let delta = toRot - fromRot;
+    while (delta > 180) delta -= 360;
+    while (delta < -180) delta += 360;
+
+    anim.rotate = {
+      startTime: performance.now(),
+      duration,
+      from: fromRot,
+      to: fromRot + delta,
+      current: fromRot
+    };
+    this.animations.set(tileId, anim);
+    this.startLoop();
+  },
+
+  startLoop() {
+    if (!this.loopId) {
+      this.loopId = requestAnimationFrame(this.tick.bind(this));
+    }
+  },
+
+  tick(now) {
+    let hasActive = false;
+    for (const [tileId, anim] of this.animations) {
+      let tileHasActive = false;
+
+      if (anim.glide) {
+        const elapsed = now - anim.glide.startTime;
+        const progress = Math.min(elapsed / anim.glide.duration, 1);
+        const t = this.easeOutCubic(progress);
+        
+        anim.glide.current = {
+          x: anim.glide.from.x + (anim.glide.to.x - anim.glide.from.x) * t,
+          y: anim.glide.from.y + (anim.glide.to.y - anim.glide.from.y) * t
+        };
+
+        if (progress >= 1) delete anim.glide;
+        else tileHasActive = true;
+      }
+
+      if (anim.rotate) {
+        const elapsed = now - anim.rotate.startTime;
+        const progress = Math.min(elapsed / anim.rotate.duration, 1);
+        const t = this.easeOutCubic(progress);
+
+        anim.rotate.current = anim.rotate.from + (anim.rotate.to - anim.rotate.from) * t;
+
+        if (progress >= 1) delete anim.rotate;
+        else tileHasActive = true;
+      }
+
+      if (!tileHasActive) {
+        this.animations.delete(tileId);
+      } else {
+        hasActive = true;
+      }
+    }
+
+    draw();
+
+    if (hasActive) {
+      this.loopId = requestAnimationFrame(this.tick.bind(this));
+    } else {
+      this.loopId = null;
+    }
+  },
+
+  easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+};
+
 const DebugManager = {
   active: false,
   showNodes: false,
@@ -497,7 +588,13 @@ function attachEvents() {
 
     // Try ghost snap first
     if (currentDrag.valid && currentDrag.x !== -1) {
-        const result = placeTile(tileId, currentDrag.x, currentDrag.y, currentDrag.rotation);
+        const { cellSize } = getBoardMetrics();
+        const fromX = currentDrag.pixelX / cellSize;
+        const fromY = currentDrag.pixelY / cellSize;
+        
+        const result = placeTile(tileId, currentDrag.x, currentDrag.y, currentDrag.rotation, {
+            animateGlideFrom: { x: fromX, y: fromY }
+        });
         if (result.ok) {
             status("Tile placed.");
             return;
@@ -512,14 +609,24 @@ function attachEvents() {
     // Try exact drop
     const cell = getCellFromEvent(event);
     if (cell) {
-         result = placeTile(tileId, cell.x, cell.y, currentDrag.rotation);
+         const { cellSize } = getBoardMetrics();
+         const fromX = currentDrag.pixelX / cellSize;
+         const fromY = currentDrag.pixelY / cellSize;
+         result = placeTile(tileId, cell.x, cell.y, currentDrag.rotation, {
+             animateGlideFrom: { x: fromX, y: fromY }
+         });
     }
     
     // Try nearest
     if (!result?.ok && dropPoint) {
       const nearest = findNearestValidPlacement(tileId, currentDrag.rotation, dropPoint);
       if (nearest) {
-        result = placeTile(tileId, nearest.x, nearest.y, currentDrag.rotation);
+        const { cellSize } = getBoardMetrics();
+        const fromX = currentDrag.pixelX / cellSize;
+        const fromY = currentDrag.pixelY / cellSize;
+        result = placeTile(tileId, nearest.x, nearest.y, currentDrag.rotation, {
+            animateGlideFrom: { x: fromX, y: fromY }
+        });
       }
     }
 
@@ -569,7 +676,8 @@ function handleRightClick(e) {
   const tileId = findTileAtCell(cell.x, cell.y);
   if (tileId) {
     const p = state.placements.get(tileId);
-    const newRot = (p.rotation + 90) % 360;
+    const oldRot = p.rotation;
+    const newRot = (oldRot + 90) % 360;
     
     // Temporarily remove self from placements to check collision properly
     const originalPlacement = { ...p };
@@ -578,6 +686,7 @@ function handleRightClick(e) {
     // 1. Try to rotate in place
     if (canPlaceTile(tileId, p.anchorX, p.anchorY, newRot)) {
       state.placements.set(tileId, { ...p, rotation: newRot });
+      AnimationManager.addRotate(tileId, oldRot, newRot);
       AudioManager.playSFX("rotate");
       status("Rotated.");
     } 
@@ -600,6 +709,8 @@ function handleRightClick(e) {
           anchorX: nearest.x, 
           anchorY: nearest.y 
         });
+        AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
+        AnimationManager.addRotate(tileId, oldRot, newRot);
         AudioManager.playSFX("rotate");
         status("Rotated and moved to fit.");
       } else {
@@ -718,7 +829,7 @@ function handleDragMove(e) {
 function handleDragEnd(e) {
     if (!state.dragState.active || !state.dragState.isFromBoard) return;
 
-    const { tileId, x, y, valid, rotation, originalX, originalY } = state.dragState;
+    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY } = state.dragState;
 
     // Use release position for "outside" check (more reliable than last mousemove)
     const rect = canvas.getBoundingClientRect();
@@ -735,7 +846,14 @@ function handleDragEnd(e) {
     if (valid && x !== -1 && !isOutside) {
         // Place at new spot (only if still over canvas)
         state.placements.delete(tileId);
-        const result = placeTile(tileId, x, y, rotation);
+        
+        const { cellSize } = getBoardMetrics();
+        const fromX = (pixelX - offsetX) / cellSize;
+        const fromY = (pixelY - offsetY) / cellSize;
+        
+        const result = placeTile(tileId, x, y, rotation, { 
+            animateGlideFrom: { x: fromX, y: fromY } 
+        });
         if (result.ok) {
             AudioManager.playSFX("rotate");
             return;
@@ -958,7 +1076,16 @@ function handleBoardClick(event) {
     return;
   }
 
-  const result = placeTile(state.selectedTileId, cell.x, cell.y, state.rotation);
+  const { cellSize } = getBoardMetrics();
+  const rect = canvas.getBoundingClientRect();
+  const clickX = ((event.clientX - rect.left) / rect.width) * canvas.width;
+  const clickY = ((event.clientY - rect.top) / rect.height) * canvas.height;
+  const fromX = clickX / cellSize;
+  const fromY = clickY / cellSize;
+
+  const result = placeTile(state.selectedTileId, cell.x, cell.y, state.rotation, {
+    animateGlideFrom: { x: fromX, y: fromY }
+  });
   if (result.ok) status("Tile placed.");
   else status(result.reason);
 }
@@ -1043,6 +1170,7 @@ function handleHint() {
         }
 
         // Place the correct tile
+        const oldP = state.placements.get(tileId);
         state.placements.set(tileId, {
           tileId,
           rotation: p.rotation,
@@ -1050,6 +1178,11 @@ function handleHint() {
           anchorY: p.anchorY,
         });
         
+        if (oldP) {
+          AnimationManager.addGlide(tileId, oldP.anchorX, oldP.anchorY, p.anchorX, p.anchorY);
+          AnimationManager.addRotate(tileId, oldP.rotation, p.rotation);
+        }
+
         state.selectedTileId = tileId;
         state.rotation = p.rotation;
         
@@ -1087,7 +1220,9 @@ function updateOrientation(rotation) {
   state.placements.delete(tileId);
 
   if (canPlaceTile(tileId, p.anchorX, p.anchorY, rotation)) {
+    const oldRot = p.rotation;
     state.placements.set(tileId, { ...p, rotation });
+    AnimationManager.addRotate(tileId, oldRot, rotation);
     AudioManager.playSFX("rotate");
     status("Rotated.");
   } else {
@@ -1101,12 +1236,15 @@ function updateOrientation(rotation) {
 
     const nearest = findNearestValidPlacement(tileId, rotation, visualCenter);
     if (nearest) {
+      const oldRot = p.rotation;
       state.placements.set(tileId, { 
         tileId, 
         rotation, 
         anchorX: nearest.x, 
         anchorY: nearest.y 
       });
+      AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
+      AnimationManager.addRotate(tileId, oldRot, rotation);
       AudioManager.playSFX("rotate");
       status("Rotated and moved to fit.");
     } else {
@@ -1119,7 +1257,7 @@ function updateOrientation(rotation) {
   draw();
 }
 
-function placeTile(tileId, anchorX, anchorY, rotation) {
+function placeTile(tileId, anchorX, anchorY, rotation, options = {}) {
   const shape = LogicCore.getTransformedTile(tileId, rotation);
   const occupied = shape.cells.map((cell) => ({
     x: anchorX + cell.x,
@@ -1132,6 +1270,11 @@ function placeTile(tileId, anchorX, anchorY, rotation) {
 
   state.placements.set(tileId, { tileId, rotation, anchorX, anchorY });
   state.rotation = rotation;
+
+  if (options.animateGlideFrom) {
+    AnimationManager.addGlide(tileId, options.animateGlideFrom.x, options.animateGlideFrom.y, anchorX, anchorY);
+  }
+
   updateTileList();
   draw();
   return { ok: true };
@@ -1393,7 +1536,20 @@ function drawTiles() {
       return;
     }
     
-    drawTileImage(tileId, p, cellSize, state.tileTint);
+    // Animation Override
+    let drawP = { ...p };
+    const anim = AnimationManager.animations.get(tileId);
+    if (anim) {
+      if (anim.glide) {
+        drawP.anchorX = anim.glide.current.x;
+        drawP.anchorY = anim.glide.current.y;
+      }
+      if (anim.rotate) {
+        drawP.rotation = anim.rotate.current;
+      }
+    }
+    
+    drawTileImage(tileId, drawP, cellSize, state.tileTint);
     
     if (DEBUG_ENDPOINTS) {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
