@@ -839,8 +839,16 @@ function handlePointerCancel(e) {
     const pointerId = e.pointerId ?? e.changedTouches?.[0]?.identifier;
     if (pendingTouchDrag && pointerId === pendingTouchDrag.pointerId) {
         clearTimeout(pendingTouchDrag.timerId);
+        const { tileId, tileRotation } = pendingTouchDrag;
         pendingTouchDrag = null;
+        /* Mobile often fires pointercancel before pointerup; treat as short tap and rotate */
+        const newRot = ((tileRotation || 0) + 90) % 360;
+        state.inventoryRotations.set(tileId, newRot);
+        state.selectedTileId = tileId;
+        state.rotation = newRot;
+        AudioManager.playSFX("rotate");
         updateTileList();
+        status(`Rotated ${tileId} to ${newRot}°.`);
         draw();
         return;
     }
