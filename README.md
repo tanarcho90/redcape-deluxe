@@ -49,14 +49,14 @@ Web implementation of the Red Riding Hood logic game. Place path tiles on the gr
 - **UI & layout:**
   - Single-screen layout: fits in the viewport without scrolling (`overflow-hidden`).
   - **Header:** Logo, level picker (icon opens overlay list), reset / hint / music; button spacing for clear grouping.
-  - **Main:** Game board (canvas) as a distinct panel (background, border, shadow) with Rotate and Check buttons overlay; status line below. Calm background (reduced pattern opacity).
+  - **Main:** Game board (canvas) as a distinct panel (background, border, shadow) with Rotate and Check buttons overlay; calm background (reduced pattern opacity). Feedback messages appear as a small toast above the tile bar (green/red/grey by type, auto-hide).
   - **Footer:** Tile bar (inventory) with horizontal scroll; safe-area and extra bottom padding on mobile so the bar stays visible. Hover feedback on tile cards.
   - **Level selection:** Header icon opens overlay with all levels; current level highlighted. No dropdown.
   - **Hover:** Placed tiles on the board show a subtle outline on hover; tile bar cards highlight on hover.
 - **Mobile:**
   - Touch: pointer capture, extended drop zone (board + gap to tile bar), double-tap to rotate (inventory and placed tiles).
   - Drag starts only after movement over threshold; double-tap uses a 400 ms window.
-  - Larger touch targets (~44px) for header and board actions; status/level list readable on small screens.
+  - Larger touch targets (~44px) for header and board actions; level list readable on small screens.
   - Optional smaller tile cards and scrollable tile list on very small viewports.
   - Tiles at the board edge (e.g. vertical tiles) are grabbable: clicks in the letterbox around the canvas count as board-edge.
 - **Audio:** Background music and SFX (win, fail, rotate).

@@ -7,11 +7,13 @@ All notable changes to Redcape Deluxe are documented here. The format is based o
 ### Added
 
 - **Hover feedback:** Tile bar cards and placed tiles on the board show a clear hover state (inventory: stronger background/border; board: subtle white outline on the tile under the cursor).
+- **Toast notifications:** Status messages appear as a compact toast above the tile bar (auto-hide after 2.5 s). Toast uses color by type: green (success), red (error), grey (info).
 
 ### Changed
 
 - **Visual clarity:** Calmer background (reduced hero-pattern opacity); game board emphasised as its own panel (background, border, soft shadow) in the main area.
 - **Button spacing:** Rotate/Check action bar and header icon buttons use increased padding and gaps for clearer grouping.
+- **Status feedback:** The fixed status line under the board was removed; all feedback is now shown via the toast.
 
 ## [0.2.0] – 2025-02
 

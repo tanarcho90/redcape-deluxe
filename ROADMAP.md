@@ -167,6 +167,7 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Calm background: reduced hero-pattern opacity; board as panel (background, border, shadow)
 - [x] Hover feedback: tile bar cards and placed tiles on board (outline)
 - [x] Button spacing: Rotate/Check bar and header buttons with clearer gaps
+- [x] Toast feedback: status messages as compact toast with color by type (success/error/info), auto-hide
 - [x] Level picker as icon with overlay list; current level highlighted
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
 
