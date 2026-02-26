@@ -660,7 +660,7 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
     state.selectedTileId = tileId;
     state.rotation = tileRotation;
     
-    const isTouch = e.pointerType === "touch";
+    const isTouch = e.pointerType !== "mouse";
     const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
     
     if (isTouch) {
@@ -744,7 +744,7 @@ function handlePointerMove(e) {
 
 function handlePointerUp(e) {
     const pointerId = e.pointerId ?? e.changedTouches?.[0]?.identifier;
-    if (pendingTouchDrag && pointerId === pendingTouchDrag.pointerId) {
+    if (pendingTouchDrag && !state.dragState.active && (pointerId === pendingTouchDrag.pointerId || pointerId === undefined)) {
         clearTimeout(pendingTouchDrag.timerId);
         const { tileId, tileRotation } = pendingTouchDrag;
         pendingTouchDrag = null;
@@ -861,7 +861,7 @@ function handlePointerUp(e) {
 
 function handlePointerCancel(e) {
     const pointerId = e.pointerId ?? e.changedTouches?.[0]?.identifier;
-    if (pendingTouchDrag && pointerId === pendingTouchDrag.pointerId) {
+    if (pendingTouchDrag && !state.dragState.active && (pointerId === pendingTouchDrag.pointerId || pointerId === undefined)) {
         clearTimeout(pendingTouchDrag.timerId);
         const { tileId, tileRotation } = pendingTouchDrag;
         pendingTouchDrag = null;
