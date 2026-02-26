@@ -110,6 +110,10 @@
         max-height: min(5rem, 20vh);
         overflow-y: auto;
       }
+      /* Tile-Cards: Touch nicht als Scroll der Leiste nutzen, damit Drag zuverlässig startet */
+      .tile-card {
+        touch-action: none;
+      }
       /* Sehr kleine Viewports: Tile-Cards etwas kleiner für mehr Platz */
       @media (max-height: 30rem) {
         .tile-card {

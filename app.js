@@ -494,6 +494,7 @@ function attachEvents() {
   canvas.addEventListener("pointerdown", handleBoardPointerDown);
   window.addEventListener("pointermove", handlePointerMove);
   window.addEventListener("pointerup", handlePointerUp);
+  window.addEventListener("pointercancel", handlePointerCancel);
   
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   
@@ -568,12 +569,13 @@ function handleBoardPointerDown(e) {
 
     const tileId = findTileAtCell(col, row);
     if (!tileId) {
-        // Selection only
         handleBoardClick(e);
         return;
     }
 
-    // Found a tile, start dragging
+    e.preventDefault();
+    if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId);
+
     const placement = state.placements.get(tileId);
     
     // Calculate center of the tile for offset
@@ -609,6 +611,9 @@ function handleBoardPointerDown(e) {
 function handleInventoryPointerDown(e, tileId, tileRotation) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     
+    e.preventDefault();
+    if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId);
+    
     state.selectedTileId = tileId;
     state.rotation = tileRotation;
     
@@ -632,7 +637,6 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
         draggedDistance: 0
     };
     
-    // updateTileList(); // Avoid recreating UI during drag start
     draw();
 }
 
@@ -723,6 +727,13 @@ function handlePointerUp(e) {
         }
     }
     
+    updateTileList();
+    draw();
+}
+
+function handlePointerCancel(e) {
+    if (!state.dragState.active) return;
+    resetDragState();
     updateTileList();
     draw();
 }
