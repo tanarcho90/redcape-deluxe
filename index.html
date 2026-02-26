@@ -73,6 +73,24 @@
         border-radius: 10px;
       }
 
+      #toast {
+        opacity: 0;
+        transform: translate(-50%, 0.5rem);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      #toast.toast-visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+        pointer-events: auto;
+      }
+      #toast.toast--success { border-color: rgba(16, 185, 129, 0.5); background: rgba(5, 150, 105, 0.2); }
+      #toast.toast--success #toastText { color: rgb(110, 231, 183); }
+      #toast.toast--error { border-color: rgba(248, 113, 113, 0.5); background: rgba(225, 29, 72, 0.15); }
+      #toast.toast--error #toastText { color: rgb(252, 165, 165); }
+      #toast.toast--info { border-color: rgba(100, 116, 139, 0.5); background: rgba(51, 65, 85, 0.25); }
+      #toast.toast--info #toastText { color: rgb(148, 163, 184); }
+
       html {
         height: 100%;
         overflow: hidden;
@@ -230,11 +248,12 @@
             </div>
           </div>
         </div>
-        <div id="statusContainer" class="flex flex-shrink-0 items-center justify-center gap-2 mt-2 min-w-0 rounded bg-slate-900/30 px-2 py-1">
-          <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
-          <p id="statusText" class="status-text-touch truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
-        </div>
       </main>
+
+      <!-- Toast: temporary status messages -->
+      <div id="toast" class="fixed bottom-20 left-1/2 z-50 max-w-[85vw] rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm" role="status" aria-live="polite">
+        <p id="toastText" class="text-[9px] font-semibold uppercase tracking-wider"></p>
+      </div>
 
       <!-- FOOTER: nur Tile-Leiste -->
       <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">

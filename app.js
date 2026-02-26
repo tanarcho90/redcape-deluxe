@@ -20,7 +20,8 @@ const hintBtn = document.getElementById("hintBtn");
 const resetBtn = document.getElementById("resetBtn");
 const helpSidebarBtn = document.getElementById("helpSidebarBtn");
 const rotateBtn = document.getElementById("rotateBtn");
-const statusText = document.getElementById("statusText");
+const toastEl = document.getElementById("toast");
+const toastText = document.getElementById("toastText");
 const modeLabel = document.getElementById("modeLabel");
 const difficultyBadge = document.getElementById("difficultyBadge");
 const overlay = document.getElementById("overlay");
@@ -232,21 +233,21 @@ const DebugManager = {
     this.showNodes = this.active;
     this.showEdges = this.active;
     this.showTileIds = this.active;
-    status(`Debug Mode: ${this.active ? "ON" : "OFF"}`);
+    status(`Debug Mode: ${this.active ? "ON" : "OFF"}`, "info");
     draw();
   },
 
   solveCurrent() {
     if (!state.current) return;
-    status("Solving...");
+    status("Solving...", "info");
     const solution = SolverEngine.solve(state.current);
     if (solution) {
       state.placements = solution;
       updateTileList();
       draw();
-      status("Solved!");
+      status("Solved!", "success");
     } else {
-      status("No solution found.");
+      status("No solution found.", "error");
     }
   },
 
@@ -541,7 +542,7 @@ function attachEvents() {
   if (rotateBtn) {
     rotateBtn.addEventListener("click", () => {
       if (!state.selectedTileId) {
-        status("Select a tile first.");
+        status("Select a tile first.", "error");
         return;
       }
       
@@ -557,7 +558,7 @@ function attachEvents() {
           state.placements.set(tileId, { ...p, rotation: newRot });
           AnimationManager.addRotate(tileId, oldRot, newRot);
           AudioManager.playSFX("rotate");
-          status("Rotated.");
+          status("Rotated.", "success");
         } else {
           const shape = LogicCore.getTransformedTile(tileId, p.rotation);
           const visualCenter = { 
@@ -570,10 +571,10 @@ function attachEvents() {
             AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
             AnimationManager.addRotate(tileId, oldRot, newRot);
             AudioManager.playSFX("rotate");
-            status("Rotated and moved.");
+            status("Rotated and moved.", "success");
           } else {
             state.placements.set(tileId, originalPlacement);
-            status("No space to rotate.");
+            status("No space to rotate.", "error");
             AudioManager.playSFX("false");
           }
         }
@@ -586,7 +587,7 @@ function attachEvents() {
         state.rotation = newRot;
         AudioManager.playSFX("rotate");
         updateTileList();
-        status(`Rotated ${tileId} to ${newRot}°.`);
+        status(`Rotated ${tileId} to ${newRot}°.`, "success");
       }
     });
   }
@@ -810,7 +811,7 @@ function handlePointerUp(e) {
             state.rotation = newRot;
             AudioManager.playSFX("rotate");
             updateTileList();
-            status(`Rotated ${tileId} to ${newRot}°.`);
+            status(`Rotated ${tileId} to ${newRot}°.`, "success");
         } else {
             lastInventoryTap = { tileId, timestamp: now };
             state.selectedTileId = tileId;
@@ -856,7 +857,7 @@ function handlePointerUp(e) {
     if (isOutside && isFromBoard) {
         state.placements.delete(tileId);
         updateTileList();
-        status("Tile removed.");
+        status("Tile removed.", "success");
         draw();
         return;
     }
@@ -875,7 +876,7 @@ function applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap,
         if (wasJustTap) {
             state.selectedTileId = tileId;
             state.rotation = rotation;
-            status(`Selected: ${tileId}.`);
+            status(`Selected: ${tileId}.`, "info");
         }
         return;
     }
@@ -889,7 +890,7 @@ function applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap,
             state.placements.set(tileId, { ...p, rotation: newRot });
             AnimationManager.addRotate(tileId, rotation, newRot);
             AudioManager.playSFX("rotate");
-            status("Rotated.");
+            status("Rotated.", "success");
         } else {
             const shape = LogicCore.getTransformedTile(tileId, rotation);
             const xs = shape.cells.map(c => originalX + c.x);
@@ -901,10 +902,10 @@ function applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap,
                 AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
                 AnimationManager.addRotate(tileId, rotation, newRot);
                 AudioManager.playSFX("rotate");
-                status("Rotated and moved.");
+                status("Rotated and moved.", "success");
             } else {
                 state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
-                status("No space to rotate.");
+                status("No space to rotate.", "error");
             }
         }
     } else {
@@ -912,7 +913,7 @@ function applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap,
         state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
         state.selectedTileId = tileId;
         state.rotation = rotation;
-        status(`Selected: ${tileId}.`);
+        status(`Selected: ${tileId}.`, "info");
     }
 }
 
@@ -932,7 +933,7 @@ function handlePointerCancel(e) {
             state.rotation = newRot;
             AudioManager.playSFX("rotate");
             updateTileList();
-            status(`Rotated ${tileId} to ${newRot}°.`);
+            status(`Rotated ${tileId} to ${newRot}°.`, "success");
         } else {
             lastInventoryTap = { tileId, timestamp: now };
             state.selectedTileId = tileId;
@@ -1014,7 +1015,7 @@ function handleRightClick(e) {
       state.placements.set(tileId, { ...p, rotation: newRot });
       AnimationManager.addRotate(tileId, oldRot, newRot);
       AudioManager.playSFX("rotate");
-      status("Rotated.");
+      status("Rotated.", "success");
     } else {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
       const xs = shape.cells.map(c => p.anchorX + c.x);
@@ -1030,10 +1031,10 @@ function handleRightClick(e) {
         AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
         AnimationManager.addRotate(tileId, oldRot, newRot);
         AudioManager.playSFX("rotate");
-        status("Rotated and moved.");
+        status("Rotated and moved.", "success");
       } else {
         state.placements.set(tileId, originalPlacement);
-        status("No space found.");
+        status("No space found.", "error");
         AudioManager.playSFX("false");
       }
     }
@@ -1083,9 +1084,9 @@ async function loadChallenges() {
   if (inlineData && Array.isArray(inlineData.challenges)) {
     state.challenges = inlineData.challenges;
     populateLevelList();
-    status(isLocalFile ? "Challenges loaded from local file." : "Challenges loaded locally.");
+    status(isLocalFile ? "Challenges loaded from local file." : "Challenges loaded locally.", "success");
   } else {
-    status("Error: Could not load challenges.");
+    status("Error: Could not load challenges.", "error");
   }
 }
 
@@ -1130,7 +1131,7 @@ function setChallenge(challenge) {
   modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "WITH WOLF" : "WITHOUT WOLF";
   if (difficultyBadge) difficultyBadge.textContent = challenge.difficulty;
   updateTileList();
-  status("Challenge loaded.");
+  status("Challenge loaded.", "success");
   showOverlay("Ready?", "Select tiles and place them.", "Start");
   draw();
 }
@@ -1156,7 +1157,7 @@ function updateTileList() {
       state.selectedTileId = tileId;
       state.rotation = tileRotation;
       updateTileList();
-      status(`Selected: ${tileId}.`);
+      status(`Selected: ${tileId}.`, "info");
       draw();
     });
     
@@ -1206,7 +1207,7 @@ function handleBoardClick(event) {
       state.selectedTileId = clickedTile;
       state.rotation = state.placements.get(clickedTile)?.rotation ?? 0;
       updateTileList(); // Refresh to clear inventory highlights
-      status(`Selected: ${clickedTile}.`);
+      status(`Selected: ${clickedTile}.`, "info");
       draw();
     }
     return;
@@ -1217,8 +1218,8 @@ function handleBoardClick(event) {
   const result = placeTile(state.selectedTileId, cell.x, cell.y, state.rotation, {
     animateGlideFrom: { x: fromGrid.x, y: fromGrid.y }
   });
-  if (result.ok) status("Tile placed.");
-  else status(result.reason);
+  if (result.ok) status("Tile placed.", "success");
+  else status(result.reason, "error");
 }
 
 function handleCheck() {
@@ -1229,7 +1230,7 @@ function handleCheck() {
     state.lastResultOk = true;
     state.tileTint = theme.tileSuccess;
     flashBoard("success");
-    status(result.message || "Correct.");
+    status(result.message || "Correct.", "success");
     
     // Confetti!
     if (typeof confetti === 'function') {
@@ -1259,19 +1260,19 @@ function handleCheck() {
     state.lastResultOk = false;
     state.tileTint = theme.path;
     flashBoard("error");
-    status(result.message || "Not correct.");
+    status(result.message || "Not correct.", "error");
   }
 }
 
 function handleHint() {
   if (!state.current) return;
-  status("Thinking...");
+  status("Thinking...", "info");
   
   // Use timeout to let the UI update the status text before heavy calculation
   setTimeout(() => {
     const solution = SolverEngine.solve(state.current);
     if (!solution) {
-      status("No solution found for this challenge.");
+      status("No solution found for this challenge.", "error");
       return;
     }
 
@@ -1319,14 +1320,14 @@ function handleHint() {
         
         updateTileList();
         draw();
-        status(`Hint: ${tileId} placed.`);
+        status(`Hint: ${tileId} placed.`, "success");
         hintFound = true;
         break;
       }
     }
 
     if (!hintFound) {
-      status("Everything looks correct!");
+      status("Everything looks correct!", "success");
     }
   }, 50);
 }
@@ -1355,7 +1356,7 @@ function updateOrientation(rotation) {
     state.placements.set(tileId, { ...p, rotation });
     AnimationManager.addRotate(tileId, oldRot, rotation);
     AudioManager.playSFX("rotate");
-    status("Rotated.");
+    status("Rotated.", "success");
   } else {
     const shape = LogicCore.getTransformedTile(tileId, p.rotation);
     const xs = shape.cells.map(c => p.anchorX + c.x);
@@ -1377,10 +1378,10 @@ function updateOrientation(rotation) {
       AnimationManager.addGlide(tileId, p.anchorX, p.anchorY, nearest.x, nearest.y);
       AnimationManager.addRotate(tileId, oldRot, rotation);
       AudioManager.playSFX("rotate");
-      status("Rotated and moved to fit.");
+      status("Rotated and moved to fit.", "success");
     } else {
       state.placements.set(tileId, originalPlacement);
-      status("No space found for rotation.");
+      status("No space found for rotation.", "error");
       AudioManager.playSFX("false");
     }
   }
@@ -1881,7 +1882,17 @@ function setTileDragImage(event, tileId, rotation) {
   event.dataTransfer.setDragImage(canvas, canvas.width / 2, canvas.height / 2);
 }
 
-function status(msg) { statusText.textContent = msg; }
+let statusToastTimer = null;
+const TOAST_TYPES = ["toast--success", "toast--error", "toast--info"];
+function status(msg, type = "info") {
+  if (!toastEl || !toastText) return;
+  toastText.textContent = msg;
+  toastEl.classList.remove(...TOAST_TYPES);
+  toastEl.classList.add("toast--" + type);
+  toastEl.classList.add("toast-visible");
+  if (statusToastTimer) clearTimeout(statusToastTimer);
+  statusToastTimer = setTimeout(() => toastEl.classList.remove("toast-visible"), 2500);
+}
 function showOverlay(t, txt, btn) {
   overlayTitle.textContent = t; overlayText.textContent = txt; overlayBtn.textContent = btn;
   overlay.classList.remove("hidden");
