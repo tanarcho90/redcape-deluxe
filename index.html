@@ -75,13 +75,13 @@
 
       #toast {
         opacity: 0;
-        transform: translate(-50%, 0.5rem);
+        transform: translateX(1rem);
         pointer-events: none;
         transition: opacity 0.2s ease, transform 0.2s ease;
       }
       #toast.toast-visible {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translateX(0);
         pointer-events: auto;
       }
       #toast.toast--success { border-color: rgba(16, 185, 129, 0.5); background: rgba(5, 150, 105, 0.2); }
@@ -265,7 +265,7 @@
       </main>
 
       <!-- Toast: temporary status messages -->
-      <div id="toast" class="fixed bottom-20 left-1/2 z-50 max-w-[85vw] rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm" role="status" aria-live="polite">
+      <div id="toast" class="fixed top-14 right-3 z-50 max-w-[85vw] rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm" role="status" aria-live="polite">
         <p id="toastText" class="text-[9px] font-semibold uppercase tracking-wider"></p>
       </div>
 
