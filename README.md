@@ -42,17 +42,24 @@ Web implementation of the Red Riding Hood logic game. Place path tiles on the gr
 - **Solver:** DFS-based solver in `scripts/solver-engine.js` used for validation and hints.
 - **UI & layout:**
   - Single-screen layout: fits in the viewport without scrolling (`overflow-hidden`).
-  - **Header:** Logo, challenge selector, reset / hint / music.
+  - **Header:** Logo, level picker (icon opens overlay list), reset / hint / music.
   - **Main:** Game board (canvas) with Rotate and Check buttons overlay; status line below.
   - **Footer:** Tile bar (inventory) with horizontal scroll; safe-area and extra bottom padding on mobile so the bar stays visible.
+  - **Level selection:** Header icon opens overlay with all levels; current level highlighted. No dropdown.
 - **Mobile:**
   - Touch: pointer capture, extended drop zone (board + gap to tile bar), double-tap to rotate (inventory and placed tiles).
   - Drag starts only after movement over threshold; double-tap uses a 400 ms window.
+  - Larger touch targets (~44px) for header and board actions; status/level list readable on small screens.
   - Optional smaller tile cards and scrollable tile list on very small viewports.
+  - Tiles at the board edge (e.g. vertical tiles) are grabbable: clicks in the letterbox around the canvas count as board-edge.
 - **Audio:** Background music and SFX (win, fail, rotate).
 - **Gameplay:** Smart rotation (“fly to fit”), hint system, drag-out to remove, confetti on success, auto-advance to next level.
 - **Debug:** Graph visualization (D), auto-solve (S), skip (N).
 - **Challenges:** 43 solvable levels.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## Next Steps
 

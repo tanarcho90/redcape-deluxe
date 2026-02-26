@@ -25,3 +25,10 @@ Track of done and planned improvements.
 - [x] **Double-tap rotate:** Inventory tiles (double-tap in bar) and placed tiles (double-tap on board).
 - [x] **Mobile layout:** Footer tile bar with safe-area and bottom padding; flexible main area; tile list max-height and scroll on small screens.
 - [x] **Touch robustness:** pointercancel handled for taps; non-mouse pointer types treated as touch where appropriate.
+- [x] **Touch targets & readability:** ~44px min touch targets for header/board actions; larger status text and level list on small screens; focus rings for a11y.
+- [x] **Edge tile grab:** Pixel-based hit test and game-frame click handling so vertical tiles at the board edge can be grabbed (clicks in letterbox/pillarbox count as board-edge).
+
+## UI & Polish
+
+- [x] **Level picker as icon:** Replaced header dropdown with an icon that opens a level overlay list; current level highlighted (green); more space for logo.
+- [x] **Tile placement alignment:** Drop anchor snapped to grid so selection outline and tile drawing stay aligned (no “hitpoint left” offset).

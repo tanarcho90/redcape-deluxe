@@ -2,7 +2,7 @@
 
 ## Core Loop
 
-1. Choose a challenge (Starter to Master).
+1. Choose a challenge: tap the list icon in the header to open the level overlay; pick a level from the list.
 2. Place and rotate path tiles from the inventory (bottom bar).
 3. Press Check to validate; confetti and auto-advance on success.
 
@@ -32,6 +32,7 @@
 - **Tile bar:** Single tap = select. **Double-tap** = rotate that inventory tile 90°. Drag (move > ~22px) = drag onto board.
 - **Board:** Single tap on placed tile = select. **Double-tap** on placed tile = rotate 90°. Drag to move or drag off to remove.
 - Releasing in the gap between board and tile bar still counts as a valid drop.
+- Tiles at the board edge (e.g. vertical tiles) can be grabbed even when tapping in the margin around the canvas; the game treats edge-of-canvas taps as board clicks.
 
 ## Debug
 
