@@ -676,10 +676,9 @@ function handlePointerUp(e) {
 
     const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY, isFromBoard, draggedDistance } = state.dragState;
 
-    const { x: releaseX, y: releaseY } = getPixelFromEvent(e);
-    const margin = 60;
-    const isOutside = releaseX < -margin || releaseX > canvas.width + margin ||
-                      releaseY < -margin || releaseY > canvas.height + margin;
+    const releaseClientX = e.clientX ?? (e.changedTouches?.[0]?.clientX ?? 0);
+    const releaseClientY = e.clientY ?? (e.changedTouches?.[0]?.clientY ?? 0);
+    const isOutside = !isReleaseInExtendedDropZone(releaseClientX, releaseClientY);
 
     const wasJustTap = draggedDistance < 10;
     resetDragState();
@@ -1238,6 +1237,21 @@ function getPixelFromEvent(event) {
     x: (clientX - rect.left) * scaleX,
     y: (clientY - rect.top) * scaleY
   };
+}
+
+/** Release in client coords: true if inside canvas rect extended downward to tile bar (better mobile drop). */
+function isReleaseInExtendedDropZone(clientX, clientY) {
+  const margin = 60;
+  const rect = canvas.getBoundingClientRect();
+  const footer = document.querySelector("footer");
+  const extendBottom = footer
+    ? Math.max(0, footer.getBoundingClientRect().top - rect.bottom)
+    : 150;
+  const left = rect.left - margin;
+  const right = rect.right + margin;
+  const top = rect.top - margin;
+  const bottom = rect.bottom + extendBottom;
+  return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom;
 }
 
 function getCellFromEvent(event) {
