@@ -172,7 +172,8 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Loading state: overlay "Loading challenges…" at startup; button re-enabled when ready
 - [x] Level picker as icon with overlay list; current level highlighted
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
-- [x] Atmospheric: subtle fog overlay; light parallax (background moves with pointer)
+- [x] Atmospheric: subtle fog overlay; light parallax (background moves with pointer); topography-style background pattern
+- [x] Board card: canvas and tile bar in one panel, no outer padding, no border radius; toast fixed above Rotate/Check (one line)
 
 ---
 

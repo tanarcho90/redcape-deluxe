@@ -22,7 +22,7 @@
 - **Drag & drop:** Snaps to nearest valid cell. Drag a placed tile off the board to remove it.
 - **Smart rotation (right-click / double-tap):** Rotate tile; if it would collide, it “flies” to the nearest valid placement.
 - **Inventory:** Bottom tile bar shows only tiles not on the board; horizontal scroll when needed. Tile cards and placed tiles show hover feedback (highlight/outline).
-- **Feedback messages:** Short messages (e.g. “Rotated.”, “Select a tile first.”, “Correct.”) appear as a toast above the tile bar and disappear after a few seconds. Colors indicate type: green = success, red = error, grey = info.
+- **Feedback messages:** Short messages (e.g. “Rotated.”, “Select a tile first.”, “Correct.”) appear in one line as a toast fixed above the Rotate/Check buttons and disappear after a few seconds. Colors indicate type: green = success, red = error, grey = info.
 
 ### Mouse
 
