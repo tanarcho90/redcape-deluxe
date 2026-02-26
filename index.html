@@ -104,6 +104,10 @@
       .main-fill {
         min-height: 0;
       }
+      /* Spielfläche: kein Browser-Scroll/Pan, damit Touch auf Android zuverlässig funktioniert */
+      .game-frame {
+        touch-action: none;
+      }
       /* Tile-Leiste: max. Höhe, bei vielen Tiles oder kleinem Screen vertikal scrollbar */
       #tileList {
         max-height: min(5rem, 20vh);

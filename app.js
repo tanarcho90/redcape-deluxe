@@ -499,10 +499,10 @@ function attachEvents() {
     });
   }
 
-  canvas.addEventListener("pointerdown", handleBoardPointerDown);
-  window.addEventListener("pointermove", handlePointerMove);
-  window.addEventListener("pointerup", handlePointerUp);
-  window.addEventListener("pointercancel", handlePointerCancel);
+  canvas.addEventListener("pointerdown", handleBoardPointerDown, { passive: false });
+  window.addEventListener("pointermove", handlePointerMove, { passive: false });
+  window.addEventListener("pointerup", handlePointerUp, { passive: false });
+  window.addEventListener("pointercancel", handlePointerCancel, { passive: false });
   
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   
@@ -699,6 +699,7 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
 }
 
 function handlePointerMove(e) {
+    if (state.dragState.active || pendingTouchDrag) e.preventDefault();
     if (pendingTouchDrag && e.pointerId === pendingTouchDrag.pointerId) {
         const dx = e.clientX - pendingTouchDrag.startClientX;
         const dy = e.clientY - pendingTouchDrag.startClientY;
@@ -1094,7 +1095,7 @@ function updateTileList() {
     
     card.addEventListener("pointerdown", (event) => {
       handleInventoryPointerDown(event, tileId, tileRotation);
-    });
+    }, { passive: false });
     
     tileList.append(card);
   });
