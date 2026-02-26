@@ -388,7 +388,8 @@ const state = {
     isFromBoard: false,
     originalX: -1,
     originalY: -1,
-    draggedDistance: 0
+    draggedDistance: 0,
+    isTouch: false
   },
 };
 
@@ -602,7 +603,8 @@ function handleBoardPointerDown(e) {
         valid: true,
         x: placement.anchorX,
         y: placement.anchorY,
-        draggedDistance: 0
+        draggedDistance: 0,
+        isTouch: e.pointerType === "touch"
     };
 
     state.selectedTileId = tileId;
@@ -639,7 +641,8 @@ function startDragFromPending(pointerEventOrNull) {
         valid: !!nearest,
         x: nearest ? nearest.x : -1,
         y: nearest ? nearest.y : -1,
-        draggedDistance: 0
+        draggedDistance: 0,
+        isTouch: true
     };
     draw();
 }
@@ -685,7 +688,8 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
         valid: false,
         x: -1,
         y: -1,
-        draggedDistance: 0
+        draggedDistance: 0,
+        isTouch: false
     };
     draw();
 }
@@ -744,6 +748,7 @@ function handlePointerUp(e) {
         state.inventoryRotations.set(tileId, newRot);
         state.selectedTileId = tileId;
         state.rotation = newRot;
+        AudioManager.playSFX("rotate");
         updateTileList();
         status(`Rotated ${tileId} to ${newRot}°.`);
         draw();
@@ -751,7 +756,7 @@ function handlePointerUp(e) {
     }
     if (!state.dragState.active) return;
 
-    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY, isFromBoard, draggedDistance } = state.dragState;
+    const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY, isFromBoard, draggedDistance, isTouch } = state.dragState;
 
     const releaseClientX = e.clientX ?? (e.changedTouches?.[0]?.clientX ?? 0);
     const releaseClientY = e.clientY ?? (e.changedTouches?.[0]?.clientY ?? 0);
@@ -785,18 +790,44 @@ function handlePointerUp(e) {
 
     // Revert
     if (isFromBoard) {
-        state.placements.set(tileId, { 
-            tileId, 
-            rotation, 
-            anchorX: originalX, 
-            anchorY: originalY 
-        });
-        
-        if (wasJustTap) {
-            // It was a tap on a tile, just select it
-            state.selectedTileId = tileId;
-            state.rotation = rotation;
-            status(`Selected: ${tileId}.`);
+        if (wasJustTap && isTouch) {
+            // Touch tap on placed tile: rotate (like right-click)
+            const newRot = (rotation + 90) % 360;
+            const p = { tileId, rotation, anchorX: originalX, anchorY: originalY };
+            if (canPlaceTile(tileId, originalX, originalY, newRot)) {
+                state.placements.set(tileId, { ...p, rotation: newRot });
+                AnimationManager.addRotate(tileId, rotation, newRot);
+                AudioManager.playSFX("rotate");
+                status("Rotated.");
+            } else {
+                const shape = LogicCore.getTransformedTile(tileId, rotation);
+                const xs = shape.cells.map(c => originalX + c.x);
+                const ys = shape.cells.map(c => originalY + c.y);
+                const visualCenter = { x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5, y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5 };
+                const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+                if (nearest) {
+                    state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
+                    AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
+                    AnimationManager.addRotate(tileId, rotation, newRot);
+                    AudioManager.playSFX("rotate");
+                    status("Rotated and moved.");
+                } else {
+                    state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+                    status("No space to rotate.");
+                }
+            }
+        } else {
+            state.placements.set(tileId, { 
+                tileId, 
+                rotation, 
+                anchorX: originalX, 
+                anchorY: originalY 
+            });
+            if (wasJustTap) {
+                state.selectedTileId = tileId;
+                state.rotation = rotation;
+                status(`Selected: ${tileId}.`);
+            }
         }
     }
     
@@ -829,7 +860,8 @@ function resetDragState() {
         rotation: 0, 
         valid: false, 
         isFromBoard: false, 
-        originalX: -1, originalY: -1 
+        originalX: -1, originalY: -1,
+        isTouch: false
     };
 }
 
