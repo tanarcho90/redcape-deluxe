@@ -53,11 +53,27 @@
 
       .hero-pattern {
         background-color: #0b1120;
+      }
+      .parallax-bg {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
         background-image: radial-gradient(1200px 800px at 15% 10%, rgba(14, 116, 144, 0.09), transparent 60%),
           radial-gradient(900px 700px at 85% 25%, rgba(30, 64, 175, 0.09), transparent 55%),
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none' stroke='%2394a3b8' stroke-width='1' stroke-opacity='0.04'%3E%3Cpath d='M-12 12L12 -12M0 24L24 0M12 36L36 12M24 48L48 24M36 60L60 36M48 72L72 48M60 84L84 60'/%3E%3C/svg%3E");
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%2394a3b8' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M0 20 Q20 12 40 20 T80 20'/%3E%3Cpath d='M0 35 Q25 45 40 35 T80 35'/%3E%3Cpath d='M0 50 Q20 42 40 50 T80 50'/%3E%3Cpath d='M0 65 Q30 55 40 65 T80 65'/%3E%3Cpath d='M20 0 Q30 20 20 40 T20 80'/%3E%3Cpath d='M45 0 Q55 25 45 40 T45 80'/%3E%3Cpath d='M70 0 Q60 22 70 40 T70 80'/%3E%3C/svg%3E");
         background-size: auto, auto, 144px 144px;
-        background-attachment: fixed;
+        background-attachment: scroll;
+        background-position: 0 0;
+        pointer-events: none;
+      }
+      .fog {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image: radial-gradient(ellipse 120% 80% at 50% 90%, rgba(148, 163, 184, 0.06) 0%, transparent 45%),
+          radial-gradient(ellipse 80% 60% at 20% 20%, rgba(148, 163, 184, 0.04) 0%, transparent 40%),
+          radial-gradient(ellipse 80% 60% at 80% 30%, rgba(148, 163, 184, 0.04) 0%, transparent 40%);
       }
 
       .custom-scrollbar::-webkit-scrollbar {
@@ -75,13 +91,13 @@
 
       #toast {
         opacity: 0;
-        transform: translateX(1rem);
+        transform: translate(-50%, 0.25rem);
         pointer-events: none;
         transition: opacity 0.2s ease, transform 0.2s ease;
       }
       #toast.toast-visible {
         opacity: 1;
-        transform: translateX(0);
+        transform: translate(-50%, 0);
         pointer-events: auto;
       }
       #toast.toast--success { border-color: rgba(16, 185, 129, 0.5); background: rgba(5, 150, 105, 0.2); }
@@ -122,12 +138,15 @@
       .main-fill {
         min-height: 0;
       }
-      /* Spielfläche: kein Browser-Scroll/Pan; Board als eigenes Panel hervorgehoben */
-      .game-frame {
+      /* Karte: Spielfeld + Tile-Leiste als ein Panel (oben/links/rechts ohne Abstand) */
+      .board-card {
         touch-action: none;
         background: rgba(15, 23, 42, 0.5);
         border: 1px solid rgba(51, 65, 85, 0.4);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.15), 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+      }
+      .game-frame {
+        touch-action: none;
       }
       /* Tile-Leiste: max. Höhe, bei vielen Tiles oder kleinem Screen vertikal scrollbar */
       #tileList {
@@ -194,7 +213,9 @@
     </style>
   </head>
   <body class="hero-pattern min-h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none box-border">
-    <div class="flex h-full w-full flex-col overflow-hidden">
+    <div id="parallaxBg" class="parallax-bg" aria-hidden="true"></div>
+    <div class="fog" aria-hidden="true"></div>
+    <div class="flex h-full w-full flex-col overflow-hidden relative z-10">
       <!-- HEADER -->
       <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 py-3 px-3 sm:px-4 backdrop-blur-md">
         <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -223,9 +244,10 @@
         </div>
       </header>
 
-      <!-- MAIN AREA -->
-      <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center py-3 px-2">
-        <div class="game-frame relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-2xl">
+      <!-- MAIN AREA: Karte (Spielfeld + Footer) ohne Außenpadding -->
+      <main class="main-fill relative flex flex-1 flex-col overflow-hidden w-full">
+        <div class="board-card relative flex flex-1 flex-col min-h-0 w-full overflow-hidden">
+        <div class="game-frame relative flex min-h-0 flex-1 items-center justify-center overflow-hidden">
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
 
           <!-- Rotate + Check als Overlay auf dem Spielfeld -->
@@ -262,19 +284,19 @@
             </div>
           </div>
         </div>
+        <!-- Footer (Tile-Leiste) in der Karte -->
+        <footer class="footer-safe z-10 flex flex-shrink-0 flex-col border-t border-slate-700/50 bg-slate-900/40 p-3 pt-3">
+          <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] flex-wrap items-center justify-center gap-2 overflow-x-auto overflow-y-auto px-2 py-1">
+            <!-- Tiles will be injected here -->
+          </div>
+        </footer>
+        </div>
       </main>
 
-      <!-- Toast: temporary status messages -->
-      <div id="toast" class="fixed top-14 right-3 z-50 max-w-[85vw] rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm" role="status" aria-live="polite">
+      <!-- Toast: fest über den Rotate/Check-Buttons, unabhängig, eine Zeile -->
+      <div id="toast" class="fixed bottom-44 left-1/2 z-50 rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm whitespace-nowrap" role="status" aria-live="polite">
         <p id="toastText" class="text-[9px] font-semibold uppercase tracking-wider"></p>
       </div>
-
-      <!-- FOOTER: nur Tile-Leiste -->
-      <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
-        <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] flex-wrap items-center justify-center gap-2 overflow-x-auto overflow-y-auto px-2 py-1">
-          <!-- Tiles will be injected here -->
-        </div>
-      </footer>
 
       <!-- Level Picker Overlay -->
       <div id="levelOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">

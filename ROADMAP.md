@@ -64,11 +64,11 @@ Goal: Clear prioritisation of actions.
 
 Goal: More immersion without visual overload.
 
-- [ ] Subtle fog effect in the background
-- [ ] Light parallax motion
-- [ ] Optional ambient sound
-- [ ] Day/night theme
-- [ ] Seasonal colour variants
+- [x] **Subtle fog effect in the background** (fixed overlay with soft radial gradients)
+- [x] **Light parallax motion** (background layer moves subtly with pointer)
+- [ ] Optional ambient sound (out of scope for now)
+- [ ] Day/night theme (out of scope)
+- [ ] Seasonal colour variants (out of scope)
 
 **Outcome:** The game gains a stronger identity.
 
@@ -172,6 +172,7 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Loading state: overlay "Loading challenges…" at startup; button re-enabled when ready
 - [x] Level picker as icon with overlay list; current level highlighted
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
+- [x] Atmospheric: subtle fog overlay; light parallax (background moves with pointer)
 
 ---
 

@@ -32,6 +32,7 @@ const helpBtn = document.getElementById("helpBtn");
 const helpOverlay = document.getElementById("helpOverlay");
 const closeHelpBtn = document.getElementById("closeHelpBtn");
 const gameFrame = document.querySelector(".game-frame");
+const parallaxBg = document.getElementById("parallaxBg");
 const musicMuteBtn = document.getElementById("musicMuteBtn");
 const musicMuteOnIcon = document.getElementById("musicMuteOnIcon");
 const musicMuteOffIcon = document.getElementById("musicMuteOffIcon");
@@ -512,6 +513,17 @@ function attachEvents() {
       if (e.target === helpOverlay) hideHelp();
     });
   }
+
+  const PARALLAX_AMOUNT = 12;
+  window.addEventListener("pointermove", (e) => {
+    if (!parallaxBg) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * PARALLAX_AMOUNT;
+    const y = (e.clientY / window.innerHeight - 0.5) * PARALLAX_AMOUNT;
+    parallaxBg.style.transform = `translate(${x}px, ${y}px)`;
+  }, { passive: true });
+  window.addEventListener("pointerleave", () => {
+    if (parallaxBg) parallaxBg.style.transform = "translate(0, 0)";
+  }, { passive: true });
 
   canvas.addEventListener("pointerdown", handleBoardPointerDown, { passive: false });
   canvas.addEventListener("pointermove", (e) => {
