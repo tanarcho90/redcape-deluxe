@@ -393,10 +393,14 @@ const state = {
   },
 };
 
-/** Touch only: short press = rotate, long press or move = drag. */
+/** Touch: drag only on movement; rotate on double-tap. */
 let pendingTouchDrag = null;
-const TOUCH_DRAG_DELAY_MS = 280;
-const TOUCH_MOVE_THRESHOLD_PX = 10;
+/** { tileId, timestamp } for double-tap rotate in inventory. */
+let lastInventoryTap = null;
+/** { tileId, timestamp } for double-tap rotate on board. */
+let lastBoardTap = null;
+const TOUCH_MOVE_THRESHOLD_PX = 22;
+const DOUBLE_TAP_MS = 400;
 
 function init() {
   AudioManager.init();
@@ -662,7 +666,7 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
     if (isTouch) {
         if (pendingTouchDrag) clearTimeout(pendingTouchDrag.timerId);
         pendingTouchDrag = {
-            timerId: setTimeout(() => startDragFromPending(null), TOUCH_DRAG_DELAY_MS),
+            timerId: null,
             tileId,
             tileRotation,
             pointerId: e.pointerId,
@@ -744,13 +748,23 @@ function handlePointerUp(e) {
         clearTimeout(pendingTouchDrag.timerId);
         const { tileId, tileRotation } = pendingTouchDrag;
         pendingTouchDrag = null;
-        const newRot = ((tileRotation || 0) + 90) % 360;
-        state.inventoryRotations.set(tileId, newRot);
-        state.selectedTileId = tileId;
-        state.rotation = newRot;
-        AudioManager.playSFX("rotate");
-        updateTileList();
-        status(`Rotated ${tileId} to ${newRot}°.`);
+        const now = Date.now();
+        const isDoubleTap = lastInventoryTap && lastInventoryTap.tileId === tileId && (now - lastInventoryTap.timestamp) < DOUBLE_TAP_MS;
+        if (isDoubleTap) {
+            lastInventoryTap = null;
+            const newRot = ((tileRotation || 0) + 90) % 360;
+            state.inventoryRotations.set(tileId, newRot);
+            state.selectedTileId = tileId;
+            state.rotation = newRot;
+            AudioManager.playSFX("rotate");
+            updateTileList();
+            status(`Rotated ${tileId} to ${newRot}°.`);
+        } else {
+            lastInventoryTap = { tileId, timestamp: now };
+            state.selectedTileId = tileId;
+            state.rotation = tileRotation;
+            updateTileList();
+        }
         draw();
         return;
     }
@@ -791,30 +805,40 @@ function handlePointerUp(e) {
     // Revert
     if (isFromBoard) {
         if (wasJustTap && isTouch) {
-            // Touch tap on placed tile: rotate (like right-click)
-            const newRot = (rotation + 90) % 360;
-            const p = { tileId, rotation, anchorX: originalX, anchorY: originalY };
-            if (canPlaceTile(tileId, originalX, originalY, newRot)) {
-                state.placements.set(tileId, { ...p, rotation: newRot });
-                AnimationManager.addRotate(tileId, rotation, newRot);
-                AudioManager.playSFX("rotate");
-                status("Rotated.");
-            } else {
-                const shape = LogicCore.getTransformedTile(tileId, rotation);
-                const xs = shape.cells.map(c => originalX + c.x);
-                const ys = shape.cells.map(c => originalY + c.y);
-                const visualCenter = { x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5, y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5 };
-                const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
-                if (nearest) {
-                    state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
-                    AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
+            const now = Date.now();
+            const isDoubleTap = lastBoardTap && lastBoardTap.tileId === tileId && (now - lastBoardTap.timestamp) < DOUBLE_TAP_MS;
+            if (isDoubleTap) {
+                lastBoardTap = null;
+                const newRot = (rotation + 90) % 360;
+                const p = { tileId, rotation, anchorX: originalX, anchorY: originalY };
+                if (canPlaceTile(tileId, originalX, originalY, newRot)) {
+                    state.placements.set(tileId, { ...p, rotation: newRot });
                     AnimationManager.addRotate(tileId, rotation, newRot);
                     AudioManager.playSFX("rotate");
-                    status("Rotated and moved.");
+                    status("Rotated.");
                 } else {
-                    state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
-                    status("No space to rotate.");
+                    const shape = LogicCore.getTransformedTile(tileId, rotation);
+                    const xs = shape.cells.map(c => originalX + c.x);
+                    const ys = shape.cells.map(c => originalY + c.y);
+                    const visualCenter = { x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5, y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5 };
+                    const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+                    if (nearest) {
+                        state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
+                        AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
+                        AnimationManager.addRotate(tileId, rotation, newRot);
+                        AudioManager.playSFX("rotate");
+                        status("Rotated and moved.");
+                    } else {
+                        state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+                        status("No space to rotate.");
+                    }
                 }
+            } else {
+                lastBoardTap = { tileId, timestamp: now };
+                state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+                state.selectedTileId = tileId;
+                state.rotation = rotation;
+                status(`Selected: ${tileId}.`);
             }
         } else {
             state.placements.set(tileId, { 
@@ -841,14 +865,23 @@ function handlePointerCancel(e) {
         clearTimeout(pendingTouchDrag.timerId);
         const { tileId, tileRotation } = pendingTouchDrag;
         pendingTouchDrag = null;
-        /* Mobile often fires pointercancel before pointerup; treat as short tap and rotate */
-        const newRot = ((tileRotation || 0) + 90) % 360;
-        state.inventoryRotations.set(tileId, newRot);
-        state.selectedTileId = tileId;
-        state.rotation = newRot;
-        AudioManager.playSFX("rotate");
-        updateTileList();
-        status(`Rotated ${tileId} to ${newRot}°.`);
+        const now = Date.now();
+        const isDoubleTap = lastInventoryTap && lastInventoryTap.tileId === tileId && (now - lastInventoryTap.timestamp) < DOUBLE_TAP_MS;
+        if (isDoubleTap) {
+            lastInventoryTap = null;
+            const newRot = ((tileRotation || 0) + 90) % 360;
+            state.inventoryRotations.set(tileId, newRot);
+            state.selectedTileId = tileId;
+            state.rotation = newRot;
+            AudioManager.playSFX("rotate");
+            updateTileList();
+            status(`Rotated ${tileId} to ${newRot}°.`);
+        } else {
+            lastInventoryTap = { tileId, timestamp: now };
+            state.selectedTileId = tileId;
+            state.rotation = tileRotation;
+            updateTileList();
+        }
         draw();
         return;
     }
