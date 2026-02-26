@@ -897,7 +897,7 @@ function updateTileList() {
     const card = document.createElement("button");
     card.type = "button";
     card.title = tileId;
-    card.className = "flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-800 active:scale-95";
+    card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-800 active:scale-95";
     if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
     
     const tileRotation = state.inventoryRotations.get(tileId) || 0;

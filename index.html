@@ -95,6 +95,10 @@
       @media (pointer: coarse) {
         body { height: 100svh; }
       }
+      /* Kleine Viewports: 100svh, damit Footer garantiert im sichtbaren Bereich liegt */
+      @media (max-height: 50rem) {
+        body { height: 100svh; min-height: 100svh; }
+      }
       /* Footer: zusätzlicher Abstand über Browser-Leiste / Home-Indicator */
       .footer-safe {
         padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
@@ -102,6 +106,19 @@
       /* Main darf schrumpfen, damit Header + Main + Footer in die Höhe passen */
       .main-fill {
         min-height: 0;
+      }
+      /* Tile-Leiste: max. Höhe, bei vielen Tiles oder kleinem Screen vertikal scrollbar */
+      #tileList {
+        max-height: min(5rem, 20vh);
+        overflow-y: auto;
+      }
+      /* Sehr kleine Viewports: Tile-Cards etwas kleiner für mehr Platz */
+      @media (max-height: 30rem) {
+        .tile-card {
+          height: 3rem;
+          min-width: 4rem;
+          width: 4rem;
+        }
       }
 
       /* Start overlay: controls hint by device (touch vs pointer) */
@@ -149,7 +166,7 @@
 
       <!-- MAIN AREA -->
       <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
-        <div class="game-frame relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl">
+        <div class="game-frame relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-2xl">
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
 
           <!-- Rotate + Check als Overlay auf dem Spielfeld -->
@@ -194,7 +211,7 @@
 
       <!-- FOOTER: nur Tile-Leiste -->
       <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50">
-        <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] items-center justify-center gap-2 overflow-x-auto px-2 py-1">
+        <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] flex-wrap items-center justify-center gap-2 overflow-x-auto overflow-y-auto px-2 py-1">
           <!-- Tiles will be injected here -->
         </div>
       </footer>
