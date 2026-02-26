@@ -113,9 +113,10 @@
         max-height: min(5rem, 20vh);
         overflow-y: auto;
       }
-      /* Tile-Cards: Touch nicht als Scroll der Leiste nutzen, damit Drag zuverlässig startet */
+      /* Tile-Cards: Touch nicht als Scroll; Mindesthöhe für Touch-Ziel (~44px) */
       .tile-card {
         touch-action: none;
+        min-height: 2.75rem;
       }
       /* Sehr kleine Viewports: Tile-Cards etwas kleiner für mehr Platz */
       @media (max-height: 30rem) {
@@ -125,6 +126,13 @@
           width: 4rem;
         }
       }
+      /* Mobile: größere Touch-Ziele (~44px) und Lesbarkeit */
+      @media (pointer: coarse), (max-width: 640px) {
+        .header-icon-btn { min-height: 2.75rem; min-width: 2.75rem; }
+        .challenge-select-touch { min-height: 2.75rem; padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 0.875rem; }
+        .board-action-btn { min-height: 2.75rem; padding-left: 1rem; padding-right: 1rem; padding-top: 0.625rem; padding-bottom: 0.625rem; font-size: 0.875rem; }
+        .status-text-touch { font-size: 0.75rem; }
+      }
 
       /* Start overlay: controls hint by device (touch vs pointer) */
       .overlay-controls-touch { display: none; }
@@ -133,36 +141,41 @@
         .overlay-controls-touch { display: block; }
         .overlay-controls-pointer { display: none; }
       }
+      /* A11y: sichtbare Fokus-Ringe für Tastatur */
+      .focus-ring:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px rgba(52, 211, 153, 0.8);
+      }
     </style>
   </head>
   <body class="hero-pattern min-h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none box-border">
     <div class="flex h-full w-full flex-col overflow-hidden">
       <!-- HEADER -->
-      <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 p-3 px-4 backdrop-blur-md">
-        <div class="flex items-center gap-3">
-          <img src="assets/Logo.webp" alt="Logo" class="h-6 sm:h-8 object-contain" />
-          <div class="h-4 w-px bg-slate-700/50 hidden sm:block"></div>
-          <div class="hidden flex-col sm:flex">
+      <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 py-3 px-3 sm:px-4 backdrop-blur-md">
+        <div class="flex items-center gap-3 min-w-0">
+          <img src="assets/Logo.webp" alt="Logo" class="h-6 sm:h-8 object-contain flex-shrink-0" />
+          <div class="h-4 w-px bg-slate-700/50 hidden sm:block flex-shrink-0"></div>
+          <div class="hidden flex-col sm:flex flex-shrink-0">
              <span id="difficultyBadge" class="text-[9px] font-bold uppercase tracking-widest text-emerald-400"></span>
              <span id="modeLabel" class="text-[9px] font-medium uppercase tracking-widest text-slate-400"></span>
           </div>
         </div>
 
-        <div class="flex flex-1 max-w-xs mx-4">
+        <div class="flex flex-1 min-w-0 max-w-xs mx-2 sm:mx-4">
            <select
             id="challengeSelect"
-            class="w-full rounded-xl border border-slate-700 bg-slate-950/50 px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
+            class="challenge-select-touch focus-ring w-full rounded-xl border border-slate-700 bg-slate-950/50 px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-100 focus:outline-none"
           ></select>
         </div>
 
-        <div class="flex items-center gap-1 sm:gap-2">
-          <button id="resetBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
+        <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          <button id="resetBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
           </button>
-          <button id="hintBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
+          <button id="hintBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
           </button>
-          <button id="musicMuteBtn" class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-slate-100 active:scale-90" title="Music on/off">
+          <button id="musicMuteBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-slate-100 active:scale-90" title="Music on/off">
             <svg id="musicMuteOnIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
             <svg id="musicMuteOffIcon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
           </button>
@@ -170,18 +183,18 @@
       </header>
 
       <!-- MAIN AREA -->
-      <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center p-2">
+      <main class="main-fill relative flex flex-1 flex-col overflow-hidden items-center justify-center py-3 px-2">
         <div class="game-frame relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-2xl">
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
 
           <!-- Rotate + Check als Overlay auf dem Spielfeld -->
           <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 pointer-events-none">
             <div class="pointer-events-auto flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/90 px-2 py-1.5 shadow-xl backdrop-blur-sm">
-              <button id="rotateBtn" class="flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-3 text-xs font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
+              <button id="rotateBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-3 text-xs sm:text-sm font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
                 <span>Rotate</span>
               </button>
-              <button id="checkBtn" class="flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-4 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40" type="button" title="Check">
+              <button id="checkBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-4 text-xs sm:text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40" type="button" title="Check">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                 <span>CHECK</span>
               </button>
@@ -195,12 +208,12 @@
               <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
               <div class="mt-4 pt-4 border-t border-slate-700/80 text-left">
                 <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Controls</p>
-                <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
+                <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Double-tap a tile to rotate. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
                 <p class="overlay-controls-pointer text-xs text-slate-400">Click a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
               </div>
               <button
                 id="overlayBtn"
-                class="mt-6 w-full rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40"
+                class="focus-ring mt-6 w-full rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40"
                 type="button"
               >
                 Play now
@@ -208,14 +221,14 @@
             </div>
           </div>
         </div>
-        <div id="statusContainer" class="flex flex-shrink-0 items-center justify-center gap-2 mt-2 min-w-0">
+        <div id="statusContainer" class="flex flex-shrink-0 items-center justify-center gap-2 mt-2 min-w-0 rounded bg-slate-900/30 px-2 py-1">
           <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
-          <p id="statusText" class="truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
+          <p id="statusText" class="status-text-touch truncate text-[10px] font-bold uppercase tracking-widest text-slate-500">Ready.</p>
         </div>
       </main>
 
       <!-- FOOTER: nur Tile-Leiste -->
-      <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50">
+      <footer class="footer-safe z-10 flex flex-shrink-0 flex-col bg-slate-900/60 p-3 pt-3 backdrop-blur-xl border-t border-slate-800/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
         <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] flex-wrap items-center justify-center gap-2 overflow-x-auto overflow-y-auto px-2 py-1">
           <!-- Tiles will be injected here -->
         </div>
@@ -226,9 +239,9 @@
         <div class="max-w-lg w-full rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl max-h-[80vh] overflow-y-auto custom-scrollbar">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
-            <button id="closeHelpBtn" class="p-2 text-slate-500 hover:text-slate-100 transition"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+            <button id="closeHelpBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
           </div>
-          <div class="space-y-4 text-xs sm:text-sm text-slate-400 leading-relaxed">
+          <div class="space-y-4 text-sm text-slate-400 leading-relaxed">
             <p>Connect pathways from Red Riding Hood to the house.</p>
             <ul class="list-disc ml-5 space-y-1">
               <li><strong class="text-slate-200">Drag</strong> tiles to place them.</li>
