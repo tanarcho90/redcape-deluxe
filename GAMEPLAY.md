@@ -3,28 +3,38 @@
 ## Core Loop
 
 1. Choose a challenge (Starter to Master).
-2. Place and rotate path tiles.
-3. Check if the path rules are satisfied.
+2. Place and rotate path tiles from the inventory (bottom bar).
+3. Press Check to validate; confetti and auto-advance on success.
 
 ## Rules
 
-- Grid: 4x4
-- Tiles: 1x2 and 1x1 (White) pieces, cannot overlap or cover trees/starts
-- House: Occupies 1 grid cell but is accessible from all 4 sides (N, E, S, W)
-- WithoutWolf: Red Riding Hood must reach any side of the house. No gaps, crossings, or extra tiles allowed.
-- WithWolf: Two separate paths required. Both must reach the house.
-- Path Length: Calculated by tile segments (1 for 1-cell White tile, 2 for all 2-cell tiles).
-- Wolf Rule: The Wolf's path must be strictly shorter (weighted length) than Red Riding Hood's path.
+- **Grid:** 4×4 (or as per challenge).
+- **Tiles:** 1×2 and 1×1 (e.g. White) pieces; cannot overlap or cover trees/starts.
+- **House:** One cell; accessible from all four sides (N, E, S, W).
+- **WithoutWolf:** Red Riding Hood must reach any side of the house. No gaps, crossings, or extra tiles.
+- **WithWolf:** Two separate paths; both must reach the house. Wolf’s path must be strictly shorter (by path length).
+- **Path length:** By tile segments (e.g. 1 for 1-cell, 2 for 2-cell tiles).
 
-## Tools
+## Tools & Controls
 
-- **Hint System:** Backtracking solver finds the solution and places one missing/correct tile.
-- **Check:** Validates the entire board including path connectivity and Wolf rules. Triggers confetti on success.
-- **Success State:** After a 2-second celebration following a successful solve, the game automatically advances to the next challenge.
-- **Drag & Drop:** Supports snapping to the nearest valid grid position.
-- **Smart Rotation (Right-Click):** Rotating a tile that would collide causes it to "fly" to the nearest valid placement.
-- **Drag-out:** Dragging a tile off the board removes it instantly and returns it to the inventory.
-- **Inventory:** Dynamic sidebar only shows tiles not currently on the board.
-- **Debug Mode (D):** Visualizes the internal path graph (nodes and edges) for debugging.
-- **Auto-Solve (S):** Triggers the solver to automatically complete the level.
-- **Skip Level (N):** Immediately skips to the next challenge in the sequence.
+- **Hint:** Solver places one correct/missing tile.
+- **Check:** Validates board (connectivity, Wolf rule). Confetti and next level on success.
+- **Drag & drop:** Snaps to nearest valid cell. Drag a placed tile off the board to remove it.
+- **Smart rotation (right-click / double-tap):** Rotate tile; if it would collide, it “flies” to the nearest valid placement.
+- **Inventory:** Bottom tile bar shows only tiles not on the board; horizontal scroll when needed.
+
+### Mouse
+
+- Click tile in bar → select. Drag onto board to place. Right-click to rotate (selected or placed tile). Drag placed tile off board to remove.
+
+### Touch
+
+- **Tile bar:** Single tap = select. **Double-tap** = rotate that inventory tile 90°. Drag (move > ~22px) = drag onto board.
+- **Board:** Single tap on placed tile = select. **Double-tap** on placed tile = rotate 90°. Drag to move or drag off to remove.
+- Releasing in the gap between board and tile bar still counts as a valid drop.
+
+## Debug
+
+- **D:** Toggle path graph visualization (nodes/edges).
+- **S:** Auto-solve current level (in debug mode).
+- **N:** Skip to next challenge (in debug mode).

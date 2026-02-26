@@ -1,22 +1,27 @@
-# Roadmap - Redcape Deluxe
+# Roadmap – Redcape Deluxe
 
-This document tracks the next steps and improvements for the project.
+Track of done and planned improvements.
 
-## Priority: UX & Gameplay
-- [x] **Single-Screen Layout:** App works without scrolling on a single page.
-- [x] **Floating Toolbar:** Interactive controls directly above the game board.
-- [x] **Drag-out to Remove:** Intuitive removal of tiles by dragging them off the board.
-- [x] **Debug Tools:** Visualization of path graphs (key 'D') and Auto-Solve ('S').
-- [x] **Improved Tile Preview:** Tiles disappear from the list when placed; static, clean preview in inventory.
-- [x] **Success Celebration:** Confetti effect (via canvas-confetti) when solving a level.
-- [x] **Smart Rotation:** "Fly-to-fit" logic for tile rotations.
-- [ ] **Animation Polish:** Smooth glide animations for snapping and rotating tiles.
+## UX & Gameplay
 
-## Priority: Content & Help
-- [x] **Hint System Completion:** Reliable hints for all 43 levels.
-- [x] **Audio System:** Background music playlist and SFX integrated.
-- [ ] **Final Level Polish:** Check all 43 levels for consistency and balance.
+- [x] **Single-screen layout:** No scrolling; everything in one viewport.
+- [x] **Floating toolbar:** Rotate and Check on the board.
+- [x] **Drag-out to remove:** Drag placed tiles off the board to remove them.
+- [x] **Debug tools:** Path graph (D), Auto-Solve (S), Skip (N).
+- [x] **Tile preview:** Inventory shows only unplaced tiles; clean preview in the bar.
+- [x] **Success celebration:** Confetti and auto-advance to next level.
+- [x] **Smart rotation:** “Fly-to-fit” when rotation would collide.
+- [ ] **Animation polish:** Smoother glide/rotate animations.
 
-## Priority: Mobile & Accessibility
-- [ ] **Touch Support:** Implementation of touch events for mobile/tablet drag & drop.
-- [ ] **Mobile Layout Refinement:** Final adjustments for extremely narrow screens.
+## Content & Help
+
+- [x] **Hint system:** Reliable hints for all levels.
+- [x] **Audio:** Background music and SFX.
+- [ ] **Final level polish:** Consistency and balance across all 43 levels.
+
+## Mobile & Touch
+
+- [x] **Touch support:** Drag from tile bar with pointer capture; extended drop zone; drag only after movement threshold.
+- [x] **Double-tap rotate:** Inventory tiles (double-tap in bar) and placed tiles (double-tap on board).
+- [x] **Mobile layout:** Footer tile bar with safe-area and bottom padding; flexible main area; tile list max-height and scroll on small screens.
+- [x] **Touch robustness:** pointercancel handled for taps; non-mouse pointer types treated as touch where appropriate.

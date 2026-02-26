@@ -1,61 +1,65 @@
 # Redcape Deluxe (Web App)
 
-Web implementation of the Red Riding Hood logic game. Place 1x2 path tiles on a 4x4 grid to build a valid route.
+Web implementation of the Red Riding Hood logic game. Place path tiles on the grid to build valid routes from Red Riding Hood to the house (with optional Wolf rules).
 
 ## Start
 
-1. Open the folder
-2. Launch `index.html` in a browser
+1. Open the project folder.
+2. Open `index.html` in a browser (desktop or mobile).
 
 ## Controls
 
-- **Drag & Drop:** Select a tile, then drag it onto the board. Snaps to the nearest valid placement.
-- **Right-Click:** Rotate the currently selected or placed tile.
-- **Drag-out:** Drag a placed tile outside the grid to remove it.
-- **Hint:** Uses the solver to place the next correct tile.
-- **Debug Mode:** Press 'D' to toggle visual path graph (nodes/edges).
-- **Auto-Solve:** Press 'S' in Debug Mode to instantly solve the level.
-- **Skip Level:** Press 'N' in Debug Mode to go to the next challenge.
+### Mouse / Desktop
 
-## Data
+- **Drag & Drop:** Click a tile in the bottom bar to select it, then drag it onto the board. It snaps to the nearest valid placement.
+- **Right-Click:** Rotate the currently selected or placed tile (with “fly to fit” if rotation would collide).
+- **Drag-out:** Drag a placed tile off the board to remove it and return it to the inventory.
+- **Rotate / Check:** Buttons on the board: Rotate the selected tile, or Check the solution.
 
-- Challenges: `data/challenges.json` & `data/challenges.inline.js`
-- Rules and logic: `scripts/logic-core.js`
-- Solver: `scripts/solver-engine.js`
-- Main App: `app.js`
+### Touch / Mobile
+
+- **Tile bar (inventory):** Single tap = select. **Double-tap** = rotate the tile by 90°. Drag (move finger > ~22px) = drag onto the board.
+- **Board:** Single tap on a placed tile = select. **Double-tap** on a placed tile = rotate it 90° (like right-click). Drag = move the tile or drag off to remove.
+- **Drop zone:** Releasing in the area between the board and the tile bar still counts as a valid drop so the tile is placed.
+- **Rotate / Check:** Use the buttons on the board to rotate the selected tile or check the solution.
+
+### Debug & Shortcuts
+
+- **D:** Toggle debug view (path graph nodes/edges).
+- **S:** (In debug mode) Auto-solve the current level.
+- **N:** (In debug mode) Skip to the next challenge.
+
+## Data & Code
+
+- **Challenges:** `data/challenges.json` and `data/challenges.inline.js`
+- **Rules & logic:** `scripts/logic-core.js`
+- **Solver:** `scripts/solver-engine.js`
+- **Main app:** `app.js`
 
 ## Current State
 
-- **Logic Core:** Centralized rules and validation in `scripts/logic-core.js`.
-- **Solver Engine:** High-performance DFS solver in `scripts/solver-engine.js` used for validation and hints.
-- **UI & Layout:**
-  - **Single-Screen UI:** App fits entirely in the viewport without scrolling (`overflow-hidden`).
-  - **Sidebar:** Redesigned sidebar featuring challenge selection, reset/hint controls, music player, and dynamic inventory.
-  - **Floating Toolbar:** Simplified to a prominent "Check" button.
-  - **Status Indicator:** Pulsing status light located at the bottom of the sidebar.
-- **Audio:**
-  - Background music playlist with 4 tracks (fairytale theme).
-  - UI controls for Play/Pause, Skip, and Volume.
-  - Sound Effects (SFX) for Win, False solution, and Tile rotation.
-- **Gameplay Mechanics:**
-  - **Smart Rotation:** Tiles auto-locate the nearest valid slot if a rotation causes a collision ("fly to fit").
-  - **Inventory Management:** Sidebar only shows tiles not currently on the board.
-  - **Success Feedback:** `canvas-confetti` celebration upon solving, followed by a 2-second delay and auto-transition to the next level.
-  - **Hint System:** Robust real-time hints that place the correct tile.
-  - **Drag-out to Remove:** Intuitive way to clear tiles from the board.
-  - **Debug Manager:** Visualizes graph nodes and edges with 'D', auto-solve with 'S', and skip with 'N'.
-- **Local Support:** Optimized for direct execution via `index.html` (skips CORS/Fetch blocks using inline data).
-- **Challenges:** 43 solvable levels verified.
+- **Logic core:** Centralized rules and validation in `scripts/logic-core.js`.
+- **Solver:** DFS-based solver in `scripts/solver-engine.js` used for validation and hints.
+- **UI & layout:**
+  - Single-screen layout: fits in the viewport without scrolling (`overflow-hidden`).
+  - **Header:** Logo, challenge selector, reset / hint / music.
+  - **Main:** Game board (canvas) with Rotate and Check buttons overlay; status line below.
+  - **Footer:** Tile bar (inventory) with horizontal scroll; safe-area and extra bottom padding on mobile so the bar stays visible.
+- **Mobile:**
+  - Touch: pointer capture, extended drop zone (board + gap to tile bar), double-tap to rotate (inventory and placed tiles).
+  - Drag starts only after movement over threshold; double-tap uses a 400 ms window.
+  - Optional smaller tile cards and scrollable tile list on very small viewports.
+- **Audio:** Background music and SFX (win, fail, rotate).
+- **Gameplay:** Smart rotation (“fly to fit”), hint system, drag-out to remove, confetti on success, auto-advance to next level.
+- **Debug:** Graph visualization (D), auto-solve (S), skip (N).
+- **Challenges:** 43 solvable levels.
 
 ## Next Steps
 
-- **Animation Polish:** Adding smooth glide animations for the "fly to fit" logic.
-- **Touch Support:** Optimization of drag and rotation events for mobile/tablet devices.
-- **Mobile Responsive Refinement:** Fine-tuning sidebar and board scaling for narrow portrait viewports.
-- **Final Level Polish:** Consistency check across all 43 levels.
+- **Animation polish:** Smoother glide/rotate animations.
+- **Final level polish:** Consistency pass over all 43 levels.
 
-## Development Process
+## Development
 
-- **Step-by-Step:** Tasks are broken down into small pieces and completed sequentially.
-- **Communication:** After each significant step or when uncertainties arise, we pause briefly and coordinate the next approach.
-- **No Solo Actions:** Complex refactorings or massive changes to game data are only done after explicit confirmation.
+- Work in small, clear steps.
+- Align on approach before larger refactors or data changes.
