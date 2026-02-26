@@ -25,9 +25,9 @@ In the long term the game should:
 
 Goal: Better readability and stronger focus on the board.
 
-- [ ] Reduce background pattern
-- [ ] Emphasise the board as its own panel
-- [ ] Add spacing between tiles
+- [x] **Reduce background pattern** (lower opacity on hero pattern)
+- [x] **Emphasise the board as its own panel** (background, border, shadow)
+- [ ] Add spacing between tiles (reverted after trial; optional for later)
 - [ ] Add subtle shadows or depth effects
 - [ ] Consistent stroke width for icons
 
@@ -37,7 +37,7 @@ Goal: Better readability and stronger focus on the board.
 
 Goal: Every action should be noticeable.
 
-- [ ] Hover state for tiles
+- [x] **Hover state for tiles** (inventory bar + placed tiles on board)
 - [ ] Smooth rotation animation
 - [x] **Visual selection indicator** (selection ring)
 - [ ] Animated feedback on “Check”
@@ -52,7 +52,7 @@ Goal: Clear prioritisation of actions.
 - [x] **“Check” as primary button** (green emphasis)
 - [x] **“Rotate” as secondary button**
 - [x] **Visual grouping in an action bar** (overlay on the board)
-- [ ] Further spacing / polish
+- [x] **Further spacing / polish** (action bar and header button gaps)
 - [ ] Loading state for buttons
 
 **Outcome:** User flow becomes clearer and more professional.
@@ -164,6 +164,9 @@ See sections 2–4 for details. Full list of completed items:
 
 **UI & Polish**
 
+- [x] Calm background: reduced hero-pattern opacity; board as panel (background, border, shadow)
+- [x] Hover feedback: tile bar cards and placed tiles on board (outline)
+- [x] Button spacing: Rotate/Check bar and header buttons with clearer gaps
 - [x] Level picker as icon with overlay list; current level highlighted
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
 

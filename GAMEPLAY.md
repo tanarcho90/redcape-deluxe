@@ -21,7 +21,7 @@
 - **Check:** Validates board (connectivity, Wolf rule). Confetti and next level on success.
 - **Drag & drop:** Snaps to nearest valid cell. Drag a placed tile off the board to remove it.
 - **Smart rotation (right-click / double-tap):** Rotate tile; if it would collide, it “flies” to the nearest valid placement.
-- **Inventory:** Bottom tile bar shows only tiles not on the board; horizontal scroll when needed.
+- **Inventory:** Bottom tile bar shows only tiles not on the board; horizontal scroll when needed. Tile cards and placed tiles show hover feedback (highlight/outline).
 
 ### Mouse
 

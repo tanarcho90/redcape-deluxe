@@ -2,6 +2,12 @@
 
 Web implementation of the Red Riding Hood logic game. Place path tiles on the grid to build valid routes from Red Riding Hood to the house (with optional Wolf rules).
 
+## Documentation
+
+- [GAMEPLAY.md](GAMEPLAY.md) – Rules, controls, and debug
+- [ROADMAP.md](ROADMAP.md) – UI & experience roadmap
+- [CHANGELOG.md](CHANGELOG.md) – Version history
+
 ## Start
 
 1. Open the project folder.
@@ -42,10 +48,11 @@ Web implementation of the Red Riding Hood logic game. Place path tiles on the gr
 - **Solver:** DFS-based solver in `scripts/solver-engine.js` used for validation and hints.
 - **UI & layout:**
   - Single-screen layout: fits in the viewport without scrolling (`overflow-hidden`).
-  - **Header:** Logo, level picker (icon opens overlay list), reset / hint / music.
-  - **Main:** Game board (canvas) with Rotate and Check buttons overlay; status line below.
-  - **Footer:** Tile bar (inventory) with horizontal scroll; safe-area and extra bottom padding on mobile so the bar stays visible.
+  - **Header:** Logo, level picker (icon opens overlay list), reset / hint / music; button spacing for clear grouping.
+  - **Main:** Game board (canvas) as a distinct panel (background, border, shadow) with Rotate and Check buttons overlay; status line below. Calm background (reduced pattern opacity).
+  - **Footer:** Tile bar (inventory) with horizontal scroll; safe-area and extra bottom padding on mobile so the bar stays visible. Hover feedback on tile cards.
   - **Level selection:** Header icon opens overlay with all levels; current level highlighted. No dropdown.
+  - **Hover:** Placed tiles on the board show a subtle outline on hover; tile bar cards highlight on hover.
 - **Mobile:**
   - Touch: pointer capture, extended drop zone (board + gap to tile bar), double-tap to rotate (inventory and placed tiles).
   - Drag starts only after movement over threshold; double-tap uses a 400 ms window.
@@ -63,8 +70,9 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## Next Steps
 
-- **Animation polish:** Smoother glide/rotate animations.
+- **Animation polish:** Smoother glide/rotate animations; optional animated feedback on Check.
 - **Final level polish:** Consistency pass over all 43 levels.
+- See [ROADMAP.md](ROADMAP.md) for the full UI & experience roadmap.
 
 ## Development
 
