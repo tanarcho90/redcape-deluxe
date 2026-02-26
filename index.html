@@ -53,9 +53,9 @@
 
       .hero-pattern {
         background-color: #0b1120;
-        background-image: radial-gradient(1200px 800px at 15% 10%, rgba(14, 116, 144, 0.18), transparent 60%),
-          radial-gradient(900px 700px at 85% 25%, rgba(30, 64, 175, 0.18), transparent 55%),
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none' stroke='%2394a3b8' stroke-width='1' stroke-opacity='0.08'%3E%3Cpath d='M-12 12L12 -12M0 24L24 0M12 36L36 12M24 48L48 24M36 60L60 36M48 72L72 48M60 84L84 60'/%3E%3C/svg%3E");
+        background-image: radial-gradient(1200px 800px at 15% 10%, rgba(14, 116, 144, 0.09), transparent 60%),
+          radial-gradient(900px 700px at 85% 25%, rgba(30, 64, 175, 0.09), transparent 55%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none' stroke='%2394a3b8' stroke-width='1' stroke-opacity='0.04'%3E%3Cpath d='M-12 12L12 -12M0 24L24 0M12 36L36 12M24 48L48 24M36 60L60 36M48 72L72 48M60 84L84 60'/%3E%3C/svg%3E");
         background-size: auto, auto, 144px 144px;
         background-attachment: fixed;
       }
@@ -104,9 +104,12 @@
       .main-fill {
         min-height: 0;
       }
-      /* Spielfläche: kein Browser-Scroll/Pan, damit Touch auf Android zuverlässig funktioniert */
+      /* Spielfläche: kein Browser-Scroll/Pan; Board als eigenes Panel hervorgehoben */
       .game-frame {
         touch-action: none;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(51, 65, 85, 0.4);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
       }
       /* Tile-Leiste: max. Höhe, bei vielen Tiles oder kleinem Screen vertikal scrollbar */
       #tileList {
@@ -171,7 +174,7 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-emerald-400 active:scale-90" title="Choose level" aria-label="Choose level">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </button>
@@ -194,13 +197,13 @@
           <canvas id="board" width="640" height="640" aria-label="Redcape Board" class="block h-auto w-full max-h-full object-contain"></canvas>
 
           <!-- Rotate + Check als Overlay auf dem Spielfeld -->
-          <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 pointer-events-none">
-            <div class="pointer-events-auto flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/90 px-2 py-1.5 shadow-xl backdrop-blur-sm">
-              <button id="rotateBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-3 text-xs sm:text-sm font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
+          <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 pointer-events-none">
+            <div class="pointer-events-auto flex items-center gap-3 rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-2 shadow-xl backdrop-blur-sm">
+              <button id="rotateBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-4 text-xs sm:text-sm font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
                 <span>Rotate</span>
               </button>
-              <button id="checkBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-4 text-xs sm:text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40" type="button" title="Check">
+              <button id="checkBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-5 text-xs sm:text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40" type="button" title="Check">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                 <span>CHECK</span>
               </button>

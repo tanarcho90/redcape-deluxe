@@ -373,6 +373,7 @@ const state = {
   current: null,
   placements: new Map(),
   selectedTileId: null,
+  hoveredTileId: null,
   rotation: 0,
   inventoryRotations: new Map(), // Store rotation for each tile in inventory
   lastResultOk: false,
@@ -509,6 +510,21 @@ function attachEvents() {
   }
 
   canvas.addEventListener("pointerdown", handleBoardPointerDown, { passive: false });
+  canvas.addEventListener("pointermove", (e) => {
+    if (state.dragState.active) return;
+    const { x, y } = getPixelFromEvent(e);
+    const next = findTileAtPixel(x, y);
+    if (next !== state.hoveredTileId) {
+      state.hoveredTileId = next;
+      draw();
+    }
+  });
+  canvas.addEventListener("pointerleave", () => {
+    if (state.hoveredTileId != null) {
+      state.hoveredTileId = null;
+      draw();
+    }
+  });
   if (gameFrame) {
     gameFrame.addEventListener("pointerdown", handleGameFramePointerDown, { passive: false });
   }
@@ -1128,7 +1144,7 @@ function updateTileList() {
     const card = document.createElement("button");
     card.type = "button";
     card.title = tileId;
-    card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-800 active:scale-95";
+    card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-700 hover:border-slate-500 active:scale-95";
     if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
     
     const tileRotation = state.inventoryRotations.get(tileId) || 0;
@@ -1744,6 +1760,13 @@ function drawTiles() {
     
     drawTileImage(tileId, drawP, cellSize, state.tileTint);
     
+    if (state.hoveredTileId === tileId) {
+      const b = getTileVisualBounds(tileId, drawP, cellSize);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(b.left + 2, b.top + 2, b.right - b.left - 4, b.bottom - b.top - 4);
+    }
+    
     if (DEBUG_ENDPOINTS) {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
       ctx.fillStyle = "#94a3b8"; // Light gray (slate-400)
@@ -1780,13 +1803,10 @@ function drawTileImage(tileId, p, cellSize, tint) {
   ctx.rotate((p.rotation * Math.PI) / 180);
   
   if (isSingleCell) {
-    // Center the 1x1 active part of the 2x1 asset
     ctx.translate(-cellSize / 2, -cellSize / 2);
   } else {
-    // Center the full 2x1 asset
     ctx.translate(-cellSize, -cellSize / 2);
   }
-  
   drawTintedImage(ctx, img, tint || theme.path, 0, 0, cellSize * 2, cellSize);
   ctx.restore();
 }
