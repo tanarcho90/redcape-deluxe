@@ -10,7 +10,10 @@ function asset(path) {
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
-const challengeSelect = document.getElementById("challengeSelect");
+const levelPickerBtn = document.getElementById("levelPickerBtn");
+const levelOverlay = document.getElementById("levelOverlay");
+const levelList = document.getElementById("levelList");
+const closeLevelOverlayBtn = document.getElementById("closeLevelOverlayBtn");
 const tileList = document.getElementById("tileList");
 const checkBtn = document.getElementById("checkBtn");
 const hintBtn = document.getElementById("hintBtn");
@@ -449,11 +452,17 @@ function getTileImage(tileId) {
 }
 
 function attachEvents() {
-  challengeSelect.addEventListener("change", () => {
-    const id = challengeSelect.value;
-    const challenge = state.challenges.find((item) => item.id === id);
-    if (challenge) setChallenge(challenge);
-  });
+  if (levelPickerBtn) {
+    levelPickerBtn.addEventListener("click", () => showLevelOverlay());
+  }
+  if (closeLevelOverlayBtn) {
+    closeLevelOverlayBtn.addEventListener("click", () => hideLevelOverlay());
+  }
+  if (levelOverlay) {
+    levelOverlay.addEventListener("click", (e) => {
+      if (e.target === levelOverlay) hideLevelOverlay();
+    });
+  }
 
   checkBtn.addEventListener("click", handleCheck);
   hintBtn.addEventListener("click", handleHint);
@@ -500,6 +509,9 @@ function attachEvents() {
   }
 
   canvas.addEventListener("pointerdown", handleBoardPointerDown, { passive: false });
+  if (gameFrame) {
+    gameFrame.addEventListener("pointerdown", handleGameFramePointerDown, { passive: false });
+  }
   window.addEventListener("pointermove", handlePointerMove, { passive: false });
   window.addEventListener("pointerup", handlePointerUp, { passive: false });
   window.addEventListener("pointercancel", handlePointerCancel, { passive: false });
@@ -566,23 +578,45 @@ function attachEvents() {
 
 // -- Drag Handlers --
 
+function handleGameFramePointerDown(e) {
+  if (e.target === canvas) return;
+  if (e.button !== 0 && e.pointerType === "mouse") return;
+  if (!state.current) return;
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+  const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+  if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) return;
+  const clampedX = Math.max(rect.left, Math.min(rect.right, clientX));
+  const clampedY = Math.max(rect.top, Math.min(rect.bottom, clientY));
+  handleBoardPointerDownWithClient(clampedX, clampedY, e);
+}
+
 function handleBoardPointerDown(e) {
+  if (e.target !== canvas) return;
+  const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+  const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+  handleBoardPointerDownWithClient(clientX, clientY, e);
+}
+
+function handleBoardPointerDownWithClient(clientX, clientY, e) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     if (!state.current) return;
-    const { x: clickX, y: clickY } = getPixelFromEvent(e);
+    const { x: clickX, y: clickY } = getPixelFromClient(clientX, clientY);
     
     const { cellSize } = getBoardMetrics();
-    const col = Math.floor(clickX / cellSize);
-    const row = Math.floor(clickY / cellSize);
-
-    const tileId = findTileAtCell(col, row);
+    let tileId = findTileAtPixel(clickX, clickY);
     if (!tileId) {
-        handleBoardClick(e);
+        const col = Math.floor(clickX / cellSize);
+        const row = Math.floor(clickY / cellSize);
+        tileId = findTileAtCell(col, row);
+    }
+    if (!tileId) {
+        handleBoardClick({ clientX, clientY, touches: e.touches });
         return;
     }
 
     e.preventDefault();
-    if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId);
+    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
 
     const placement = state.placements.get(tileId);
     
@@ -1003,11 +1037,11 @@ function getAnchorGridCoords(tileId, rotation, pixelX, pixelY, offsetX, offsetY)
   const centerX = pixelX - offsetX;
   const centerY = pixelY - offsetY;
   
-  // Convert center back to anchor grid coordinates
+  // Convert center back to anchor grid coordinates; snap to grid so selection and draw align
   // Based on: centerX = (anchorX + width/2) * cellSize
   return {
-    x: (centerX / cellSize) - (width / 2),
-    y: (centerY / cellSize) - (height / 2)
+    x: Math.round((centerX / cellSize) - (width / 2)),
+    y: Math.round((centerY / cellSize) - (height / 2))
   };
 }
 
@@ -1020,7 +1054,7 @@ async function loadChallenges() {
       if (response.ok) {
         const data = await response.json();
         state.challenges = data.challenges || [];
-        populateChallengeSelect();
+        populateLevelList();
         return;
       }
     } catch (error) {
@@ -1032,24 +1066,42 @@ async function loadChallenges() {
   const inlineData = window.__CHALLENGES__;
   if (inlineData && Array.isArray(inlineData.challenges)) {
     state.challenges = inlineData.challenges;
-    populateChallengeSelect();
+    populateLevelList();
     status(isLocalFile ? "Challenges loaded from local file." : "Challenges loaded locally.");
   } else {
     status("Error: Could not load challenges.");
   }
 }
 
-function populateChallengeSelect() {
-  challengeSelect.innerHTML = "";
-  state.challenges.forEach((challenge, index) => {
-    const option = document.createElement("option");
-    option.value = challenge.id;
-    // Show only the ID since difficulty is already part of it (e.g., "Starter 4" instead of "Starter 4 – Starter")
-    option.textContent = challenge.id;
-    if (index === 0) option.selected = true;
-    challengeSelect.append(option);
+function populateLevelList() {
+  if (!levelList) return;
+  levelList.innerHTML = "";
+  state.challenges.forEach((challenge) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.challengeId = challenge.id;
+    btn.className = "level-list-item focus-ring w-full rounded-xl border px-3 py-2.5 text-left text-sm transition flex items-center justify-between gap-2 " +
+      "border-slate-700 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:text-slate-100";
+    btn.innerHTML = `<span class="truncate">${challenge.id}</span><span class="level-list-badge text-[10px] font-bold uppercase tracking-wider text-emerald-400/90 flex-shrink-0">${challenge.difficulty || ""}</span>`;
+    btn.addEventListener("click", () => {
+      setChallenge(challenge);
+      hideLevelOverlay();
+    });
+    levelList.append(btn);
   });
   if (state.challenges[0]) setChallenge(state.challenges[0]);
+}
+
+function showLevelOverlay() {
+  if (!levelOverlay) return;
+  levelOverlay.classList.remove("hidden");
+  levelList.querySelectorAll("[data-challenge-id]").forEach((el) => {
+    el.classList.toggle("level-current", el.dataset.challengeId === state.current?.id);
+  });
+}
+
+function hideLevelOverlay() {
+  if (levelOverlay) levelOverlay.classList.add("hidden");
 }
 
 function setChallenge(challenge) {
@@ -1059,7 +1111,6 @@ function setChallenge(challenge) {
   state.placements.clear();
   state.selectedTileId = null;
   state.rotation = 0;
-  challengeSelect.value = challenge.id;
   modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "WITH WOLF" : "WITHOUT WOLF";
   if (difficultyBadge) difficultyBadge.textContent = challenge.difficulty;
   updateTileList();
@@ -1407,17 +1458,76 @@ function findTileAtCell(x, y) {
   return null;
 }
 
-function getPixelFromEvent(event) {
+/** Bounding rect (in canvas pixels) of the drawn tile image, so hit-test matches what the user sees (e.g. vertical tiles extend slightly past grid at the edge). */
+function getTileVisualBounds(tileId, p, cellSize) {
+  const shape = LogicCore.getTransformedTile(tileId, p.rotation);
+  const xs = shape.cells.map((c) => p.anchorX + c.x);
+  const ys = shape.cells.map((c) => p.anchorY + c.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const centerX = (minX + maxX + 1) * 0.5 * cellSize;
+  const centerY = (minY + maxY + 1) * 0.5 * cellSize;
+  const isSingleCell = shape.cells.length === 1;
+  const rot = ((p.rotation % 360) + 360) % 360;
+  let left, top, right, bottom;
+  if (rot === 0 || rot === 180) {
+    const w = isSingleCell ? cellSize : cellSize * 2;
+    const h = cellSize;
+    left = centerX - w / 2;
+    top = centerY - h / 2;
+    right = centerX + w / 2;
+    bottom = centerY + h / 2;
+  } else {
+    const w = cellSize;
+    const h = isSingleCell ? cellSize : cellSize * 2;
+    left = centerX - w / 2;
+    top = centerY - h / 2;
+    right = centerX + w / 2;
+    bottom = centerY + h / 2;
+  }
+  return { left, top, right, bottom };
+}
+
+/** Find which placed tile contains the given canvas pixel (uses visual bounds so edge tiles are grabbable). */
+function findTileAtPixel(clickX, clickY) {
+  const { cellSize } = getBoardMetrics();
+  const pad = Math.max(2, cellSize * 0.05);
+  const placements = Array.from(state.placements.entries());
+  for (let i = placements.length - 1; i >= 0; i--) {
+    const [tileId, p] = placements[i];
+    const b = getTileVisualBounds(tileId, p, cellSize);
+    if (clickX >= b.left - pad && clickX <= b.right + pad && clickY >= b.top - pad && clickY <= b.bottom + pad) return tileId;
+  }
+  return null;
+}
+
+function getPixelFromClient(clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
+  const elW = rect.width;
+  const elH = rect.height;
+  const bufW = canvas.width;
+  const bufH = canvas.height;
+  if (elW <= 0 || elH <= 0) return { x: 0, y: 0 };
+  const scale = Math.min(elW / bufW, elH / bufH);
+  const contentW = bufW * scale;
+  const contentH = bufH * scale;
+  const offsetX = (elW - contentW) / 2;
+  const offsetY = (elH - contentH) / 2;
+  const contentLeft = rect.left + offsetX;
+  const contentTop = rect.top + offsetY;
+  let x = (clientX - contentLeft) / scale;
+  let y = (clientY - contentTop) / scale;
+  x = Math.max(0, Math.min(bufW, x));
+  y = Math.max(0, Math.min(bufH, y));
+  return { x, y };
+}
+
+function getPixelFromEvent(event) {
   const clientX = event.clientX || (event.touches && event.touches[0] ? event.touches[0].clientX : 0);
   const clientY = event.clientY || (event.touches && event.touches[0] ? event.touches[0].clientY : 0);
-  
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  return {
-    x: (clientX - rect.left) * scaleX,
-    y: (clientY - rect.top) * scaleY
-  };
+  return getPixelFromClient(clientX, clientY);
 }
 
 /** Release in client coords: true if inside canvas rect extended downward to tile bar (better mobile drop). */

@@ -129,7 +129,6 @@
       /* Mobile: größere Touch-Ziele (~44px) und Lesbarkeit */
       @media (pointer: coarse), (max-width: 640px) {
         .header-icon-btn { min-height: 2.75rem; min-width: 2.75rem; }
-        .challenge-select-touch { min-height: 2.75rem; padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 0.875rem; }
         .board-action-btn { min-height: 2.75rem; padding-left: 1rem; padding-right: 1rem; padding-top: 0.625rem; padding-bottom: 0.625rem; font-size: 0.875rem; }
         .status-text-touch { font-size: 0.75rem; }
       }
@@ -146,14 +145,25 @@
         outline: none;
         box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px rgba(52, 211, 153, 0.8);
       }
+      /* Level-Picker: aktueller Level grüner Hintergrund, weiße fette Schrift */
+      .level-list-item.level-current {
+        background: rgb(5 150 105);
+        border-color: rgb(5 150 105);
+        color: #fff;
+        font-weight: 700;
+      }
+      .level-list-item.level-current .level-list-badge {
+        color: #fff;
+        font-weight: 700;
+      }
     </style>
   </head>
   <body class="hero-pattern min-h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none box-border">
     <div class="flex h-full w-full flex-col overflow-hidden">
       <!-- HEADER -->
       <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 py-3 px-3 sm:px-4 backdrop-blur-md">
-        <div class="flex items-center gap-3 min-w-0">
-          <img src="assets/Logo.webp" alt="Logo" class="h-6 sm:h-8 object-contain flex-shrink-0" />
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <img src="assets/Logo.webp" alt="Logo" class="h-8 sm:h-10 object-contain flex-shrink-0" />
           <div class="h-4 w-px bg-slate-700/50 hidden sm:block flex-shrink-0"></div>
           <div class="hidden flex-col sm:flex flex-shrink-0">
              <span id="difficultyBadge" class="text-[9px] font-bold uppercase tracking-widest text-emerald-400"></span>
@@ -161,14 +171,10 @@
           </div>
         </div>
 
-        <div class="flex flex-1 min-w-0 max-w-xs mx-2 sm:mx-4">
-           <select
-            id="challengeSelect"
-            class="challenge-select-touch focus-ring w-full rounded-xl border border-slate-700 bg-slate-950/50 px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-100 focus:outline-none"
-          ></select>
-        </div>
-
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-emerald-400 active:scale-90" title="Choose level" aria-label="Choose level">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
           <button id="resetBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
           </button>
@@ -233,6 +239,19 @@
           <!-- Tiles will be injected here -->
         </div>
       </footer>
+
+      <!-- Level Picker Overlay -->
+      <div id="levelOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">
+        <div class="max-w-sm w-full rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl max-h-[80vh] flex flex-col">
+          <div class="flex items-center justify-between mb-4 flex-shrink-0">
+            <h2 class="text-xl font-semibold text-slate-100">Choose level</h2>
+            <button id="closeLevelOverlayBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition" aria-label="Close"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+          </div>
+          <div id="levelList" class="custom-scrollbar overflow-y-auto space-y-1 min-h-0">
+            <!-- Levels injected by app.js -->
+          </div>
+        </div>
+      </div>
 
       <!-- Help Overlay (Minimal) -->
       <div id="helpOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">
