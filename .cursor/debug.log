@@ -1,0 +1,45 @@
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":false,"wasJustTap":false,"isTouch":true,"draggedDistance":225.9645752506956,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139854281,"hypothesisId":"H1"}
+{"location":"app.js:handlePointerUp","message":"placeTile result","data":{"isFromBoard":false,"resultOk":true},"timestamp":1772139854283,"hypothesisId":"H1"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139856815,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139856816,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139856816,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139863431,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":false,"lastBoardTapTile":"Blue","lastBoardTapAge":6616},"timestamp":1772139863432,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139863432,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139863611,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139863612,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":180},"timestamp":1772139863612,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139867900,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139867900,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139867900,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139868064,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":165},"timestamp":1772139868065,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139868065,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139869069,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139869070,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139869070,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139869234,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":165},"timestamp":1772139869235,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139869235,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139869835,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139869835,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139869835,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139870015,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":180},"timestamp":1772139870015,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139870015,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139870675,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139870676,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139870675,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":1,"y":2,"isOutside":false},"timestamp":1772139870870,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":194},"timestamp":1772139870870,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139870870,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":false,"isTouch":true,"draggedDistance":241.8432252691603,"valid":true,"x":2,"y":2,"isOutside":false},"timestamp":1772139871635,"hypothesisId":"H1"}
+{"location":"app.js:handlePointerUp","message":"placeTile result","data":{"isFromBoard":true,"resultOk":true},"timestamp":1772139871635,"hypothesisId":"H1"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":2,"y":2,"isOutside":false},"timestamp":1772139872249,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":null,"lastBoardTapAge":null},"timestamp":1772139872250,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139872250,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":true,"isTouch":true,"draggedDistance":0,"valid":true,"x":2,"y":2,"isOutside":false},"timestamp":1772139872414,"hypothesisId":"H1"}
+{"location":"app.js:applyBoardTapResult","message":"doubleTap check","data":{"isDoubleTap":true,"lastBoardTapTile":"Blue","lastBoardTapAge":165},"timestamp":1772139872415,"hypothesisId":"H3"}
+{"location":"app.js:applyBoardTapResult","message":"entry","data":{"tileId":"Blue","wasJustTap":true,"isTouch":true},"timestamp":1772139872415,"hypothesisId":"H3"}
+{"location":"app.js:handlePointerUp","message":"board release","data":{"isFromBoard":true,"wasJustTap":false,"isTouch":true,"draggedDistance":281.2612277522949,"valid":true,"x":1,"y":0,"isOutside":false},"timestamp":1772139873115,"hypothesisId":"H1"}
+{"location":"app.js:handlePointerUp","message":"placeTile result","data":{"isFromBoard":true,"resultOk":true},"timestamp":1772139873115,"hypothesisId":"H1"}

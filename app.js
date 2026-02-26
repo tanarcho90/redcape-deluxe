@@ -608,7 +608,7 @@ function handleBoardPointerDown(e) {
         x: placement.anchorX,
         y: placement.anchorY,
         draggedDistance: 0,
-        isTouch: e.pointerType === "touch"
+        isTouch: e.pointerType !== "mouse"
     };
 
     state.selectedTileId = tileId;
@@ -702,7 +702,8 @@ function handlePointerMove(e) {
     if (pendingTouchDrag && e.pointerId === pendingTouchDrag.pointerId) {
         const dx = e.clientX - pendingTouchDrag.startClientX;
         const dy = e.clientY - pendingTouchDrag.startClientY;
-        if (Math.hypot(dx, dy) > TOUCH_MOVE_THRESHOLD_PX) {
+        const dist = Math.hypot(dx, dy);
+        if (dist > TOUCH_MOVE_THRESHOLD_PX) {
             startDragFromPending(e);
         } else {
             return;
@@ -776,8 +777,15 @@ function handlePointerUp(e) {
     const releaseClientY = e.clientY ?? (e.changedTouches?.[0]?.clientY ?? 0);
     const isOutside = !isReleaseInExtendedDropZone(releaseClientX, releaseClientY);
 
-    const wasJustTap = draggedDistance < 10;
+    const wasJustTap = draggedDistance < (state.dragState.isTouch ? TOUCH_MOVE_THRESHOLD_PX : 10);
     resetDragState();
+
+    if (isFromBoard && wasJustTap) {
+        applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap, isTouch);
+        updateTileList();
+        draw();
+        return;
+    }
 
     if (valid && x !== -1 && !isOutside) {
         if (isFromBoard) state.placements.delete(tileId);
@@ -802,61 +810,59 @@ function handlePointerUp(e) {
         return;
     }
 
-    // Revert
     if (isFromBoard) {
-        if (wasJustTap && isTouch) {
-            const now = Date.now();
-            const isDoubleTap = lastBoardTap && lastBoardTap.tileId === tileId && (now - lastBoardTap.timestamp) < DOUBLE_TAP_MS;
-            if (isDoubleTap) {
-                lastBoardTap = null;
-                const newRot = (rotation + 90) % 360;
-                const p = { tileId, rotation, anchorX: originalX, anchorY: originalY };
-                if (canPlaceTile(tileId, originalX, originalY, newRot)) {
-                    state.placements.set(tileId, { ...p, rotation: newRot });
-                    AnimationManager.addRotate(tileId, rotation, newRot);
-                    AudioManager.playSFX("rotate");
-                    status("Rotated.");
-                } else {
-                    const shape = LogicCore.getTransformedTile(tileId, rotation);
-                    const xs = shape.cells.map(c => originalX + c.x);
-                    const ys = shape.cells.map(c => originalY + c.y);
-                    const visualCenter = { x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5, y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5 };
-                    const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
-                    if (nearest) {
-                        state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
-                        AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
-                        AnimationManager.addRotate(tileId, rotation, newRot);
-                        AudioManager.playSFX("rotate");
-                        status("Rotated and moved.");
-                    } else {
-                        state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
-                        status("No space to rotate.");
-                    }
-                }
-            } else {
-                lastBoardTap = { tileId, timestamp: now };
-                state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
-                state.selectedTileId = tileId;
-                state.rotation = rotation;
-                status(`Selected: ${tileId}.`);
-            }
-        } else {
-            state.placements.set(tileId, { 
-                tileId, 
-                rotation, 
-                anchorX: originalX, 
-                anchorY: originalY 
-            });
-            if (wasJustTap) {
-                state.selectedTileId = tileId;
-                state.rotation = rotation;
-                status(`Selected: ${tileId}.`);
-            }
-        }
+        applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap, isTouch);
     }
     
     updateTileList();
     draw();
+}
+
+function applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap, isTouch) {
+    if (!wasJustTap || !isTouch) {
+        state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+        if (wasJustTap) {
+            state.selectedTileId = tileId;
+            state.rotation = rotation;
+            status(`Selected: ${tileId}.`);
+        }
+        return;
+    }
+    const now = Date.now();
+    const isDoubleTap = lastBoardTap && lastBoardTap.tileId === tileId && (now - lastBoardTap.timestamp) < DOUBLE_TAP_MS;
+    if (isDoubleTap) {
+        lastBoardTap = null;
+        const newRot = (rotation + 90) % 360;
+        const p = { tileId, rotation, anchorX: originalX, anchorY: originalY };
+        if (canPlaceTile(tileId, originalX, originalY, newRot)) {
+            state.placements.set(tileId, { ...p, rotation: newRot });
+            AnimationManager.addRotate(tileId, rotation, newRot);
+            AudioManager.playSFX("rotate");
+            status("Rotated.");
+        } else {
+            const shape = LogicCore.getTransformedTile(tileId, rotation);
+            const xs = shape.cells.map(c => originalX + c.x);
+            const ys = shape.cells.map(c => originalY + c.y);
+            const visualCenter = { x: (Math.min(...xs) + Math.max(...xs) + 1) * 0.5, y: (Math.min(...ys) + Math.max(...ys) + 1) * 0.5 };
+            const nearest = findNearestValidPlacement(tileId, newRot, visualCenter);
+            if (nearest) {
+                state.placements.set(tileId, { tileId, rotation: newRot, anchorX: nearest.x, anchorY: nearest.y });
+                AnimationManager.addGlide(tileId, originalX, originalY, nearest.x, nearest.y);
+                AnimationManager.addRotate(tileId, rotation, newRot);
+                AudioManager.playSFX("rotate");
+                status("Rotated and moved.");
+            } else {
+                state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+                status("No space to rotate.");
+            }
+        }
+    } else {
+        lastBoardTap = { tileId, timestamp: now };
+        state.placements.set(tileId, { tileId, rotation, anchorX: originalX, anchorY: originalY });
+        state.selectedTileId = tileId;
+        state.rotation = rotation;
+        status(`Selected: ${tileId}.`);
+    }
 }
 
 function handlePointerCancel(e) {
@@ -885,8 +891,17 @@ function handlePointerCancel(e) {
         draw();
         return;
     }
-    if (!state.dragState.active) return;
+    if (!state.dragState.active) {
+        updateTileList();
+        draw();
+        return;
+    }
+    const { tileId, rotation, originalX, originalY, draggedDistance, isFromBoard, isTouch } = state.dragState;
+    const wasJustTap = draggedDistance < (isTouch ? TOUCH_MOVE_THRESHOLD_PX : 10);
     resetDragState();
+    if (isFromBoard) {
+        applyBoardTapResult(tileId, rotation, originalX, originalY, wasJustTap, isTouch);
+    }
     updateTileList();
     draw();
 }
