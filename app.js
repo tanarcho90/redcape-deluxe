@@ -375,6 +375,7 @@ const state = {
   placements: new Map(),
   selectedTileId: null,
   hoveredTileId: null,
+  checkingSolution: false,
   rotation: 0,
   inventoryRotations: new Map(), // Store rotation for each tile in inventory
   lastResultOk: false,
@@ -408,6 +409,8 @@ const TOUCH_MOVE_THRESHOLD_PX = 22;
 const DOUBLE_TAP_MS = 400;
 
 function init() {
+  showOverlay("Loading…", "Loading challenges…", "…");
+  if (overlayBtn) overlayBtn.disabled = true;
   AudioManager.init();
   DebugManager.init();
   loadIcons();
@@ -1133,6 +1136,7 @@ function setChallenge(challenge) {
   updateTileList();
   status("Challenge loaded.", "success");
   showOverlay("Ready?", "Select tiles and place them.", "Start");
+  if (overlayBtn) overlayBtn.disabled = false;
   draw();
 }
 
@@ -1224,44 +1228,52 @@ function handleBoardClick(event) {
 
 function handleCheck() {
   if (!state.current) return;
-  const result = LogicCore.validateSolution(state.current, state.placements);
-  if (result.ok) {
-    AudioManager.playSFX("win");
-    state.lastResultOk = true;
-    state.tileTint = theme.tileSuccess;
-    flashBoard("success");
-    status(result.message || "Correct.", "success");
-    
-    // Confetti!
-    if (typeof confetti === 'function') {
-      const btnRect = checkBtn.getBoundingClientRect();
-      const originX = (btnRect.left + btnRect.width / 2) / window.innerWidth;
-      const originY = (btnRect.top + btnRect.height / 2) / window.innerHeight;
+  state.checkingSolution = true;
+  checkBtn.classList.add("board-action-btn--checking");
+  updateBoardButtonState();
 
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { x: originX, y: originY },
-        colors: ['#10b981', '#34d399', '#6ee7b7', '#ffffff']
-      });
-    }
+  setTimeout(() => {
+    const result = LogicCore.validateSolution(state.current, state.placements);
+    state.checkingSolution = false;
+    checkBtn.classList.remove("board-action-btn--checking");
+    updateBoardButtonState();
 
-    const nextChallenge = getNextChallenge();
-    if (nextChallenge) {
-      setTimeout(() => {
-        setChallenge(nextChallenge);
-        hideOverlay();
-      }, 2000); // 2 seconds delay to enjoy the confetti
+    if (result.ok) {
+      AudioManager.playSFX("win");
+      state.lastResultOk = true;
+      state.tileTint = theme.tileSuccess;
+      flashBoard("success");
+      status(result.message || "Correct.", "success");
+
+      if (typeof confetti === "function") {
+        const btnRect = checkBtn.getBoundingClientRect();
+        const originX = (btnRect.left + btnRect.width / 2) / window.innerWidth;
+        const originY = (btnRect.top + btnRect.height / 2) / window.innerHeight;
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { x: originX, y: originY },
+          colors: ["#10b981", "#34d399", "#6ee7b7", "#ffffff"]
+        });
+      }
+
+      const nextChallenge = getNextChallenge();
+      if (nextChallenge) {
+        setTimeout(() => {
+          setChallenge(nextChallenge);
+          hideOverlay();
+        }, 2000);
+      } else {
+        showOverlay("Correct!", "You solved all challenges.", "Finish");
+      }
     } else {
-      showOverlay("Correct!", "You solved all challenges.", "Finish");
+      AudioManager.playSFX("false");
+      state.lastResultOk = false;
+      state.tileTint = theme.path;
+      flashBoard("error");
+      status(result.message || "Not correct.", "error");
     }
-  } else {
-    AudioManager.playSFX("false");
-    state.lastResultOk = false;
-    state.tileTint = theme.path;
-    flashBoard("error");
-    status(result.message || "Not correct.", "error");
-  }
+  }, 320);
 }
 
 function handleHint() {
@@ -1603,7 +1615,10 @@ function resizeCanvas() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBackground();
-  if (!state.current) return;
+  if (!state.current) {
+    updateBoardButtonState();
+    return;
+  }
   drawGrid();
   drawTrees();
   drawHouse();
@@ -1611,6 +1626,14 @@ function draw() {
   drawSelection();
   drawTiles();
   drawGhost();
+  updateBoardButtonState();
+}
+
+function updateBoardButtonState() {
+  const noSelection = !state.selectedTileId;
+  const disabled = noSelection || state.checkingSolution;
+  if (rotateBtn) rotateBtn.disabled = disabled;
+  if (checkBtn) checkBtn.disabled = disabled;
 }
 
 function drawGhost() {
@@ -1808,6 +1831,9 @@ function drawTileImage(tileId, p, cellSize, tint) {
   } else {
     ctx.translate(-cellSize, -cellSize / 2);
   }
+  ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetY = 2;
   drawTintedImage(ctx, img, tint || theme.path, 0, 0, cellSize * 2, cellSize);
   ctx.restore();
 }

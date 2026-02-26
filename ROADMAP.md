@@ -27,9 +27,8 @@ Goal: Better readability and stronger focus on the board.
 
 - [x] **Reduce background pattern** (lower opacity on hero pattern)
 - [x] **Emphasise the board as its own panel** (background, border, shadow)
-- [ ] Add spacing between tiles (reverted after trial; optional for later)
-- [ ] Add subtle shadows or depth effects
-- [ ] Consistent stroke width for icons
+- [x] **Add subtle shadows or depth effects** (board panel + tile drop shadow on canvas)
+- [x] **Consistent stroke width for icons** (normalised to 2)
 
 **Outcome:** The board looks more modern, structured, and less flat.
 
@@ -38,10 +37,10 @@ Goal: Better readability and stronger focus on the board.
 Goal: Every action should be noticeable.
 
 - [x] **Hover state for tiles** (inventory bar + placed tiles on board)
-- [ ] Smooth rotation animation
+- [ ] Smooth rotation animation (current behaviour already smooth; deferred)
 - [x] **Visual selection indicator** (selection ring)
 - [ ] Animated feedback on “Check”
-- [ ] Clear disabled state for buttons
+- [x] **Clear disabled state for buttons** (Rotate/Check disabled when no tile selected)
 
 **Outcome:** Players get immediate visual feedback, making the game feel more alive.
 
@@ -53,7 +52,7 @@ Goal: Clear prioritisation of actions.
 - [x] **“Rotate” as secondary button**
 - [x] **Visual grouping in an action bar** (overlay on the board)
 - [x] **Further spacing / polish** (action bar and header button gaps)
-- [ ] Loading state for buttons
+- [x] **Loading state for buttons** (overlay "Loading challenges…" at startup; Check shows checking state)
 
 **Outcome:** User flow becomes clearer and more professional.
 
@@ -168,6 +167,9 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Hover feedback: tile bar cards and placed tiles on board (outline)
 - [x] Button spacing: Rotate/Check bar and header buttons with clearer gaps
 - [x] Toast feedback: status messages as compact toast with color by type (success/error/info), auto-hide
+- [x] Disabled state for Rotate/Check when no tile selected; animated "checking" feedback on Check
+- [x] Subtle shadows/depth: board panel shadow, tile drop shadow on canvas; consistent icon stroke width
+- [x] Loading state: overlay "Loading challenges…" at startup; button re-enabled when ready
 - [x] Level picker as icon with overlay list; current level highlighted
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
 
