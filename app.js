@@ -379,10 +379,8 @@ const state = {
     tileId: null,
     x: -1,
     y: -1,
-    // Pixel coordinates for smooth dragging
     pixelX: 0,
     pixelY: 0,
-    // Offset from tile center to grab point
     offsetX: 0,
     offsetY: 0,
     rotation: 0,
@@ -393,6 +391,11 @@ const state = {
     draggedDistance: 0
   },
 };
+
+/** Touch only: short press = rotate, long press or move = drag. */
+let pendingTouchDrag = null;
+const TOUCH_DRAG_DELAY_MS = 280;
+const TOUCH_MOVE_THRESHOLD_PX = 10;
 
 function init() {
   AudioManager.init();
@@ -608,6 +611,39 @@ function handleBoardPointerDown(e) {
     draw();
 }
 
+function startDragFromPending(pointerEventOrNull) {
+    if (!pendingTouchDrag) return;
+    clearTimeout(pendingTouchDrag.timerId);
+    const p = pendingTouchDrag;
+    pendingTouchDrag = null;
+    const { x: pixelX, y: pixelY } = pointerEventOrNull
+        ? getPixelFromEvent(pointerEventOrNull)
+        : { x: p.initialPixelX, y: p.initialPixelY };
+    state.selectedTileId = p.tileId;
+    state.rotation = p.tileRotation;
+    const { cellSize } = getBoardMetrics();
+    const nearest = findNearestValidPlacement(p.tileId, p.tileRotation, {
+        x: pixelX / cellSize,
+        y: pixelY / cellSize
+    });
+    state.dragState = {
+        active: true,
+        tileId: p.tileId,
+        isFromBoard: false,
+        rotation: p.tileRotation,
+        pixelX, pixelY,
+        offsetX: 0,
+        offsetY: 60,
+        originalX: -1,
+        originalY: -1,
+        valid: !!nearest,
+        x: nearest ? nearest.x : -1,
+        y: nearest ? nearest.y : -1,
+        draggedDistance: 0
+    };
+    draw();
+}
+
 function handleInventoryPointerDown(e, tileId, tileRotation) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     
@@ -620,15 +656,30 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
     const isTouch = e.pointerType === "touch";
     const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
     
+    if (isTouch) {
+        if (pendingTouchDrag) clearTimeout(pendingTouchDrag.timerId);
+        pendingTouchDrag = {
+            timerId: setTimeout(() => startDragFromPending(null), TOUCH_DRAG_DELAY_MS),
+            tileId,
+            tileRotation,
+            pointerId: e.pointerId,
+            startClientX: e.clientX,
+            startClientY: e.clientY,
+            initialPixelX: pixelX,
+            initialPixelY: pixelY
+        };
+        draw();
+        return;
+    }
+    
     state.dragState = {
         active: true,
         tileId: tileId,
         isFromBoard: false,
         rotation: tileRotation,
-        pixelX: pixelX, 
-        pixelY: pixelY,
+        pixelX, pixelY,
         offsetX: 0,
-        offsetY: isTouch ? 60 : 0, // Lift tile above finger on touch
+        offsetY: 0,
         originalX: -1,
         originalY: -1,
         valid: false,
@@ -636,11 +687,19 @@ function handleInventoryPointerDown(e, tileId, tileRotation) {
         y: -1,
         draggedDistance: 0
     };
-    
     draw();
 }
 
 function handlePointerMove(e) {
+    if (pendingTouchDrag && e.pointerId === pendingTouchDrag.pointerId) {
+        const dx = e.clientX - pendingTouchDrag.startClientX;
+        const dy = e.clientY - pendingTouchDrag.startClientY;
+        if (Math.hypot(dx, dy) > TOUCH_MOVE_THRESHOLD_PX) {
+            startDragFromPending(e);
+        } else {
+            return;
+        }
+    }
     if (!state.dragState.active) return;
     
     const { x: pixelX, y: pixelY } = getPixelFromEvent(e);
@@ -676,6 +735,20 @@ function handlePointerMove(e) {
 }
 
 function handlePointerUp(e) {
+    const pointerId = e.pointerId ?? e.changedTouches?.[0]?.identifier;
+    if (pendingTouchDrag && pointerId === pendingTouchDrag.pointerId) {
+        clearTimeout(pendingTouchDrag.timerId);
+        const { tileId, tileRotation } = pendingTouchDrag;
+        pendingTouchDrag = null;
+        const newRot = ((tileRotation || 0) + 90) % 360;
+        state.inventoryRotations.set(tileId, newRot);
+        state.selectedTileId = tileId;
+        state.rotation = newRot;
+        updateTileList();
+        status(`Rotated ${tileId} to ${newRot}°.`);
+        draw();
+        return;
+    }
     if (!state.dragState.active) return;
 
     const { tileId, x, y, valid, rotation, originalX, originalY, pixelX, pixelY, offsetX, offsetY, isFromBoard, draggedDistance } = state.dragState;
@@ -732,6 +805,14 @@ function handlePointerUp(e) {
 }
 
 function handlePointerCancel(e) {
+    const pointerId = e.pointerId ?? e.changedTouches?.[0]?.identifier;
+    if (pendingTouchDrag && pointerId === pendingTouchDrag.pointerId) {
+        clearTimeout(pendingTouchDrag.timerId);
+        pendingTouchDrag = null;
+        updateTileList();
+        draw();
+        return;
+    }
     if (!state.dragState.active) return;
     resetDragState();
     updateTileList();
