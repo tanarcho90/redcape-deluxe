@@ -409,6 +409,19 @@ let lastBoardTap = null;
 const TOUCH_MOVE_THRESHOLD_PX = 22;
 const DOUBLE_TAP_MS = 400;
 
+const SUCCESS_MESSAGES = [
+  "Path clear! Well done!",
+  "Red would be proud!",
+  "The wolf didn't see that coming.",
+  "Grandma's waiting. You're on it!",
+  "That's the way through the woods!",
+  "Breadcrumb trail: mastered.",
+  "Huff and puff all you want, wolf.",
+  "Forest: 0, You: 1.",
+  "Nobody gets lost on your watch!",
+  "The path less tangled."
+];
+
 function init() {
   showOverlay("Gathering paths…", "Preparing the forest…", "…");
   if (overlayBtn) overlayBtn.disabled = true;
@@ -514,7 +527,7 @@ function attachEvents() {
     });
   }
 
-  const PARALLAX_AMOUNT = 12;
+  const PARALLAX_AMOUNT = 16;
   window.addEventListener("pointermove", (e) => {
     if (!parallaxBg) return;
     const x = (e.clientX / window.innerWidth - 0.5) * PARALLAX_AMOUNT;
@@ -1250,11 +1263,12 @@ function handleCheck() {
   updateBoardButtonState();
 
   if (result.ok) {
+    const successMsg = SUCCESS_MESSAGES[Math.floor(Math.random() * SUCCESS_MESSAGES.length)];
     AudioManager.playSFX("win");
     state.lastResultOk = true;
     state.tileTint = theme.tileSuccess;
     flashBoard("success");
-    status(result.message || "Path clear! Well done!", "success");
+    status(successMsg, "success");
 
     if (typeof confetti === "function") {
       const btnRect = checkBtn.getBoundingClientRect();
@@ -1959,6 +1973,15 @@ function flashBoard(type) {
   const cls = type === "success" ? "board-glow-success" : "board-glow-error";
   gameFrame.classList.add(cls);
   setTimeout(() => gameFrame.classList.remove(cls), 600);
+  if (type === "success") {
+    const glow = document.getElementById("successGlow");
+    if (glow) {
+      glow.classList.remove("active");
+      void glow.offsetWidth;
+      glow.classList.add("active");
+      setTimeout(() => glow.classList.remove("active"), 900);
+    }
+  }
 }
 
 init();
