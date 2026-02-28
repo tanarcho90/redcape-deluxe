@@ -229,7 +229,7 @@
         </div>
 
         <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-emerald-400 active:scale-90" title="Choose level" aria-label="Choose level">
+          <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-emerald-400 active:scale-90" title="Pick a path" aria-label="Pick a path">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </button>
           <button id="resetBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-rose-400 active:scale-90" title="Reset">
@@ -268,11 +268,11 @@
           <!-- Overlay Messages -->
           <div id="overlay" class="overlay absolute inset-0 z-20 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4">
             <div class="max-w-xs rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 text-center shadow-2xl">
-              <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
-              <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
+              <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready to wander?</h2>
+              <p id="overlayText" class="mt-2 text-sm text-slate-300">Find the path from Red to the house. Drag tiles onto the board!</p>
               <div class="mt-4 pt-4 border-t border-green-900/50 text-left">
-                <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Controls</p>
-                <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Double-tap a tile to rotate. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
+                <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1.5">The basics</p>
+                <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Double-tap to rotate. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
                 <p class="overlay-controls-pointer text-xs text-slate-400">Click a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
               </div>
               <button
@@ -280,7 +280,7 @@
                 class="focus-ring mt-6 w-full rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-950/40"
                 type="button"
               >
-                Play now
+                Into the forest!
               </button>
             </div>
           </div>
@@ -303,7 +303,7 @@
       <div id="levelOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4 backdrop-blur-sm">
         <div class="max-w-sm w-full rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 shadow-2xl max-h-[80vh] flex flex-col">
           <div class="flex items-center justify-between mb-4 flex-shrink-0">
-            <h2 class="text-xl font-semibold text-slate-100">Choose level</h2>
+            <h2 class="text-xl font-semibold text-slate-100">Pick a path</h2>
             <button id="closeLevelOverlayBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition" aria-label="Close"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
           </div>
           <div id="levelList" class="custom-scrollbar overflow-y-auto space-y-1 min-h-0">
@@ -316,16 +316,16 @@
       <div id="helpOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4 backdrop-blur-sm">
         <div class="max-w-lg w-full rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 shadow-2xl max-h-[80vh] overflow-y-auto custom-scrollbar">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
+            <h2 class="text-xl font-semibold text-slate-100">How to find your way</h2>
             <button id="closeHelpBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
           </div>
           <div class="space-y-4 text-sm text-slate-400 leading-relaxed">
-            <p>Connect pathways from Red Riding Hood to the house.</p>
+            <p>Connect the path from Red to the house so she can deliver those goodies.</p>
             <ul class="list-disc ml-5 space-y-1">
-              <li><strong class="text-slate-200">Drag</strong> tiles to place them.</li>
-              <li><strong class="text-slate-200">Tap</strong> to select, use <strong class="text-slate-200">Rotate</strong> button to turn.</li>
-              <li><strong class="text-slate-200">With Wolf:</strong> Create two separate paths. Wolf's path must be shorter.</li>
-              <li><strong class="text-slate-200">Outside:</strong> Drag a tile off the board to remove it.</li>
+              <li><strong class="text-slate-200">Drag</strong> tiles onto the board to place them.</li>
+              <li><strong class="text-slate-200">Tap</strong> to select, then hit <strong class="text-slate-200">Rotate</strong> to spin.</li>
+              <li><strong class="text-slate-200">With Wolf:</strong> Two paths needed. Wolf's must be shorter (no shortcuts for him!).</li>
+              <li><strong class="text-slate-200">Changed your mind?</strong> Drag a tile off the board to remove it.</li>
             </ul>
           </div>
         </div>
