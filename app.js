@@ -290,7 +290,7 @@ const DebugManager = {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
       const nodes = shape.endpoints.map(ep => LogicCore.edgeNodeFromPoint(p.anchorX + ep.point.x, p.anchorY + ep.point.y));
       nodes.forEach(n => edgeNodes.add(n));
-      connections.push({ a: nodes[0], b: nodes[1], color: "#3b82f6" });
+      connections.push({ a: nodes[0], b: nodes[1], color: "#059669" });
     });
 
     const house = state.current.boardSetup.house;
@@ -1113,7 +1113,7 @@ function populateLevelList() {
     btn.type = "button";
     btn.dataset.challengeId = challenge.id;
     btn.className = "level-list-item focus-ring w-full rounded-xl border px-3 py-2.5 text-left text-sm transition flex items-center justify-between gap-2 " +
-      "border-slate-700 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:text-slate-100";
+      "border-green-900/60 bg-[rgba(4,28,20,0.8)] text-slate-200 hover:bg-green-900/60 hover:text-slate-100";
     btn.innerHTML = `<span class="truncate">${challenge.id}</span><span class="level-list-badge text-[10px] font-bold uppercase tracking-wider text-emerald-400/90 flex-shrink-0">${challenge.difficulty || ""}</span>`;
     btn.addEventListener("click", () => {
       setChallenge(challenge);
@@ -1161,8 +1161,8 @@ function updateTileList() {
     const card = document.createElement("button");
     card.type = "button";
     card.title = tileId;
-    card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/40 p-1 transition hover:bg-slate-700 hover:border-slate-500 active:scale-95";
-    if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-slate-800");
+    card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-green-900/50 bg-[rgba(4,28,20,0.7)] p-1 transition hover:bg-green-900/50 hover:border-green-700/50 active:scale-95";
+    if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-green-950");
     
     const tileRotation = state.inventoryRotations.get(tileId) || 0;
     const preview = document.createElement("canvas");
@@ -1244,48 +1244,46 @@ function handleCheck() {
   checkBtn.classList.add("board-action-btn--checking");
   updateBoardButtonState();
 
-  setTimeout(() => {
-    const result = LogicCore.validateSolution(state.current, state.placements);
-    state.checkingSolution = false;
-    checkBtn.classList.remove("board-action-btn--checking");
-    updateBoardButtonState();
+  const result = LogicCore.validateSolution(state.current, state.placements);
+  state.checkingSolution = false;
+  checkBtn.classList.remove("board-action-btn--checking");
+  updateBoardButtonState();
 
-    if (result.ok) {
-      AudioManager.playSFX("win");
-      state.lastResultOk = true;
-      state.tileTint = theme.tileSuccess;
-      flashBoard("success");
-      status(result.message || "Correct.", "success");
+  if (result.ok) {
+    AudioManager.playSFX("win");
+    state.lastResultOk = true;
+    state.tileTint = theme.tileSuccess;
+    flashBoard("success");
+    status(result.message || "Correct.", "success");
 
-      if (typeof confetti === "function") {
-        const btnRect = checkBtn.getBoundingClientRect();
-        const originX = (btnRect.left + btnRect.width / 2) / window.innerWidth;
-        const originY = (btnRect.top + btnRect.height / 2) / window.innerHeight;
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { x: originX, y: originY },
-          colors: ["#10b981", "#34d399", "#6ee7b7", "#ffffff"]
-        });
-      }
-
-      const nextChallenge = getNextChallenge();
-      if (nextChallenge) {
-        setTimeout(() => {
-          setChallenge(nextChallenge);
-          hideOverlay();
-        }, 2000);
-      } else {
-        showOverlay("Correct!", "You solved all challenges.", "Finish");
-      }
-    } else {
-      AudioManager.playSFX("false");
-      state.lastResultOk = false;
-      state.tileTint = theme.path;
-      flashBoard("error");
-      status(result.message || "Not correct.", "error");
+    if (typeof confetti === "function") {
+      const btnRect = checkBtn.getBoundingClientRect();
+      const originX = (btnRect.left + btnRect.width / 2) / window.innerWidth;
+      const originY = (btnRect.top + btnRect.height / 2) / window.innerHeight;
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { x: originX, y: originY },
+        colors: ["#10b981", "#34d399", "#6ee7b7", "#ffffff"]
+      });
     }
-  }, 320);
+
+    const nextChallenge = getNextChallenge();
+    if (nextChallenge) {
+      setTimeout(() => {
+        setChallenge(nextChallenge);
+        hideOverlay();
+      }, 2000);
+    } else {
+      showOverlay("Correct!", "You solved all challenges.", "Finish");
+    }
+  } else {
+    AudioManager.playSFX("false");
+    state.lastResultOk = false;
+    state.tileTint = theme.path;
+    flashBoard("error");
+    status(result.message || "Not correct.", "error");
+  }
 }
 
 function handleHint() {
@@ -1717,16 +1715,27 @@ function drawGhost() {
 }
 
 function drawBackground() {
-  const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  bg.addColorStop(0, "#0f172a");
-  bg.addColorStop(1, "#030712");
+  const w = canvas.width;
+  const h = canvas.height;
+  // Same overlay as header/footer: rgba(4, 28, 20, 0.7) so parallax/fog show through
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, "rgba(4, 28, 20, 0.7)");
+  bg.addColorStop(0.5, "rgba(4, 28, 20, 0.68)");
+  bg.addColorStop(1, "rgba(4, 28, 20, 0.7)");
   ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, w, h);
+  // Vignette for depth (darker edges)
+  const vignette = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.75);
+  vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
+  vignette.addColorStop(0.6, "rgba(0, 0, 0, 0)");
+  vignette.addColorStop(1, "rgba(0, 0, 0, 0.2)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, w, h);
 }
 
 function drawGrid() {
   const { cellSize } = getBoardMetrics();
-  ctx.strokeStyle = "rgba(148, 163, 184, 0.1)";
+  ctx.strokeStyle = "rgba(20, 83, 45, 0.5)";
   ctx.lineWidth = 1;
   for (let i = 0; i <= boardConfig.cols; i++) {
     ctx.beginPath();
@@ -1805,7 +1814,7 @@ function drawTiles() {
     
     if (DEBUG_ENDPOINTS) {
       const shape = LogicCore.getTransformedTile(tileId, p.rotation);
-      ctx.fillStyle = "#94a3b8"; // Light gray (slate-400)
+      ctx.fillStyle = "#166534"; // Dark green (forest)
       const radius = Math.max(1, Math.round(cellSize * 0.03)); // Smaller radius
       shape.endpoints.forEach((ep) => {
         const x = (p.anchorX + ep.point.x) * cellSize;
@@ -1877,7 +1886,7 @@ function drawSelection() {
   const y = Math.min(...ys) * cellSize;
   const w = (Math.max(...xs) - Math.min(...xs) + 1) * cellSize;
   const h = (Math.max(...ys) - Math.min(...ys) + 1) * cellSize;
-  ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+  ctx.strokeStyle = "rgba(22, 101, 52, 0.35)";
   ctx.lineWidth = 2;
   ctx.strokeRect(x + 4, y + 4, w - 8, h - 8);
 }

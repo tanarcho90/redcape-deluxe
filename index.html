@@ -52,16 +52,17 @@
       }
 
       .hero-pattern {
-        background-color: #0b1120;
+        background-color: #061008;
       }
       .parallax-bg {
         position: fixed;
         inset: 0;
         z-index: 0;
-        background-image: radial-gradient(1200px 800px at 15% 10%, rgba(14, 116, 144, 0.09), transparent 60%),
-          radial-gradient(900px 700px at 85% 25%, rgba(30, 64, 175, 0.09), transparent 55%),
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%2394a3b8' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M0 20 Q20 12 40 20 T80 20'/%3E%3Cpath d='M0 35 Q25 45 40 35 T80 35'/%3E%3Cpath d='M0 50 Q20 42 40 50 T80 50'/%3E%3Cpath d='M0 65 Q30 55 40 65 T80 65'/%3E%3Cpath d='M20 0 Q30 20 20 40 T20 80'/%3E%3Cpath d='M45 0 Q55 25 45 40 T45 80'/%3E%3Cpath d='M70 0 Q60 22 70 40 T70 80'/%3E%3C/svg%3E");
-        background-size: auto, auto, 144px 144px;
+        background-image: radial-gradient(1200px 800px at 15% 10%, rgba(4, 50, 38, 0.14), transparent 55%),
+          radial-gradient(900px 700px at 85% 25%, rgba(8, 55, 35, 0.1), transparent 50%),
+          radial-gradient(600px 400px at 50% 60%, rgba(6, 78, 59, 0.06), transparent 45%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%23122a18' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M0 20 Q20 12 40 20 T80 20'/%3E%3Cpath d='M0 35 Q25 45 40 35 T80 35'/%3E%3Cpath d='M0 50 Q20 42 40 50 T80 50'/%3E%3Cpath d='M0 65 Q30 55 40 65 T80 65'/%3E%3Cpath d='M20 0 Q30 20 20 40 T20 80'/%3E%3Cpath d='M45 0 Q55 25 45 40 T45 80'/%3E%3Cpath d='M70 0 Q60 22 70 40 T70 80'/%3E%3C/svg%3E");
+        background-size: auto, auto, auto, 144px 144px;
         background-attachment: scroll;
         background-position: 0 0;
         pointer-events: none;
@@ -71,9 +72,9 @@
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        background-image: radial-gradient(ellipse 120% 80% at 50% 90%, rgba(148, 163, 184, 0.06) 0%, transparent 45%),
-          radial-gradient(ellipse 80% 60% at 20% 20%, rgba(148, 163, 184, 0.04) 0%, transparent 40%),
-          radial-gradient(ellipse 80% 60% at 80% 30%, rgba(148, 163, 184, 0.04) 0%, transparent 40%);
+        background-image: radial-gradient(ellipse 140% 90% at 50% 95%, rgba(6, 78, 59, 0.08) 0%, transparent 40%),
+          radial-gradient(ellipse 90% 70% at 15% 15%, rgba(4, 50, 38, 0.06) 0%, transparent 45%),
+          radial-gradient(ellipse 90% 70% at 85% 25%, rgba(4, 50, 38, 0.06) 0%, transparent 45%);
       }
 
       .custom-scrollbar::-webkit-scrollbar {
@@ -81,11 +82,11 @@
         width: 4px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(15, 23, 42, 0.3);
+        background: rgba(4, 28, 20, 0.5);
         border-radius: 10px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(148, 163, 184, 0.2);
+        background: rgba(22, 101, 52, 0.2);
         border-radius: 10px;
       }
 
@@ -138,12 +139,12 @@
       .main-fill {
         min-height: 0;
       }
-      /* Karte: Spielfeld + Tile-Leiste als ein Panel (oben/links/rechts ohne Abstand) */
+      /* Karte: Spielfeld + Tile-Leiste als ein Panel (oben/links/rechts ohne Abstand), Border wie Header/Footer */
       .board-card {
         touch-action: none;
-        background: rgba(15, 23, 42, 0.5);
-        border: 1px solid rgba(51, 65, 85, 0.4);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.15), 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        background: transparent;
+        border: 1px solid rgb(20 83 45 / 0.5);
+        box-shadow: inset 0 1px 0 0 rgba(34, 197, 94, 0.06);
       }
       .game-frame {
         touch-action: none;
@@ -197,7 +198,7 @@
       /* A11y: sichtbare Fokus-Ringe für Tastatur */
       .focus-ring:focus-visible {
         outline: none;
-        box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px rgba(52, 211, 153, 0.8);
+        box-shadow: 0 0 0 2px #061008, 0 0 0 4px rgba(52, 211, 153, 0.8);
       }
       /* Level-Picker: aktueller Level grüner Hintergrund, weiße fette Schrift */
       .level-list-item.level-current {
@@ -212,15 +213,15 @@
       }
     </style>
   </head>
-  <body class="hero-pattern min-h-screen overflow-hidden bg-slate-950 text-slate-100 touch-none box-border">
+  <body class="hero-pattern min-h-screen overflow-hidden text-slate-100 touch-none box-border">
     <div id="parallaxBg" class="parallax-bg" aria-hidden="true"></div>
     <div class="fog" aria-hidden="true"></div>
     <div class="flex h-full w-full flex-col overflow-hidden relative z-10">
       <!-- HEADER -->
-      <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-slate-800/50 bg-slate-900/40 py-3 px-3 sm:px-4 backdrop-blur-md">
+      <header class="z-10 flex flex-shrink-0 items-center justify-between border-b border-green-900/50 bg-[rgba(4,28,20,0.7)] py-3 px-3 sm:px-4 backdrop-blur-md">
         <div class="flex items-center gap-3 min-w-0 flex-1">
           <img src="assets/Logo.webp" alt="Logo" class="h-8 sm:h-10 object-contain flex-shrink-0" />
-          <div class="h-4 w-px bg-slate-700/50 hidden sm:block flex-shrink-0"></div>
+          <div class="h-4 w-px bg-green-800/40 hidden sm:block flex-shrink-0"></div>
           <div class="hidden flex-col sm:flex flex-shrink-0">
              <span id="difficultyBadge" class="text-[9px] font-bold uppercase tracking-widest text-emerald-400"></span>
              <span id="modeLabel" class="text-[9px] font-medium uppercase tracking-widest text-slate-400"></span>
@@ -228,16 +229,16 @@
         </div>
 
         <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-emerald-400 active:scale-90" title="Choose level" aria-label="Choose level">
+          <button id="levelPickerBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-emerald-400 active:scale-90" title="Choose level" aria-label="Choose level">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </button>
-          <button id="resetBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-rose-400 active:scale-90" title="Reset">
+          <button id="resetBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-rose-400 active:scale-90" title="Reset">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
           </button>
-          <button id="hintBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-amber-400 active:scale-90" title="Hint">
+          <button id="hintBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-amber-400 active:scale-90" title="Hint">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
           </button>
-          <button id="musicMuteBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-slate-100 active:scale-90" title="Music on/off">
+          <button id="musicMuteBtn" class="focus-ring header-icon-btn flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-green-800/50 hover:text-slate-100 active:scale-90" title="Music on/off">
             <svg id="musicMuteOnIcon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
             <svg id="musicMuteOffIcon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
           </button>
@@ -252,8 +253,8 @@
 
           <!-- Rotate + Check als Overlay auf dem Spielfeld -->
           <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 pointer-events-none">
-            <div class="pointer-events-auto flex items-center gap-3 rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-2 shadow-xl backdrop-blur-sm">
-              <button id="rotateBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-slate-800/80 px-4 text-xs sm:text-sm font-bold text-slate-100 transition hover:bg-slate-700 active:scale-95" title="Rotate">
+            <div class="pointer-events-auto flex items-center gap-3 rounded-full border border-green-900/50 bg-[rgba(4,28,20,0.9)] px-3 py-2 shadow-xl backdrop-blur-sm">
+              <button id="rotateBtn" class="focus-ring board-action-btn flex h-9 items-center gap-2 rounded-full bg-green-950 px-4 text-xs sm:text-sm font-bold text-slate-100 transition hover:bg-green-900 active:scale-95" title="Rotate">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
                 <span>Rotate</span>
               </button>
@@ -265,11 +266,11 @@
           </div>
 
           <!-- Overlay Messages -->
-          <div id="overlay" class="overlay absolute inset-0 z-20 grid place-items-center bg-slate-950/80 p-4">
-            <div class="max-w-xs rounded-2xl border border-slate-700 bg-slate-900 p-6 text-center shadow-2xl">
+          <div id="overlay" class="overlay absolute inset-0 z-20 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4">
+            <div class="max-w-xs rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 text-center shadow-2xl">
               <h2 id="overlayTitle" class="text-xl font-semibold text-slate-100">Ready?</h2>
               <p id="overlayText" class="mt-2 text-sm text-slate-300">Choose a challenge and start.</p>
-              <div class="mt-4 pt-4 border-t border-slate-700/80 text-left">
+              <div class="mt-4 pt-4 border-t border-green-900/50 text-left">
                 <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Controls</p>
                 <p class="overlay-controls-touch text-xs text-slate-400">Tap a tile to select, drag onto the board to place. Double-tap a tile to rotate. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
                 <p class="overlay-controls-pointer text-xs text-slate-400">Click a tile to select, drag onto the board to place. Use <strong class="text-slate-300">Rotate</strong> to turn. Drag off the board to remove.</p>
@@ -285,7 +286,7 @@
           </div>
         </div>
         <!-- Footer (Tile-Leiste) in der Karte -->
-        <footer class="footer-safe z-10 flex flex-shrink-0 flex-col border-t border-slate-700/50 bg-slate-900/40 p-3 pt-3">
+        <footer class="footer-safe z-10 flex flex-shrink-0 flex-col border-t border-green-900/50 bg-[rgba(4,28,20,0.7)] p-3 pt-3 backdrop-blur-sm">
           <div id="tileList" class="custom-scrollbar flex min-h-[3.5rem] flex-wrap items-center justify-center gap-2 overflow-x-auto overflow-y-auto px-2 py-1">
             <!-- Tiles will be injected here -->
           </div>
@@ -294,13 +295,13 @@
       </main>
 
       <!-- Toast: fest über den Rotate/Check-Buttons, unabhängig, eine Zeile -->
-      <div id="toast" class="fixed bottom-44 left-1/2 z-50 rounded-full border border-slate-600/70 bg-slate-800/90 px-3 py-1.5 shadow-md backdrop-blur-sm whitespace-nowrap" role="status" aria-live="polite">
+      <div id="toast" class="fixed bottom-44 left-1/2 z-50 rounded-full border border-green-900/50 bg-[rgba(4,28,20,0.95)] px-3 py-1.5 shadow-md backdrop-blur-sm whitespace-nowrap" role="status" aria-live="polite">
         <p id="toastText" class="text-[9px] font-semibold uppercase tracking-wider"></p>
       </div>
 
       <!-- Level Picker Overlay -->
-      <div id="levelOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">
-        <div class="max-w-sm w-full rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl max-h-[80vh] flex flex-col">
+      <div id="levelOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4 backdrop-blur-sm">
+        <div class="max-w-sm w-full rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 shadow-2xl max-h-[80vh] flex flex-col">
           <div class="flex items-center justify-between mb-4 flex-shrink-0">
             <h2 class="text-xl font-semibold text-slate-100">Choose level</h2>
             <button id="closeLevelOverlayBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition" aria-label="Close"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
@@ -312,8 +313,8 @@
       </div>
 
       <!-- Help Overlay (Minimal) -->
-      <div id="helpOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-slate-950/90 p-4 backdrop-blur-sm">
-        <div class="max-w-lg w-full rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl max-h-[80vh] overflow-y-auto custom-scrollbar">
+      <div id="helpOverlay" class="overlay hidden absolute inset-0 z-30 grid place-items-center bg-[rgba(6,16,8,0.92)] p-4 backdrop-blur-sm">
+        <div class="max-w-lg w-full rounded-2xl border border-green-900/50 bg-[rgba(4,28,20,0.98)] p-6 shadow-2xl max-h-[80vh] overflow-y-auto custom-scrollbar">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-slate-100">How to Play</h2>
             <button id="closeHelpBtn" class="focus-ring p-2 rounded-full text-slate-500 hover:text-slate-100 transition"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
