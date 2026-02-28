@@ -39,7 +39,7 @@ Goal: Every action should be noticeable.
 - [x] **Hover state for tiles** (inventory bar + placed tiles on board)
 - [ ] Smooth rotation animation (current behaviour already smooth; deferred)
 - [x] **Visual selection indicator** (selection ring)
-- [ ] Animated feedback on “Check”
+- [x] **Animated feedback on “Check”
 - [x] **Clear disabled state for buttons** (Rotate/Check disabled when no tile selected)
 
 **Outcome:** Players get immediate visual feedback, making the game feel more alive.
@@ -82,7 +82,7 @@ Goal: Lower barrier to entry.
 - [ ] Progress indicator per level
 - [ ] Reset button with clear feedback
 - [x] **Hint system** (solver places missing tile)
-- [x] **Overlays** (Ready?, How to Play)
+- [x] **Overlays** (Ready to wander?, How to find your way)
 
 **Outcome:** New players understand the goal faster and stay longer.
 
@@ -90,7 +90,7 @@ Goal: Lower barrier to entry.
 
 Goal: Accessibility for more players.
 
-- [ ] Check/improve colour contrast
+- [x] **Check/improve colour contrast** (toast opaque backgrounds + text-shadow for readability)
 - [x] **Visible focus states** (focus-visible ring)
 - [x] **Larger touch targets** (~44px min)
 - [ ] “Reduced Motion” option
@@ -115,7 +115,7 @@ Goal: Accessibility for more players.
 
 Goal: Scalability of the project.
 
-- [ ] Define own colour palette
+- [x] **Define own colour palette** (forest green theme: hero, parallax, fog, panels, borders)
 - [ ] Clear typography hierarchy
 - [ ] Component library (buttons, tiles, status messages, overlays)
 - [ ] Animation guidelines
@@ -124,7 +124,7 @@ Goal: Scalability of the project.
 
 ### 4.3 Polishing & Premium Feel
 
-- [ ] Smooth transitions between states
+- [x] **Smooth transitions between states** (level transition: overlay text + opacity; overlay 300ms)
 - [ ] Refined sound effects (extended)
 - [x] **Light particle effects on success** (confetti)
 - [ ] Intro animation on start
@@ -174,6 +174,11 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Tile placement alignment: anchor snapped to grid (no hitpoint offset)
 - [x] Atmospheric: subtle fog overlay; light parallax (background moves with pointer); topography-style background pattern
 - [x] Board card: canvas and tile bar in one panel, no outer padding, no border radius; toast fixed above Rotate/Check (one line)
+- [x] Forest theme: dark green palette (hero, parallax, fog, canvas overlay, header/footer/board borders)
+- [x] Toast readability: opaque toast backgrounds and text-shadow over board/overlay
+- [x] Level transition: soft overlay text ("On to the next path…") and fade before next level
+- [x] Success feedback: board glow, confetti, success-glow animation; random fun success messages (10 variants)
+- [x] Copy: atmospheric English copy (overlays, toasts, help, level picker)
 
 ---
 
