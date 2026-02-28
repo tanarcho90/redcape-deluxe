@@ -48,7 +48,7 @@ Web implementation of the Red Riding Hood logic game. Place path tiles on the gr
 - **Solver:** DFS-based solver in `scripts/solver-engine.js` used for validation and hints.
 - **UI & layout:**
   - Single-screen layout: fits in the viewport without scrolling (`overflow-hidden`).
-  - **Header:** Logo, level picker (icon opens overlay list), reset / hint / music; button spacing for clear grouping.
+  - **Header:** Logo, level info (difficulty, mode, progress "X / N"), level picker (icon opens overlay list), reset / hint / music; button spacing for clear grouping.
   - **Main:** One panel (“board card”) contains the game canvas and the tile bar (footer); no outer padding (edge-to-edge to header and sides), no border radius. Rotate and Check buttons overlay the canvas. Calm background: topography-style pattern, fog, parallax. Feedback messages appear as a toast fixed above the Rotate/Check buttons (one line, green/red/grey by type, auto-hide).
   - **Footer:** Tile bar (inventory) integrated into the board card below the canvas; horizontal scroll, safe-area on mobile. Hover feedback on tile cards.
   - **Level selection:** Header icon opens overlay with all levels; current level highlighted. No dropdown.
@@ -60,7 +60,7 @@ Web implementation of the Red Riding Hood logic game. Place path tiles on the gr
   - Optional smaller tile cards and scrollable tile list on very small viewports.
   - Tiles at the board edge (e.g. vertical tiles) are grabbable: clicks in the letterbox around the canvas count as board-edge.
 - **Audio:** Background music and SFX (win, fail, rotate).
-- **Gameplay:** Smart rotation (“fly to fit”), hint system, drag-out to remove, confetti on success, auto-advance to next level.
+- **Gameplay:** Smart rotation (“fly to fit”), hint system, drag-out to remove, confetti on success, auto-advance to next level. Reset shows toast "Level reset." First-time mini-tutorial overlay ("First steps") with localStorage; then normal "Ready to wander?" overlay.
 - **Debug:** Graph visualization (D), auto-solve (S), skip (N).
 - **Challenges:** 43 solvable levels.
 
@@ -70,8 +70,9 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## Next Steps
 
-- **Animation polish:** Smoother glide/rotate animations; optional animated feedback on Check.
+- **Animation polish:** Smoother glide/rotate animations (optional).
 - **Final level polish:** Consistency pass over all 43 levels.
+- **Optional:** Reduced Motion, scalable font sizes, component library.
 - See [ROADMAP.md](ROADMAP.md) for the full UI & experience roadmap.
 
 ## Development

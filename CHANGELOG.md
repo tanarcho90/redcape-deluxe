@@ -4,7 +4,13 @@ All notable changes to Redcape Deluxe are documented here. The format is based o
 
 ## [Unreleased]
 
-(No unreleased changes.)
+### Added
+
+- **Mini-tutorial on first start:** First-time visitors see a "First steps" overlay (pick tile, drag onto board, Rotate then Check); "Got it, let's go!" sets a localStorage flag so later visits show the normal "Ready to wander?" overlay.
+- **Progress indicator:** Header shows current level index and total (e.g. "1 / 43").
+- **Reset feedback:** Toast "Level reset." when the reset button is used.
+- **Tooltips / accessibility:** All interactive controls have `title` and `aria-label` (level picker, reset, hint, Rotate, Check, overlay button, tile cards, level list items).
+- **Visual error hints:** On failed Check, a short red pulse (board-error-pulse) on the game frame in addition to the toast message.
 
 ## [0.3.0] – 2026-02
 

@@ -76,11 +76,11 @@ Goal: More immersion without visual overload.
 
 Goal: Lower barrier to entry.
 
-- [ ] Mini-tutorial on first start
-- [ ] Explanatory tooltips
-- [ ] Visual error hints instead of text only
-- [ ] Progress indicator per level
-- [ ] Reset button with clear feedback
+- [x] **Mini-tutorial on first start** (localStorage; "First steps" overlay, "Got it, let's go!")
+- [x] **Explanatory tooltips** (title + aria-label on all controls, tiles, level list)
+- [x] **Visual error hints** (board-error-pulse on Check fail; toast + aria)
+- [x] **Progress indicator per level** (header: "X / N")
+- [x] **Reset button with clear feedback** (toast "Level reset." on reset)
 - [x] **Hint system** (solver places missing tile)
 - [x] **Overlays** (Ready to wander?, How to find your way)
 
@@ -179,6 +179,11 @@ See sections 2–4 for details. Full list of completed items:
 - [x] Level transition: soft overlay text ("On to the next path…") and fade before next level
 - [x] Success feedback: board glow, confetti, success-glow animation; random fun success messages (10 variants)
 - [x] Copy: atmospheric English copy (overlays, toasts, help, level picker)
+- [x] Mini-tutorial: first-visit "First steps" overlay; localStorage flag
+- [x] Tooltips: title and aria-label on header buttons, Rotate/Check, overlay button, tiles, level list
+- [x] Progress indicator: header shows current level index and total (e.g. 1 / 43)
+- [x] Reset feedback: toast "Level reset." when reset is used
+- [x] Visual error hints: board-error-pulse (red tint) on failed Check; toast + aria unchanged
 
 ---
 

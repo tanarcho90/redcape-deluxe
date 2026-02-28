@@ -2,9 +2,10 @@
 
 ## Core Loop
 
-1. Choose a challenge: tap the list icon in the header to open the level overlay; pick a level from the list.
-2. Place and rotate path tiles from the inventory (bottom bar).
-3. Press Check to validate; confetti and auto-advance on success.
+1. (First time only) Dismiss the "First steps" overlay with "Got it, let's go!" or the normal "Ready to wander?" overlay with "Into the forest!".
+2. Choose a challenge: tap the list icon in the header to open the level overlay; pick a level from the list. The header shows progress (e.g. "1 / 43").
+3. Place and rotate path tiles from the inventory (bottom bar).
+4. Press Check to validate; confetti and auto-advance on success. On wrong solution, a red pulse and toast explain the error. Use Reset (header) to clear the board; a toast confirms "Level reset."
 
 ## Rules
 
@@ -18,7 +19,8 @@
 ## Tools & Controls
 
 - **Hint:** Solver places one correct/missing tile.
-- **Check:** Validates board (connectivity, Wolf rule). Confetti and next level on success.
+- **Reset:** Clears the board for the current level; toast "Level reset."
+- **Check:** Validates board (connectivity, Wolf rule). Confetti and next level on success. On failure: toast with error message and short red pulse on the board.
 - **Drag & drop:** Snaps to nearest valid cell. Drag a placed tile off the board to remove it.
 - **Smart rotation (right-click / double-tap):** Rotate tile; if it would collide, it “flies” to the nearest valid placement.
 - **Inventory:** Bottom tile bar shows only tiles not on the board; horizontal scroll when needed. Tile cards and placed tiles show hover feedback (highlight/outline).
