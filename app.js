@@ -24,10 +24,12 @@ const toastEl = document.getElementById("toast");
 const toastText = document.getElementById("toastText");
 const modeLabel = document.getElementById("modeLabel");
 const difficultyBadge = document.getElementById("difficultyBadge");
+const progressIndicator = document.getElementById("progressIndicator");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
+const overlayBasics = document.getElementById("overlayBasics");
 const helpBtn = document.getElementById("helpBtn");
 const helpOverlay = document.getElementById("helpOverlay");
 const closeHelpBtn = document.getElementById("closeHelpBtn");
@@ -409,6 +411,8 @@ let lastBoardTap = null;
 const TOUCH_MOVE_THRESHOLD_PX = 22;
 const DOUBLE_TAP_MS = 400;
 
+const TUTORIAL_DONE_KEY = "redcape_tutorial_done";
+
 const SUCCESS_MESSAGES = [
   "Path clear! Well done!",
   "Red would be proud!",
@@ -488,10 +492,14 @@ function attachEvents() {
   resetBtn.addEventListener("click", () => {
     if (!state.current) return;
     setChallenge(state.current);
+    status("Level reset.", "info");
   });
 
   if (overlayBtn) {
     overlayBtn.addEventListener("click", () => {
+      if (overlay && overlay.dataset.mode === "tutorial") {
+        try { localStorage.setItem(TUTORIAL_DONE_KEY, "1"); } catch (_) {}
+      }
       hideOverlay();
       AudioManager.startIfStopped();
     });
@@ -1125,6 +1133,8 @@ function populateLevelList() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.dataset.challengeId = challenge.id;
+    btn.title = `Play level ${challenge.id}`;
+    btn.setAttribute("aria-label", `Play level ${challenge.id}`);
     btn.className = "level-list-item focus-ring w-full rounded-xl border px-3 py-2.5 text-left text-sm transition flex items-center justify-between gap-2 " +
       "border-green-900/60 bg-[rgba(4,28,20,0.8)] text-slate-200 hover:bg-green-900/60 hover:text-slate-100";
     btn.innerHTML = `<span class="truncate">${challenge.id}</span><span class="level-list-badge text-[10px] font-bold uppercase tracking-wider text-emerald-400/90 flex-shrink-0">${challenge.difficulty || ""}</span>`;
@@ -1158,9 +1168,17 @@ function setChallenge(challenge) {
   state.rotation = 0;
   modeLabel.textContent = challenge.requiredMode === "WithWolf" ? "WITH WOLF" : "WITHOUT WOLF";
   if (difficultyBadge) difficultyBadge.textContent = challenge.difficulty;
+  if (progressIndicator && state.challenges.length) {
+    const idx = state.challenges.findIndex(c => c.id === challenge.id);
+    progressIndicator.textContent = `${idx >= 0 ? idx + 1 : "–"} / ${state.challenges.length}`;
+  }
   updateTileList();
   status("New path ahead!", "success");
-  showOverlay("Ready to wander?", "Find the path from Red to the house. Drag tiles onto the board!", "Into the forest!");
+  if (state.challenges.length && !localStorage.getItem(TUTORIAL_DONE_KEY)) {
+    showTutorialOverlay();
+  } else {
+    showOverlay("Ready to wander?", "Find the path from Red to the house. Drag tiles onto the board!", "Into the forest!");
+  }
   if (overlayBtn) overlayBtn.disabled = false;
   draw();
 }
@@ -1173,7 +1191,8 @@ function updateTileList() {
   availableInInventory.forEach((tileId) => {
     const card = document.createElement("button");
     card.type = "button";
-    card.title = tileId;
+    card.title = `Tile ${tileId}. Click to select, drag onto board to place.`;
+    card.setAttribute("aria-label", `Tile ${tileId}. Select to place on board.`);
     card.className = "tile-card flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-green-900/50 bg-[rgba(4,28,20,0.7)] p-1 transition hover:bg-green-900/50 hover:border-green-700/50 active:scale-95";
     if (state.selectedTileId === tileId) card.classList.add("ring-2", "ring-emerald-400/40", "bg-green-950");
     
@@ -1296,6 +1315,10 @@ function handleCheck() {
     state.lastResultOk = false;
     state.tileTint = theme.path;
     flashBoard("error");
+    if (gameFrame) {
+      gameFrame.classList.add("board-error-pulse");
+      setTimeout(() => gameFrame.classList.remove("board-error-pulse"), 1000);
+    }
     status(result.message || "Not quite the right path yet…", "error");
   }
 }
@@ -1954,8 +1977,23 @@ function status(msg, type = "info") {
   if (statusToastTimer) clearTimeout(statusToastTimer);
   statusToastTimer = setTimeout(() => toastEl.classList.remove("toast-visible"), 2500);
 }
+function showTutorialOverlay() {
+  overlayTitle.textContent = "First steps";
+  overlayText.innerHTML = "1. Pick a tile from the bar.<br>2. Drag it onto the board.<br>3. Use Rotate if needed, then Check.";
+  overlayText.classList.add("whitespace-pre-line");
+  overlayBtn.textContent = "Got it, let's go!";
+  if (overlayBasics) overlayBasics.classList.add("hidden");
+  if (overlay) overlay.dataset.mode = "tutorial";
+  overlay.classList.remove("hidden");
+}
+
 function showOverlay(t, txt, btn) {
-  overlayTitle.textContent = t; overlayText.textContent = txt; overlayBtn.textContent = btn;
+  overlayTitle.textContent = t;
+  overlayText.textContent = txt;
+  overlayText.classList.remove("whitespace-pre-line");
+  overlayBtn.textContent = btn;
+  if (overlayBasics) overlayBasics.classList.remove("hidden");
+  if (overlay) overlay.dataset.mode = "ready";
   overlay.classList.remove("hidden");
 }
 function hideOverlay() { overlay.classList.add("hidden"); }
